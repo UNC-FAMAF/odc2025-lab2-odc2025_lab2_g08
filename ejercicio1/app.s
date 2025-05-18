@@ -6,7 +6,7 @@
 	.equ GPIO_GPFSEL0,   0x00
 	.equ GPIO_GPLEV0,    0x34
 
-	.equ COLOR_FONDO_0 , 0x3030
+	.equ COLOR_FONDO_0 , 0xF8F8
 
 	.globl main
 
@@ -198,8 +198,170 @@ loop0:
 	bl draw_rectangle
 
 
+	//TEST PIXEL ART: (ODC)
+//	 .equ PIXEL_SIZE, 4
+//	 .equ DIR ,1
+//	 .equ PADDING, 10
+	// movz x6, 0x00, lsl 00 // color
+	// movk x6, 0x0000, lsl 00
+ 	// mov     x0, x20 //RESETEO FB
+ 	// mov     x1, 1*DIR*PIXEL_SIZE+OFFSET_X      
+ 	// mov     x2, 2*DIR*PIXEL_SIZE+OFFSET_Y
+ 	// mov     x3, PIXEL_SIZE         // tamaño PIXEL_SIZE
+ 	// mov     x4, x6
+ 	// bl      draw_square
+	
+//	mov x0,x20 
+//	mov x1, 7*PIXEL_SIZE //ALTO
+//	mov x2, PIXEL_SIZE //ANCHO
+//	mov x9, 2 	*	PIXEL_SIZE 	+ PADDING //Y
+//	mov x3, 15 *	PIXEL_SIZE + PADDING//X
+//	movz x6, 0x00, lsl 00 // color
+//	movk x6, 0x0000, lsl 00
+//	bl draw_rectangle
+//
+//	mov x0,x20 
+//	mov x1, 7*PIXEL_SIZE //ALTO
+//	mov x2, PIXEL_SIZE //ANCHO
+//	mov x9, 2 	*	PIXEL_SIZE 	+ PADDING //Y
+//	mov x3, 19 *	PIXEL_SIZE + PADDING  //X
+//	movz x6, 0x00, lsl 00 // color
+//	movk x6, 0x0000, lsl 00
+//	bl draw_rectangle
+//
+//
+//	mov x0,x20 
+//	mov x1, PIXEL_SIZE //ALTO
+//	mov x2, 4*PIXEL_SIZE //ANCHO
+//	mov x9, 2 	*	PIXEL_SIZE 	+ PADDING //Y
+//	mov x3, 15 *	PIXEL_SIZE + PADDING//X
+//	movz x6, 0x00, lsl 00 // color
+//	movk x6, 0x0000, lsl 00
+//	bl draw_rectangle
+//
+//	mov x0,x20 
+//	mov x1, PIXEL_SIZE //ALTO
+//	mov x2, 5*PIXEL_SIZE //ANCHO
+//	mov x9, 9 	*	PIXEL_SIZE 	+ PADDING //Y
+//	mov x3, 15 *	PIXEL_SIZE + PADDING//X
+//	movz x6, 0x00, lsl 00 // color
+//	movk x6, 0x0000, lsl 00
+//	bl draw_rectangle
+//
+//	//LETRA D
+//	.equ PADDING_L,27
+//
+//	mov x0,x20 
+//	mov x1, 7*PIXEL_SIZE //ALTO
+//	mov x2, PIXEL_SIZE //ANCHO
+//	mov x9, 2 	*	PIXEL_SIZE 	+ PADDING //Y
+//	mov x3, 15 *	PIXEL_SIZE + PADDING+ PADDING_L//X
+//	movz x6, 0x00, lsl 00 // color
+//	movk x6, 0x0000, lsl 00
+//	bl draw_rectangle
+//
+//	mov x0,x20 
+//	mov x1, 6*PIXEL_SIZE //ALTO
+//	mov x2, PIXEL_SIZE //ANCHO
+//	mov x9, 3 	*	PIXEL_SIZE 	+ PADDING //Y
+//	mov x3, 19 *	PIXEL_SIZE + PADDING+ PADDING_L //X
+//	movz x6, 0x00, lsl 00 // color
+//	movk x6, 0x0000, lsl 00
+//	bl draw_rectangle
+//
+//
+//	mov x0,x20 
+//	mov x1, PIXEL_SIZE //ALTO
+//	mov x2, 3*PIXEL_SIZE //ANCHO
+//	mov x9, 2 	*	PIXEL_SIZE 	+ PADDING //Y
+//	mov x3, 15 *	PIXEL_SIZE + PADDING+ PADDING_L//X
+//	movz x6, 0x00, lsl 00 // color
+//	movk x6, 0x0000, lsl 00
+//	bl draw_rectangle
+//
+//	mov x0,x20 
+//	mov x1, PIXEL_SIZE //ALTO
+//	mov x2, 3*PIXEL_SIZE //ANCHO
+//	mov x9, 9 	*	PIXEL_SIZE 	+ PADDING //Y
+//	mov x3, 15 *	PIXEL_SIZE + PADDING + PADDING_L//X
+//	movz x6, 0x00, lsl 00 // color
+//	movk x6, 0x0000, lsl 00
+//	bl draw_rectangle
+//
+
+
+//DIBUJO DE UN TRIANGULO
+.equ ALTURA, 100
+.equ PADDING_TRIANGULO,220
+.equ COLOR_TRIANGULO, 0x3830
+.equ PIXEL_SIZE, 1
+
+//loop
+	mov x25, #0
+	loop:
+		cmp x25,ALTURA
+		b.ge end_loop
+		add x25,x25,#1
+
+		mov x0,x20 //RESETEO FB
+		mov x1, PIXEL_SIZE //ALTO
+		mov x2, PIXEL_SIZE  //ANCHO
+		mul x2,x2,x25 //ANCHO = PIXEL_SIZE * X2 * X25(n) 
+
+		mov x9, PIXEL_SIZE //Y
+		mul x9,x9,x25 
+
+		//AHORA LA POS HORIZONTAL
+		mov x3, PIXEL_SIZE + PADDING_TRIANGULO //X POS 
+		mov x28,ALTURA
+		sub x28,x28,x25
+		add x28,x28,x25
+		
+		movz x6, COLOR_TRIANGULO, lsl 00 
+		movk x6, COLOR_TRIANGULO, lsl 00
+		bl draw_rectangle
+
+		b loop
+
+	end_loop:
+
+//	//ESTE CODIGO FUNCIONA Y HACE UN TRIANGULO EQUILATERO
+//	mov x25, #0
+//	loop:
+//		cmp x25,#21
+//		b.ge end_loop
+//		add x25,x25,#1
+//
+//		mov x0,x20 
+//		mov x1, PIXEL_SIZE //ALTO
+//		mov x2, PIXEL_SIZE  //ANCHO
+//		mul x2,x2,x25
+//
+//		mov x9, PIXEL_SIZE //Y
+//		mul x9,x9,x25
+//
+//
+//		mov x3, PIXEL_SIZE +PADDING//X
+//		mov x28,#21
+//		sub x28,x28,x25
+//		add x3,x3,x28
+//		add x3,x3,X3
+//
+//
+//		movz x6, 0xff, lsl 00 // color
+//		movk x6, 0xffff, lsl 16
+//		bl draw_rectangle
+//		
+//		b loop
+//
+//	end_loop:
+
+
 	//---------------------------------------------------------------
 	// Infinite Loop
+
+
+
 
 InfLoop:
 	b InfLoop
@@ -283,3 +445,35 @@ skip_pixel:
 	ret
 
 
+// draw_square:
+//   x0 = dirección base del framebuffer
+//   x1 = posición X del cuadrado (columna)
+//   x2 = posición Y del cuadrado (fila)
+//   x3 = tamaño del lado del cuadrado (size)
+//   x4 = color (32 bpp)
+// Registros usados internamente: x5–x9
+draw_square:
+    mov     x5, x3               // filas restantes = size
+    mov     x6, SCREEN_WIDTH     // ancho de pantalla
+
+sq_row:
+    mov     x7, x1               // columna actual = x
+    mov     x8, x3               // columnas restantes = size
+
+sq_col:
+    // addr = fb + 4 * (y * SCREEN_WIDTH + x)
+    mul     x9, x2, x6
+    add     x9, x9, x7
+    lsl     x9, x9, 2
+    add     x9, x0, x9
+    stur    w4, [x9]             // escribe color
+
+    add     x7, x7, 1            // siguiente columna
+    sub     x8, x8, 1
+    cbnz    x8, sq_col           // repite en la fila
+
+    add     x2, x2, 1            // siguiente fila
+    sub     x5, x5, 1
+    cbnz    x5, sq_row           // repite filas
+
+    ret
