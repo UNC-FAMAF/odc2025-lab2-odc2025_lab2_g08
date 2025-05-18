@@ -6,6 +6,8 @@
 	.equ GPIO_GPFSEL0,   0x00
 	.equ GPIO_GPLEV0,    0x34
 
+	.equ COLOR_FONDO_0 , 0x3030
+
 	.globl main
 
 main:
@@ -13,8 +15,8 @@ main:
  	mov x20, x0	// Guarda la dirección base del framebuffer en x20
 	//---------------- CODE HERE ------------------------------------
 
-	movz x10, 0xDB, lsl 16
-	movk x10, 0xF7FF, lsl 00
+	movz x10, COLOR_FONDO_0  
+	movk x10, COLOR_FONDO_0
 
 	mov x2, SCREEN_HEIGH         // Y Size
 loop1:
@@ -46,6 +48,8 @@ loop0:
 	// efectivamente, su valor representará si GPIO 2 está activo
 	lsr w11, w11, 1
 
+	 
+
 	// TEST RECTANGULO
 	// CARA :-|
 	// dibujar cabeza
@@ -72,6 +76,19 @@ loop0:
 
 	bl draw_rectangle
 
+
+	//Ceja izquierda
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 5 // alto del rectangullo
+	mov x2, 20 // ancho del rectangulo
+	mov x9, 190// posicion y del rectangulo
+	mov x3, 100 // posicion x del rectangulo
+
+	movz x6, 0x00, lsl 00 // color
+	movk x6, 0x0000, lsl 00
+
+	bl draw_rectangle
+
 	// dibujar ojo derecho
 	mov x0, x20 // reinicia framebuffer
 	mov x1, 20 // alto del rectangullo
@@ -84,6 +101,7 @@ loop0:
 
 	bl draw_rectangle
 
+	
 	// dibujar boca
 	mov x0, x20 // reinicia framebuffer
 	mov x1, 20 // alto del rectangullo
@@ -142,6 +160,18 @@ loop0:
 
 	bl draw_circle
 
+	//Ceja izquierda
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 5 // alto del rectangullo
+	mov x2, 30 // ancho del rectangulo
+	mov x9, 190// posicion y del rectangulo
+	mov x3, 400 // posicion x del rectangulo
+
+	movz x6, 0x00, lsl 00 // color
+	movk x6, 0x0000, lsl 00
+
+	bl draw_rectangle
+
 	// ojo izquierdo
 	mov x0, x20 
 	mov x1, 480 // centro a(x)
@@ -152,6 +182,21 @@ loop0:
 	movk x6, 0x0000, lsl 00
 
 	bl draw_circle
+
+
+
+	//Ceja derecha
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 5 // alto del rectangullo
+	mov x2, 30 // ancho del rectangulo
+	mov x9, 190// posicion y del rectangulo
+	mov x3, 465 // posicion x del rectangulo
+
+	movz x6, 0x00, lsl 00 // color
+	movk x6, 0x0000, lsl 00
+
+	bl draw_rectangle
+
 
 	//---------------------------------------------------------------
 	// Infinite Loop
