@@ -47,13 +47,13 @@ loop0:
 	lsr w11, w11, 1
 
 	// TEST RECTANGULO
-	// CARA :-)
+	// CARA :-|
 	// dibujar cabeza
 	mov x0, x20 // reinicia framebuffer
-	mov x1, 150 // alto del rectangullo
+	mov x1, 200 // alto del rectangullo
 	mov x2, 200 // ancho del rectangulo
-	mov x9, 160 // posicion y del rectangulo
-	mov x3, 200 // posicion x del rectangulo
+	mov x9, 140 // posicion y del rectangulo
+	mov x3, 50 // posicion x del rectangulo
 
 	movz x6, 0xC8, lsl 16 // color #c874f2
 	movk x6, 0x74f2, lsl 00
@@ -65,7 +65,7 @@ loop0:
 	mov x1, 20 // alto del rectangullo
 	mov x2, 20 // ancho del rectangulo
 	mov x9, 200 // posicion y del rectangulo
-	mov x3, 230 // posicion x del rectangulo
+	mov x3, 100 // posicion x del rectangulo
 
 	movz x6, 0x00, lsl 16 // color
 	movk x6, 0x0000, lsl 00
@@ -77,7 +77,7 @@ loop0:
 	mov x1, 20 // alto del rectangullo
 	mov x2, 20 // ancho del rectangulo
 	mov x9, 200 // posicion y del rectangulo
-	mov x3, 350 // posicion x del rectangulo
+	mov x3, 180 // posicion x del rectangulo
 
 	movz x6, 0x00, lsl 16 // color
 	movk x6, 0x0000, lsl 00
@@ -87,14 +87,71 @@ loop0:
 	// dibujar boca
 	mov x0, x20 // reinicia framebuffer
 	mov x1, 20 // alto del rectangullo
-	mov x2, 140 // ancho del rectangulo
-	mov x9, 250 // posicion y del rectangulo
-	mov x3, 230 // posicion x del rectangulo
+	mov x2, 100 // ancho del rectangulo
+	mov x9, 270 // posicion y del rectangulo
+	mov x3, 100 // posicion x del rectangulo
 
 	movz x6, 0x00, lsl 16 // color
 	movk x6, 0x0000, lsl 00
 
 	bl draw_rectangle
+
+	//TEST CIRCULO
+	// cara :)
+	mov x0, x20 
+	mov x1, 450 // centro a(x)
+	mov x2, 240 // centro b(y)
+	mov x3, 100 // radio
+
+	movz x6, 0xF5, lsl 16 // color
+	movk x6, 0xBF42, lsl 00
+
+	bl draw_circle
+
+	// boca
+	mov x0, x20 
+	mov x1, 450 // centro a(x)
+	mov x2, 260 // centro b(y)
+	mov x3, 70 // radio
+
+	movz x6, 0x00, lsl 16 // color
+	movk x6, 0x0000, lsl 00
+
+	bl draw_circle
+
+	// tapar mitad boca
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 90 // alto del rectangullo
+	mov x2, 140 // ancho del rectangulo
+	mov x9, 180// posicion y del rectangulo
+	mov x3, 380 // posicion x del rectangulo
+
+	movz x6, 0xF5, lsl 16 // color
+	movk x6, 0xBF42, lsl 00
+
+	bl draw_rectangle
+
+	// ojo izquierdo
+	mov x0, x20 
+	mov x1, 415 // centro a(x)
+	mov x2, 220 // centro b(y)
+	mov x3, 20 // radio
+
+	movz x6, 0x00, lsl 16
+	movk x6, 0x0000, lsl 00
+
+	bl draw_circle
+
+	// ojo izquierdo
+	mov x0, x20 
+	mov x1, 480 // centro a(x)
+	mov x2, 220 // centro b(y)
+	mov x3, 20 // radio
+
+	movz x6, 0x00, lsl 16
+	movk x6, 0x0000, lsl 00
+
+	bl draw_circle
 
 	//---------------------------------------------------------------
 	// Infinite Loop
@@ -131,4 +188,53 @@ loopx:
 	cbnz x4, loopy // repite mientras queden filas por pintar (alto del rectángulo)
 
 	ret
+
+
+// Subrutina: dibujar circulo
+// (x-a)² + (y-b)² <= r²
+draw_circle:
+	sub x9, x2, x3 //y = b - r (posicion inicial y)
+
+	mul x11, x3, x3 //r²
+	lsl x12, x3, 1 // 2r para x (cota superior)
+	lsl x13, x3, 1 // 2r para y (cota superior)
+
+	mov x7, SCREEN_WIDTH
+
+circ_loopy:
+	sub x10, x1, x3 //x = a - r (posicion inicial x)
+	mov x5, x12
+
+circ_loopx:
+	sub x14, x10, x1 //x-a
+	mul x14, x14, x14 //(x-a)²
+
+	sub x15, x9, x2 // y-b
+	mul x15, x15, x15 //(y-b)²
+
+	add x15, x15, x14 //(x-a)²+(y-b)²
+
+	cmp x15, x11
+	bgt skip_pixel // (x-a)²+(y-b)² > r², entonces no colorea el pixel
+
+	// calcular pixel actual
+	mul x4, x9, x7 // y * screen width
+	add x4, x4, x10 // + x
+	lsl x4, x4, 2 // * 4
+	add x4, x0, x4 // + framebuffer
+	// x4 = framebuffer + ((y * SCREEN_WIDTH + x) * 4) = dirección del píxel (x,y)
+	stur w6, [x4]
+
+	
+skip_pixel:
+	add x10, x10, 1 // avanza un píxel en X dentro de la fila
+	sub x5, x5, 1 // 2r - 1
+	cbnz x5, circ_loopx // repite mientras queden píxeles horizontales (ancho del circulo)
+
+	add x9, x9, 1 // avanza una fila en Y
+	sub x13, x13, 1 // 2r - 1
+	cbnz x13, circ_loopy // repite mientras queden filas por pintar (alto del circulo)
+
+	ret
+
 
