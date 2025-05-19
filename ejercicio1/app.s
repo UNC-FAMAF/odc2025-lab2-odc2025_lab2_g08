@@ -322,13 +322,71 @@ loop0:
 	.equ COLOR_TRIANGULO, 0x3830
 	.equ PIXEL_SIZE, 1 //si cambias esto, tambien hay que ajustar la pos x 
 
-	bl draw_triangle
+	//bl draw_triangle
+
+
+	//test linea
+	mov x0, x20
+	mov x1, 320
+	mov x2, 240
+	mov x3, 300
+	mov x4, 300
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFF0F, lsl 00
+
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 300
+	mov x2, 300
+	mov x3, 350
+	mov x4, 260
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFF0F, lsl 00
+
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 350
+	mov x2, 260
+	mov x3, 290
+	mov x4, 260
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFF0F, lsl 00
+
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 290
+	mov x2, 260
+	mov x3, 340
+	mov x4, 300
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFF0F, lsl 00
+
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 340
+	mov x2, 300
+	mov x3, 320
+	mov x4, 240
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFF0F, lsl 00
+
+	bl draw_line
+
 	
+
 	//---------------------------------------------------------------
 	// Infinite Loop
 InfLoop:
 	b InfLoop
 
+
+//--------------------------------------------------------------------
+// SUBRUTINAS
+// -------------------------------------------------------------------
 
 // Subrutina: dibujar rectangulo
 draw_rectangle:
@@ -488,3 +546,93 @@ loop:
 end_loop:
 	ret
 
+// Subrutina: dibujar linea entre dos puntos
+// Algoritmo de Bresenham
+// x1 = x0 (punto x del punto 1)
+// x2 = y0 (punto y del punto 1)
+// x3 = x1 (punto x del punto 2)
+// x4 = y1 (punto y del punto 2)
+draw_line:
+
+	mov x7, SCREEN_WIDTH
+
+    sub x9, x3, x1 // x9 = x1 - x0
+    cmp x9, #0
+    bge dx_done
+    neg x9, x9
+
+dx_done:
+    mov x5, x9 // x5 = dx = |x1 - x0|
+
+    sub x9, x4, x2 // x9 = y1 - y0
+    cmp x9, #0
+    bge dy_done
+    neg x9, x9
+
+dy_done:
+    mov x6, x9 // x6 = dy = |y1 - y0|
+	sub x14, x5, x6 // error = dx - dy
+
+	cmp x1, x3
+	ble sx_one
+	mov x11, -1
+	b comp_sy
+
+sx_one:
+	mov x11, 1
+	b comp_sy
+
+comp_sy:
+	cmp x2, x4
+	ble sy_one
+	mov x12, -1
+	b line_loop
+
+sy_one: 
+	mov x12, 1
+	b line_loop
+
+line_loop:
+	mul x13, x2, x7 // y0 * screen width
+	add x13, x13, x1 // + x0
+	lsl x13, x13, 2 // * 4
+	add x13, x0, x13 // + framebuffer
+	// x13 = framebuffer + ((y * SCREEN_WIDTH + x) * 4) = dirección del píxel (x,y)
+	stur w8, [x13]
+
+	cmp x1, x3
+	bne not_equal
+
+	cmp x2, x4
+	bne not_equal
+
+	b end_line
+
+not_equal:
+	lsl x15, x14, 1 // x15 = error * 2
+	neg x16, x6
+	cmp x15, x16
+	bge step_x
+
+	b check_step_y
+
+step_x:
+	sub x14, x14, x6 // error = error - dy
+	add x1, x1, x11 // x0 = x0 + sx
+
+	b check_step_y
+
+check_step_y:
+	cmp x15, x5
+	ble step_y
+	b line_loop
+
+step_y:
+	add x14, x14, x5 // error = error + dx
+	add x2, x2, x12 // y0 = y0 + sy
+	b line_loop
+
+end_line:
+	ret
+
+    
