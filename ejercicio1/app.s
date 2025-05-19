@@ -63,6 +63,8 @@ loop0:
 	movk x6, 0x74f2, lsl 00
 
 	bl draw_rectangle
+	//mov x8, 5000  // Duración del delay
+    //bl funcion_delay
 
 	// dibujar ojo izquierdo
 	mov x0, x20 // reinicia framebuffer
@@ -75,6 +77,8 @@ loop0:
 	movk x6, 0x0000, lsl 00
 
 	bl draw_rectangle
+	//mov x8, 5000  // Duración del delay
+    //bl funcion_delay
 
 
 	//Ceja izquierda
@@ -88,6 +92,8 @@ loop0:
 	movk x6, 0x0000, lsl 00
 
 	bl draw_rectangle
+	//mov x8, 5000  // Duración del delay
+    //bl funcion_delay
 
 	// dibujar ojo derecho
 	mov x0, x20 // reinicia framebuffer
@@ -100,6 +106,22 @@ loop0:
 	movk x6, 0x0000, lsl 00
 
 	bl draw_rectangle
+	//mov x8, 5000  // Duración del delay
+    //bl funcion_delay
+
+	// dibujar ceja derecha
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 5 // alto del rectangulo
+	mov x2, 20 // ancho del rectangulo
+    mov x9, 190 // pos y
+	mov x3, 180 // pos x
+
+	movz x6, 0x00, lsl 00 // color negro
+	movk x6, 0x0000, lsl 00
+
+	bl draw_rectangle
+	//mov x8, 5000  // Duración del delay
+    //bl funcion_delay
 
 	
 	// dibujar boca
@@ -113,6 +135,8 @@ loop0:
 	movk x6, 0x0000, lsl 00
 
 	bl draw_rectangle
+	//mov x8, 5000  // Duración del delay
+    //bl funcion_delay
 
 	//TEST CIRCULO
 	// cara :)
@@ -477,3 +501,11 @@ sq_col:
     cbnz    x5, sq_row           // repite filas
 
     ret
+
+//funcion_delay:
+//	mov x9, x8 //inicializa el contador con el valor de x8
+//delay:
+//	sub x9, x9, 1 // decrementa el contador
+//	cbnz x9, delay // si no es cero, sigue el bucle
+
+//	ret
