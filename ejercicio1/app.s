@@ -314,56 +314,18 @@ loop0:
 //
 
 
-//DIBUJO DE UN TRIANGULO
-.equ ALTURA, 120
-//CON ESTOS PADDING SE PUEDE IR MOVIENDO LA POS X --- POS Y
-.equ PADDING_TRIANGULO_X,420
-.equ PADDING_TRIANGULO_Y,10  
-.equ COLOR_TRIANGULO, 0x3830
-.equ PIXEL_SIZE, 1 //si cambias esto, tambien hay que ajustar la pos x 
+	//DIBUJO DE UN TRIANGULO
+	.equ ALTURA, 120
+	//CON ESTOS PADDING SE PUEDE IR MOVIENDO LA POS X --- POS Y
+	.equ PADDING_TRIANGULO_X,420
+	.equ PADDING_TRIANGULO_Y,10  
+	.equ COLOR_TRIANGULO, 0x3830
+	.equ PIXEL_SIZE, 1 //si cambias esto, tambien hay que ajustar la pos x 
 
-//loop
-	mov x25, #0 //x25 = i = 0
-	loop:
-		cmp x25,ALTURA //if x25 < ALTURA
-		b.ge end_loop
-		add x25,x25,#1 //i++
-
-		mov x0,x20 //RESETEO FB
-		mov x1, PIXEL_SIZE //ALTO	
-		mov x2, PIXEL_SIZE  //ANCHO 
-		//aca va variando el ancho del pixel en base a (2i + 1)
-		mul x2,x2,x25 //ANCHO = PIXEL_SIZE * X2 * X25(n)  
-		
-		mov x9, PIXEL_SIZE //Y //aca la separacion de cada rectangulo que forma el triangulo es del tamaño de un pixel y se va bajando a medida que aumenta el contador 
-		mul x9,x9,x25 
-		add x9,x9,PADDING_TRIANGULO_Y //Agrego el padding top
-
-		//AHORA LA POS HORIZONTAL
-		mov x28,ALTURA 
-		add x28,x28,x25 //Altura = altura + i
-		lsr x28,x28,1 //x28 = (altura - i) / 2
-		mov x3,PADDING_TRIANGULO_X  //X POS 
-		sub x3,x3,x28 // pos_x = padding_triangulo_X - (altura - i) / 2  
-		
-		//Estas cuentas hechas arriba logran que se vaya simulando el
-		//triangulo en base a la variacion del ancho de los rectangulos
-		//y el padding que se le agrega a la izquierda
-		//IMPORTANTE: Si se cambia el tamaño del "define" PIXEL_SIZE se rompe todo
-		//y hay que jugar con el left shif para que se arregle
-		movz x6, COLOR_TRIANGULO, lsl 00 
-		movk x6, COLOR_TRIANGULO, lsl 00
-		bl draw_rectangle
-
-		b loop
-
-	end_loop:
+	bl draw_triangle
+	
 	//---------------------------------------------------------------
 	// Infinite Loop
-
-
-
-
 InfLoop:
 	b InfLoop
 
@@ -486,3 +448,43 @@ sq_col:
 //	cbnz x9, delay // si no es cero, sigue el bucle
 
 //	ret
+
+// Subrutina: dibujar triangulo
+draw_triangle:
+	mov x25, #0 //x25 = i = 0
+loop:
+	cmp x25,ALTURA //if x25 < ALTURA
+	b.ge end_loop
+	add x25,x25,#1 //i++
+
+	mov x0,x20 //RESETEO FB
+	mov x1, PIXEL_SIZE //ALTO	
+	mov x2, PIXEL_SIZE  //ANCHO 
+	//aca va variando el ancho del pixel en base a (2i + 1)
+	mul x2,x2,x25 //ANCHO = PIXEL_SIZE * X2 * X25(n)  
+	
+	mov x9, PIXEL_SIZE //Y //aca la separacion de cada rectangulo que forma el triangulo es del tamaño de un pixel y se va bajando a medida que aumenta el contador 
+	mul x9,x9,x25 
+	add x9,x9,PADDING_TRIANGULO_Y //Agrego el padding top
+
+	//AHORA LA POS HORIZONTAL
+	mov x28,ALTURA 
+	add x28,x28,x25 //Altura = altura + i
+	lsr x28,x28,1 //x28 = (altura - i) / 2
+	mov x3,PADDING_TRIANGULO_X  //X POS 
+	sub x3,x3,x28 // pos_x = padding_triangulo_X - (altura - i) / 2  
+	
+	//Estas cuentas hechas arriba logran que se vaya simulando el
+	//triangulo en base a la variacion del ancho de los rectangulos
+	//y el padding que se le agrega a la izquierda
+	//IMPORTANTE: Si se cambia el tamaño del "define" PIXEL_SIZE se rompe todo
+	//y hay que jugar con el left shif para que se arregle
+	movz x6, COLOR_TRIANGULO, lsl 00 
+	movk x6, COLOR_TRIANGULO, lsl 00
+	bl draw_rectangle
+
+	b loop
+
+end_loop:
+	ret
+
