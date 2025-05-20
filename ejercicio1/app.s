@@ -322,7 +322,7 @@ loop0:
 	.equ COLOR_TRIANGULO, 0x3830
 	.equ PIXEL_SIZE, 1 //si cambias esto, tambien hay que ajustar la pos x 
 
-	//bl draw_triangle
+	bl draw_triangle
 
 
 	//test linea
@@ -472,7 +472,7 @@ skip_pixel:
 //   x2 = posición Y del cuadrado (fila)
 //   x3 = tamaño del lado del cuadrado (size)
 //   x4 = color (32 bpp)
-// Registros usados internamente: x5–x9
+// Registros usados internamente: x5-x9
 draw_square:
     mov     x5, x3               // filas restantes = size
     mov     x6, SCREEN_WIDTH     // ancho de pantalla
@@ -509,6 +509,8 @@ sq_col:
 
 // Subrutina: dibujar triangulo
 draw_triangle:
+	stp    x29, x30, [sp, #16]!   // guarda fp/lr en stack, ajusta sp
+    mov    x29, sp                // nuevo frame pointer
 	mov x25, #0 //x25 = i = 0
 loop:
 	cmp x25,ALTURA //if x25 < ALTURA
@@ -544,6 +546,7 @@ loop:
 	b loop
 
 end_loop:
+	ldp    x29, x30, [sp], #16    // restaura fp/lr y ajusta sp
 	ret
 
 // Subrutina: dibujar linea entre dos puntos
