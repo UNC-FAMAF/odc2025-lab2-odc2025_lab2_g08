@@ -313,18 +313,6 @@ loop0:
 //	bl draw_rectangle
 //
 
-
-	//DIBUJO DE UN TRIANGULO
-	.equ ALTURA, 120
-	//CON ESTOS PADDING SE PUEDE IR MOVIENDO LA POS X --- POS Y
-	.equ PADDING_TRIANGULO_X,420
-	.equ PADDING_TRIANGULO_Y,10  
-	.equ COLOR_TRIANGULO, 0x3830
-	.equ PIXEL_SIZE, 1 //si cambias esto, tambien hay que ajustar la pos x 
-
-	bl draw_triangle
-
-
 	//test linea
 	mov x0, x20
 	mov x1, 320
@@ -374,9 +362,51 @@ loop0:
 	movz x8, 0xFF, lsl 16
 	movk x8, 0xFF0F, lsl 00
 
-	bl draw_line
+// Triángulo rectangulo 1 a (x=250, y=10)
+	mov x0, x20
+	mov x8, 120   // tamaño
+	mov x16, 1    // alto = 1 //pixel_size NO CAMBIAR
+	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
+	mov x4, 250    // Y inicial
+	mov x5, 50   // X inicial
+	movz x6, 0xFF, lsl 16 // color
+	movk x6, 0xF0F0, lsl 00
+	bl  draw_right_triangle
 
-	
+	//Triangulo equilatero
+	mov x0, x20
+	mov x8, 120   // tamaño
+	mov x16, 1    // alto = 1 //pixel_size NO CAMBIAR
+	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
+	mov x4, 25    // Y inicial
+	mov x18, 388   // X inicial
+	movz x6, 0x00, lsl 16 // color
+	movk x6, 0x0000, lsl 00
+	bl  draw_triangle
+
+
+	mov x0, x20
+	mov x8, 120   // tamaño
+	mov x16, 1    // alto = 1 //pixel_size NO CAMBIAR
+	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
+	mov x4, 250    // Y inicial
+	mov x18, 130  // X inicial
+	movz x6, 0xF8, lsl 16 // color
+	movk x6, 0xF9F9, lsl 00
+	bl  draw_right_triangle_inverted
+
+
+	//TEST POST LLAMADA A draw_right_triangle
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 5 // alto del rectangullo
+	mov x2, 30 // ancho del rectangulo
+	mov x9, 10// posicion y del rectangulo
+	mov x3, 465 // posicion x del rectangulo
+	movz x6, 0x00, lsl 00 // color
+	movk x6, 0x0000, lsl 00
+
+	bl draw_rectangle
+
 
 	//---------------------------------------------------------------
 	// Infinite Loop
@@ -390,6 +420,9 @@ InfLoop:
 
 // Subrutina: dibujar rectangulo
 draw_rectangle:
+	//stp x29, x30, [sp, #16]!   // guarda fp/lr en stack, ajusta sp
+    mov x29, sp   
+
 	mov x4, x1 // copia de parametro height
 	mov x7, SCREEN_WIDTH // copia de screen width
 
@@ -414,7 +447,7 @@ loopx:
 	add x9, x9, 1 // avanza una fila en Y
 	sub x4, x4, 1 // height - 1
 	cbnz x4, loopy // repite mientras queden filas por pintar (alto del rectángulo)
-
+	//ldp    x29, x30, [sp], #16    // restaura fp/lr y ajusta sp
 	ret
 
 
@@ -466,39 +499,6 @@ skip_pixel:
 	ret
 
 
-// draw_square:
-//   x0 = dirección base del framebuffer
-//   x1 = posición X del cuadrado (columna)
-//   x2 = posición Y del cuadrado (fila)
-//   x3 = tamaño del lado del cuadrado (size)
-//   x4 = color (32 bpp)
-// Registros usados internamente: x5-x9
-draw_square:
-    mov     x5, x3               // filas restantes = size
-    mov     x6, SCREEN_WIDTH     // ancho de pantalla
-
-sq_row:
-    mov     x7, x1               // columna actual = x
-    mov     x8, x3               // columnas restantes = size
-
-sq_col:
-    // addr = fb + 4 * (y * SCREEN_WIDTH + x)
-    mul     x9, x2, x6
-    add     x9, x9, x7
-    lsl     x9, x9, 2
-    add     x9, x0, x9
-    stur    w4, [x9]             // escribe color
-
-    add     x7, x7, 1            // siguiente columna
-    sub     x8, x8, 1
-    cbnz    x8, sq_col           // repite en la fila
-
-    add     x2, x2, 1            // siguiente fila
-    sub     x5, x5, 1
-    cbnz    x5, sq_row           // repite filas
-
-    ret
-
 //funcion_delay:
 //	mov x9, x8 //inicializa el contador con el valor de x8
 //delay:
@@ -507,47 +507,6 @@ sq_col:
 
 //	ret
 
-// Subrutina: dibujar triangulo
-draw_triangle:
-	stp    x29, x30, [sp, #16]!   // guarda fp/lr en stack, ajusta sp
-    mov    x29, sp                // nuevo frame pointer
-	mov x25, #0 //x25 = i = 0
-loop:
-	cmp x25,ALTURA //if x25 < ALTURA
-	b.ge end_loop
-	add x25,x25,#1 //i++
-
-	mov x0,x20 //RESETEO FB
-	mov x1, PIXEL_SIZE //ALTO	
-	mov x2, PIXEL_SIZE  //ANCHO 
-	//aca va variando el ancho del pixel en base a (2i + 1)
-	mul x2,x2,x25 //ANCHO = PIXEL_SIZE * X2 * X25(n)  
-	
-	mov x9, PIXEL_SIZE //Y //aca la separacion de cada rectangulo que forma el triangulo es del tamaño de un pixel y se va bajando a medida que aumenta el contador 
-	mul x9,x9,x25 
-	add x9,x9,PADDING_TRIANGULO_Y //Agrego el padding top
-
-	//AHORA LA POS HORIZONTAL
-	mov x28,ALTURA 
-	add x28,x28,x25 //Altura = altura + i
-	lsr x28,x28,1 //x28 = (altura - i) / 2
-	mov x3,PADDING_TRIANGULO_X  //X POS 
-	sub x3,x3,x28 // pos_x = padding_triangulo_X - (altura - i) / 2  
-	
-	//Estas cuentas hechas arriba logran que se vaya simulando el
-	//triangulo en base a la variacion del ancho de los rectangulos
-	//y el padding que se le agrega a la izquierda
-	//IMPORTANTE: Si se cambia el tamaño del "define" PIXEL_SIZE se rompe todo
-	//y hay que jugar con el left shif para que se arregle
-	movz x6, COLOR_TRIANGULO, lsl 00 
-	movk x6, COLOR_TRIANGULO, lsl 00
-	bl draw_rectangle
-
-	b loop
-
-end_loop:
-	ldp    x29, x30, [sp], #16    // restaura fp/lr y ajusta sp
-	ret
 
 // Subrutina: dibujar linea entre dos puntos
 // Algoritmo de Bresenham
@@ -600,7 +559,7 @@ line_loop:
 	add x13, x13, x1 // + x0
 	lsl x13, x13, 2 // * 4
 	add x13, x0, x13 // + framebuffer
-	// x13 = framebuffer + ((y * SCREEN_WIDTH + x) * 4) = dirección del píxel (x,y)
+    //x13 = framebuffer + ((y * SCREEN_WIDTH + x) * 4) = dirección del píxel (x,y)
 	stur w8, [x13]
 
 	cmp x1, x3
@@ -638,4 +597,93 @@ step_y:
 end_line:
 	ret
 
+draw_right_triangle:
+    stp  x29, x30, [sp, #16]!   // guarda fp/lr
+    mov  x29, sp   
+    mov  x15, #0               // contador de filas
+
+    mov  x0,  x20              // reset fb
+    mov  x1,  x16              // altura = 1
+    mov  x2,  x17              // ancho inicial = 1 (se va haciendo mas grande)
+    mov  x9,  x4               // Y inicial 
+    mov  x3,  x5               // X inicial 
+
+for_loop:
+    cmp  x15, x8               
+    b.ge end_loop
+    add  x15, x15, #1          
     
+	mov  x2,  x15 // ANCHO = i             
+
+    bl  draw_rectangle        
+    b	for_loop
+end_loop:
+    ldp  x29, x30, [sp], #16   // restaura fp/lr
+    ret
+
+
+
+draw_triangle:
+    stp  x29, x30, [sp, #16]!   // guarda fp/lr
+    mov  x29, sp   
+    mov  x15, #0               // contador de filas
+
+    mov  x0,  x20              // reset fb
+    mov  x1,  x16              // altura = 1
+    mov  x2,  x17              // ancho inicial = 1 (se va haciendo mas grande)
+    mov  x9,  x4               // Y inicial 
+    mov  x3,  1
+	              // X inicial 
+
+for_loop_1:
+    cmp  x15, x8               
+    b.ge end_loop_1
+    add  x15, x15, #1          
+    
+	mov  x2, x15            
+	mov x28,x8
+	sub x28,x28,x15
+	lsr x28,x28,1
+
+	mov x3,x28
+	add x3,x3,x18
+	
+
+
+    bl  draw_rectangle        
+    b	for_loop_1
+end_loop_1:
+    ldp  x29, x30, [sp], #16   // restaura fp/lr
+    ret
+
+
+
+
+draw_right_triangle_inverted:
+    stp  x29, x30, [sp, #16]!   // guarda fp/lr
+    mov  x29, sp   
+    mov  x15, #0               // contador de filas
+    mov  x0,  x20              // reset fb
+    mov  x1,  x16              // altura = 1
+    mov  x2,  x17              // ancho inicial = 1 (se va haciendo mas grande)
+    mov  x9,  x4               // Y inicial 
+    add  x3,x3, x5               // X inicial 
+
+for_loop_2:
+    cmp  x15, x8               
+    b.ge end_loop_2
+    add  x15, x15, #1          
+    
+	mov  x2, x15            
+	mov x28,x8
+	sub x28,x28,x15	
+	
+	mov x3,x28
+	add x3,x3,x18
+    bl  draw_rectangle        
+    b	for_loop_2
+end_loop_2:
+    ldp  x29, x30, [sp], #16   // restaura fp/lr
+    ret
+
+
