@@ -1126,4 +1126,3 @@ end_loop_3:
 //	movk x6, 0x0000, lsl 00
 //
 //	bl draw_rectangle
-//
