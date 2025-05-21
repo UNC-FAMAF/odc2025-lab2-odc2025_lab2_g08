@@ -47,46 +47,61 @@ loop0:
 	// efectivamente, su valor representará si GPIO 2 está activo
 	lsr w11, w11, 1
 
+	//cielo
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 160 // alto del rectangullo
+	mov x2, 640 // ancho del rectangulo
+	mov x9, 0// posicion y del rectangulo
+	mov x3, 0 // posicion x del rectangulo
+
+	movz x6, 0xCEEB, lsl 00 // color
+	movk x6, 0xFF87, lsl 16
+
+	bl draw_rectangle
+	
+
 	//banquina
 	mov x0, x20
 	mov x8, 600   // tamaño
 	mov x16, 1    // alto = 1 //pixel_size NO CAMBIAR
 	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
-	mov x4, 0    // Y inicial
+	mov x4, 160    // Y inicial
 	mov x18,0   // X inicial
 	movz x6, 0xD700, lsl 00 // color
 	movk x6, 0x40FF, lsl 16
+	mov  x15, #90
 	bl  draw_route
-
 
 	//banquina
 	mov x0, x20
 	mov x8, 600   // tamaño
-	mov x16, 1    // alto = 1 //pixel_size NO CAMBIAR
-	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
-	mov x4, 0    // Y inicial
-	mov x18,38   // X inicial
+	mov x16, 1    
+	mov x17, 1    
+	mov x4, 160    // Y inicial
+	mov x18,39   // X inicial
 	movz x6, 0xD700, lsl 00 // color
 	movk x6, 0x40FF, lsl 16
+	mov  x15, #90
 	bl  draw_route
 
-	//ruta
+	////ruta
 	mov x0, x20
 	mov x8, 600   // tamaño
 	mov x16, 1    // alto = 1 //pixel_size NO CAMBIAR
 	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
-	mov x4, 0    // Y inicial
+	mov x4, 160    // Y inicial
 	mov x18,20   // X inicial
 	movz x6, 0x30, lsl 16 // color
 	movk x6, 0x3030, lsl 00
+	mov  x15, #105
 	bl  draw_route
 
-	
+	//LIneas de la ruta
 	mov x15,#1
 	mov x0, x20 // reinicia framebuffer
 	mov x1, 30 // alto del rectangullo
-	mov x2, 10 // ancho del rectangulo
-	mov x9, 10 // posicion y del rectangulo
+	mov x2, 8 // ancho del rectangulo
+	mov x9, 150 // posicion y del rectangulo
 		
 	loop_linea:
 		cmp x15,#7
@@ -98,11 +113,22 @@ loop0:
 		mov x3, 315 // posicion x del rectangulo
 		movz x6, 0xFF, lsl 16 // color
 		movk x6, 0xFFFF, lsl 00
-
+		add x1,x1,x15
 		bl draw_rectangle
 		b loop_linea
 	end_loop_line:
 
+	//sol
+	mov x0, x20 
+	mov x1, 480 // centro a(x)
+	mov x2, 20 // centro b(y)
+	mov x3, 70 // radio
+
+	movz x6, 0xF5, lsl 16 // color
+	movk x6, 0xBF42, lsl 00
+
+	bl draw_circle
+	
 
 //
 //	// TEST RECTANGULO
@@ -745,7 +771,7 @@ end_loop_2:
 draw_route:
     stp  x29, x30, [sp, #16]!   // guarda fp/lr
     mov  x29, sp   
-    mov  x15, #100               // contador de filas
+    //mov  x15, #90               // contador de filas
 
     mov  x0,  x20              // reset fb
     mov  x1,  x16              // altura = 1
