@@ -128,6 +128,137 @@ loop0:
 	movk x6, 0xBF42, lsl 00
 
 	bl draw_circle
+
+    //auto
+	//1er rectangulo
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 20 // alto del rectangullo
+	mov x2, 120 // ancho del rectangulo
+	mov x9, 360// posicion y del rectangulo
+	mov x3, 170 // posicion x del rectangulo
+
+	movz x6, 0xFF00, lsl 00 // color
+	movk x6, 0xFF00, lsl 00
+
+	bl draw_rectangle
+
+	//2do rectangulo
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 20 // alto del rectangullo
+	mov x2, 140 // ancho del rectangulo
+	mov x9, 380// posicion y del rectangulo
+	mov x3, 160 // posicion x del rectangulo
+
+	movz x6, 0xFF00, lsl 00 // color
+	movk x6, 0xFF00, lsl 00
+
+	bl draw_rectangle
+    
+	//3er rectangulo
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 30 // alto del rectangullo
+	mov x2, 160 // ancho del rectangulo
+	mov x9, 400// posicion y del rectangulo
+	mov x3, 150 // posicion x del rectangulo
+
+	movz x6, 0xFF, lsl 00 // color
+	movk x6, 0xFF00, lsl 00
+
+	bl draw_rectangle
+
+	//ventanilla
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 25 // alto del rectangullo
+	mov x2, 100 // ancho del rectangulo
+	mov x9, 370// posicion y del rectangulo
+	mov x3, 180 // posicion x del rectangulo
+
+	movz x6, 0x00, lsl 00 // color
+	movk x6, 0x0000, lsl 00
+
+	bl draw_rectangle
+
+	//luces izquierdas
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 10 // alto del rectangullo
+	mov x2, 10 // ancho del rectangulo
+	mov x9, 410// posicion y del rectangulo
+	mov x3, 150 // posicion x del rectangulo
+
+	movz x6, 0x00, lsl 00 // color
+	movk x6, 0x0000, lsl 00
+
+	bl draw_rectangle
+
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 10 // alto del rectangullo
+	mov x2, 10 // ancho del rectangulo
+	mov x9, 410// posicion y del rectangulo
+	mov x3, 160 // posicion x del rectangulo
+
+	movz x6, 0xF5, lsl 00 // color
+	movk x6, 0xBF42, lsl 00
+
+	bl draw_rectangle
+
+	//luces derechas
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 10 // alto del rectangullo
+	mov x2, 10 // ancho del rectangulo
+	mov x9, 410// posicion y del rectangulo
+	mov x3, 300 // posicion x del rectangulo
+
+	movz x6, 0x00, lsl 00 // color
+	movk x6, 0x0000, lsl 00
+
+	bl draw_rectangle
+
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 10 // alto del rectangullo
+	mov x2, 10 // ancho del rectangulo
+	mov x9, 410// posicion y del rectangulo
+	mov x3, 290 // posicion x del rectangulo
+
+	movz x6, 0xF5, lsl 00 // color
+	movk x6, 0xBF42, lsl 00
+
+	bl draw_rectangle
+
+	//patente
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 15 // alto del rectangullo
+	mov x2, 40 // ancho del rectangulo
+	mov x9, 410// posicion y del rectangulo
+	mov x3, 210 // posicion x del rectangulo
+
+	movz x6, 0xFF, lsl 00 // color
+	movk x6, 0xFFFF, lsl 00
+
+	bl draw_rectangle
+
+	//rueda izquierda
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 25 // alto del rectangullo
+	mov x2, 30 // ancho del rectangulo
+	mov x9, 430// posicion y del rectangulo
+	mov x3, 150 // posicion x del rectangulo
+
+	movz x6, 0x00, lsl 00 // color
+	movk x6, 0x0000, lsl 00
+
+	bl draw_rectangle
+	
+	//rueda derecha
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 25 // alto del rectangullo
+	mov x2, 30 // ancho del rectangulo
+	mov x9, 430// posicion y del rectangulo
+	mov x3, 280 // posicion x del rectangulo
+
+	movz x6, 0x00, lsl 00 // color
+	movk x6, 0x0000, lsl 00
+
+	bl draw_rectangle
 	
 
 //
