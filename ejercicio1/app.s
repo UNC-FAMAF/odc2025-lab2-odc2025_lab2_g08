@@ -49,7 +49,7 @@ loop0:
 
 	//cielo
 	mov x0, x20 // reinicia framebuffer
-	mov x1, 160 // alto del rectangullo
+	mov x1, 200 // alto del rectangullo
 	mov x2, 640 // ancho del rectangulo
 	mov x9, 0// posicion y del rectangulo
 	mov x3, 0 // posicion x del rectangulo
@@ -61,47 +61,59 @@ loop0:
 	
 
 	//banquina
-	mov x0, x20
-	mov x8, 600   // tamaño
-	mov x16, 1    // alto = 1 //pixel_size NO CAMBIAR
-	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
-	mov x4, 160    // Y inicial
-	mov x18,0   // X inicial
-	movz x6, 0xD700, lsl 00 // color
-	movk x6, 0x40FF, lsl 16
-	mov  x15, #90
-	bl  draw_route
+//	mov x0, x20
+//	mov x8, 600   // tamaño
+//	mov x16, 1    // alto = 1 //pixel_size NO CAMBIAR
+//	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
+//	mov x4, 160    // Y inicial
+//	mov x18,0   // X inicial
+//	movz x6, 0xD700, lsl 00 // color
+//	movk x6, 0x40FF, lsl 16
+//	mov  x15, #90
+//	bl  draw_route
+//
+//	//banquina
+//	mov x0, x20
+//	mov x8, 600   // tamaño
+//	mov x16, 1    
+//	mov x17, 1    
+//	mov x4, 160    // Y inicial
+//	mov x18,39   // X inicial
+//	movz x6, 0xD700, lsl 00 // color
+//	movk x6, 0x40FF, lsl 16
+//	mov  x15, #90
+//	bl  draw_route
 
-	//banquina
+	////banquina
 	mov x0, x20
-	mov x8, 600   // tamaño
-	mov x16, 1    
-	mov x17, 1    
-	mov x4, 160    // Y inicial
-	mov x18,39   // X inicial
+	mov x8, 620   // tamaño
+	mov x16, 2    // alto = 1 //pixel_size NO CAMBIAR
+	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
+	mov x4, 200    // Y inicial
+	mov x18,10  // X inicial
 	movz x6, 0xD700, lsl 00 // color
 	movk x6, 0x40FF, lsl 16
-	mov  x15, #90
+	mov  x15, #90 //MOdificando este valor me permite "cortar" la cuspide del triangulo
 	bl  draw_route
 
 	////ruta
 	mov x0, x20
-	mov x8, 600   // tamaño
-	mov x16, 1    // alto = 1 //pixel_size NO CAMBIAR
+	mov x8, 580   // tamaño
+	mov x16, 2    // alto = 1 //pixel_size NO CAMBIAR
 	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
-	mov x4, 160    // Y inicial
-	mov x18,20   // X inicial
-	movz x6, 0x30, lsl 16 // color
-	movk x6, 0x3030, lsl 00
-	mov  x15, #105
+	mov x4, 200    // Y inicial
+	mov x18,30  // X inicial
+	movz x6, 0x3838, lsl 00 // color
+	movk x6, 0x3838, lsl 16
+	mov  x15, #72
 	bl  draw_route
 
 	//LIneas de la ruta
 	mov x15,#1
 	mov x0, x20 // reinicia framebuffer
-	mov x1, 30 // alto del rectangullo
-	mov x2, 8 // ancho del rectangulo
-	mov x9, 150 // posicion y del rectangulo
+	mov x1, 15 // alto del rectangullo
+	mov x2, 4 // ancho del rectangulo
+	mov x9, 196 // posicion y del rectangulo
 		
 	loop_linea:
 		cmp x15,#7
@@ -110,7 +122,7 @@ loop0:
 		mov x7,x15
 		mul x7,x7,x2
 		add x9,x9,x7
-		mov x3, 315 // posicion x del rectangulo
+		mov x3, 318 // posicion x del rectangulo
 		movz x6, 0xFF, lsl 16 // color
 		movk x6, 0xFFFF, lsl 00
 		add x1,x1,x15
@@ -129,6 +141,39 @@ loop0:
 
 	bl draw_circle
 	
+
+	//Triangulo equilatero
+	mov x0, x20
+	mov x8, 100   // tamaño
+	mov x16, 1    // alto = 1 //pixel_size NO CAMBIAR
+	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
+	mov x4, 100   // Y inicial
+	mov x18, 60   // X inicial
+	movz x6, 0xB48C, lsl 0 // color
+	movk x6, 0xFFD2, lsl 16
+	bl  draw_triangle
+
+	//Triangulo equilatero
+	mov x0, x20
+	mov x8, 80   // tamaño
+	mov x16, 1    // alto = 1 //pixel_size NO CAMBIAR
+	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
+	mov x4, 120   // Y inicial
+	mov x18, 130   // X inicial
+	movz x6, 0x8C66, lsl 0 // color
+	movk x6, 0xFFB9, lsl 16
+	bl  draw_triangle
+
+	//Triangulo equilatero
+	mov x0, x20
+	mov x8, 100   // tamaño
+	mov x16, 1    // alto = 1 //pixel_size NO CAMBIAR
+	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
+	mov x4, 100   // Y inicial
+	mov x18, 8   // X inicial
+	movz x6, 0x8C66, lsl 0 // color
+	movk x6, 0xFFB9, lsl 16
+	bl  draw_triangle
 
 //
 //	// TEST RECTANGULO
@@ -777,13 +822,12 @@ draw_route:
     mov  x1,  x16              // altura = 1
     mov  x2,  x17              // ancho inicial = 1 (se va haciendo mas grande)
     mov  x9,  x4               // Y inicial 
-    mov  x3,  x18
-	              // X inicial 
-
+    mov  x3,  x18 // X inicial 
+	//x15 se encarga de cortar el fondo del triangulo
 for_loop_3:
     cmp  x15, x8               
     b.ge end_loop_3
-    add x15,x15,#2
+    add x15,x15,#7
 
 	mov  x2, x15            
 	mov x28,x8
