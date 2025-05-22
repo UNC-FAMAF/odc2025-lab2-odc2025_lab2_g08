@@ -46,6 +46,120 @@ loop0:
 	// efectivamente, su valor representará si GPIO 2 está activo
 	lsr w11, w11, 1
 
+	//mov x19, 1 //para mover la pos del auto en pos x
+	//mov x18, 1 //mover el auto en pos y
+	//bl draw_car_2
+
+	//mov x19,76 //para mover la pos del auto en pos x
+	//mov x18, -60 //mover el auto en pos y
+	//bl draw_car_1
+
+	
+	b input_loop
+	
+	//---------------------------------------------------------------
+	// Infinite Loop
+InfLoop:
+	b InfLoop
+
+
+//--------------------------------------------------------------------
+// SUBRUTINAS
+// -------------------------------------------------------------------
+
+
+input_loop:
+	
+	
+    bl ReadChar
+    
+	cmp w3, #'d'
+    b.eq move_right
+    // Si era 'd', avanzamos el auto
+	
+    cmp w3,#'a'
+	b.eq move_left
+    
+	cmp w3,#'w'
+	b.eq move_up
+	
+	cmp w3,#'s'
+	b.eq move_down
+	b input_loop
+
+move_right:
+	add x19, x19, #50    // mueve 5 píxeles a la derecha
+	bl draw_backgound
+	bl draw_car_1
+
+	b input_loop
+
+move_left:
+	sub x19, x19, #50    // mueve 5 píxeles a la izquierda
+	bl draw_backgound
+	bl draw_car_1
+	b input_loop
+
+
+move_up:
+	sub x27, x27, #5    // mueve 5 píxeles  arriba
+	bl draw_backgound
+	
+	//sub x24,x24,4
+	//sub x25,x25,1
+
+	bl draw_car_1
+	b input_loop
+
+move_down:
+	add x27, x27, #5    // mueve 5 píxeles  abajo
+	bl draw_backgound
+
+	//add x24,x24,1  //lo deforma mucho al auto
+	//add x25,x25,1 //lo deforma mucho al auto
+	bl draw_car_1
+	b input_loop
+
+
+ReadChar:
+    // PERIPHERAL_BASE ya en .equ
+    ldr  x0, =GPIO_BASE
+
+    // Carga el offset FR en x2
+    movz x2, #0x1018          // UART0_FR
+    add  x1, x0, x2           // x1 = PERIPHERAL_BASE + UART0_FR
+
+WaitChar:
+    ldr  w2, [x1]             // leer UART0_FR
+    and  w2, w2, #0x10
+    cbnz w2, WaitChar
+
+    // Carga el offset DR en x2
+    movz x2, #0x1000          // UART0_DR
+    add  x1, x0, x2           // x1 = PERIPHERAL_BASE + UART0_DR
+
+    ldr  w3, [x1]             // leer UART0_DR
+    ret
+
+
+
+draw_backgound:
+
+	stp  x29, x30, [sp, #-16]!   // guarda fp/lr
+    mov  x29, sp  
+	
+	//pasto
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 480 // alto del rectangullo
+	mov x2, 640 // ancho del rectangulo
+	mov x9, 0// posicion y del rectangulo
+	mov x3, 0 // posicion x del rectangulo
+
+	movz x6, 0x8B22,lsl 00 //Bits 0-15  
+	movk x6, 0xFF22,lsl 16 // del 16-31
+
+	bl draw_rectangle
+	
 	//cielo
 	mov x0, x20 // reinicia framebuffer
 	mov x1, 200 // alto del rectangullo
@@ -89,20 +203,7 @@ loop0:
 	mov x2, 4 // ancho del rectangulo
 	mov x9, 196 // posicion y del rectangulo
 		
-	loop_linea:
-		cmp x15,#7
-		b.ge end_loop_line
-		add x15,x15,#1
-		mov x7,x15
-		mul x7,x7,x2
-		add x9,x9,x7
-		mov x3, 318 // posicion x del rectangulo
-		movz x6, 0xFF, lsl 16 // color
-		movk x6, 0xFFFF, lsl 00
-		add x1,x1,x15
-		bl draw_rectangle
-		b loop_linea
-	end_loop_line:
+	bl draw_route_lines
 
 	//sol
 	mov x0, x20 
@@ -112,8 +213,6 @@ loop0:
 	movz x6, 0xF5, lsl 16 // color
 	movk x6, 0xBF42, lsl 00
 	bl draw_circle
-
-
 
 	//Triangulo equilatero
 	mov x0, x20
@@ -148,13 +247,235 @@ loop0:
 	movk x6, 0xFFB9, lsl 16
 	bl  draw_triangle
 
+	ldp  x29, x30, [sp], #16   // restaura fp/lr
+	
+	ret
 
 
+draw_route_lines:
+	stp  x29, x30, [sp, #-16]!   // guarda fp/lr
+   	mov  x29, sp
+	mov x15,#0
+loop_linea:
+	cmp x15,#7
+	b.ge end_loop_line
+	add x15,x15,#1
+	mov x7,x15
+	mul x7,x7,x2
+	add x9,x9,x7
+	mov x3, 318 // posicion x del rectangulo
+	movz x6, 0xFF, lsl 16 // color
+	movk x6, 0xFFFF, lsl 00
+	add x1,x1,x15
+	bl draw_rectangle		
+	b loop_linea
+	
+
+end_loop_line:
+	ldp  x29, x30, [sp], #16   // restaura fp/lr
+	ret
+
+
+draw_car_1:
+ 	
+	stp  x29, x30, [sp, #-16]!   // guarda fp/lr
+    mov  x29, sp  
+
+
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 33 // alto del rectangullo
+	mov x2, 75 // ancho del rectangulo
+	mov x9, 338 // posicion y del rectangulo
+	mov x3, 223 // posicion x del rectangulo
+
+	movz x6, 0xF8, lsl 00 // 
+	movk x6, 0x3838, lsl 16
+
+	add x3,x3,x19
+	add x9,x9,x27
+
+	add x1,x1,x24
+	add x2,x2,x25
+	
+
+
+	bl draw_rectangle
+
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 20 // alto del rectangullo
+	mov x2, 100 // ancho del rectangulo
+	mov x9, 350 // posicion y del rectangulo
+	mov x3, 210 // posicion x del rectangulo
+
+	movz x6, 0xF8, lsl 00 // 
+	movk x6, 0x3838, lsl 16
+	
+	add x3,x3,x19
+	add x9,x9,x27
+
+	add x1,x1,x24
+	add x2,x2,x25
+	bl draw_rectangle
+
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 10 // alto del rectangullo
+	mov x2, 46 // ancho del rectangulo
+	mov x9, 344 // posicion y del rectangulo
+	mov x3, 237 // posicion x del rectangulo
+
+	movz x6, 0x00, lsl 00 // 
+	movk x6, 0x0000, lsl 16
+	add x3,x3,x19
+	add x9,x9,x27
+
+	add x1,x1,x24
+	add x2,x2,x25
+	bl draw_rectangle
+
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 5 // alto del rectangullo
+	mov x2, 24 // ancho del rectangulo
+	mov x9, 359 // posicion y del rectangulo
+	mov x3, 248 // posicion x del rectangulo
+	movz x6, 0xFF, lsl 16 // 
+	movk x6, 0xFFFF, lsl 00
+	add x3,x3,x19
+	add x9,x9,x27
+
+	add x1,x1,x24
+	add x2,x2,x25
+
+	bl draw_rectangle
+
+
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 6 // alto del rectangullo
+	mov x2, 96 // ancho del rectangulo
+	mov x9, 369 // posicion y del rectangulo
+	mov x3, 212 // posicion x del rectangulo
+	movz x6, 0x00, lsl 00 
+	movk x6, 0x0000, lsl 16
+	add x3,x3,x19
+	add x9,x9,x27
+
+	add x1,x1,x24
+	add x2,x2,x25
+	bl draw_rectangle
+
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 5 // alto del rectangullo
+	mov x2, 101 // ancho del rectangulo
+	mov x9, 374 // posicion y del rectangulo
+	mov x3, 209 // posicion x del rectangulo
+
+	movz x6, 0xF8, lsl 00 // 
+	movk x6, 0x3838, lsl 16
+	add x3,x3,x19
+	add x9,x9,x27
+
+	add x1,x1,x24
+	add x2,x2,x25
+	bl draw_rectangle
+
+	//RUEDA IZQ
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 11 // alto del rectangullo
+	mov x2, 25 // ancho del rectangulo
+	mov x9, 379 // posicion y del rectangulo
+	mov x3, 212 // posicion x del rectangulo
+	movz x6, 0x00, lsl 00 
+	movk x6, 0x0000, lsl 16
+	add x3,x3,x19
+	add x9,x9,x27
+
+	add x1,x1,x24
+	add x2,x2,x25
+	bl draw_rectangle
+
+	//GUARDABARROS IZQ
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 2 // alto del rectangullo
+	mov x2, 15 // ancho del rectangulo
+	mov x9, 380 // posicion y del rectangulo
+	mov x3, 216 // posicion x del rectangulo
+	movz x6, 0x8038, lsl 00 
+	movk x6, 0x3838, lsl 16
+	add x3,x3,x19
+	add x9,x9,x27
+
+	add x1,x1,x24
+	add x2,x2,x25
+	//bl draw_rectangle
+
+	//RUEDA DER
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 11 // alto del rectangullo
+	mov x2, 25 // ancho del rectangulo
+	mov x9, 379 // posicion y del rectangulo
+	mov x3, 284 // posicion x del rectangulo
+	movz x6, 0x00, lsl 00 
+	movk x6, 0x0000, lsl 16
+	add x3,x3,x19
+	add x9,x9,x27
+
+	add x1,x1,x24
+	add x2,x2,x25
+	bl draw_rectangle
+
+	//GUARDABARROS DER
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 2 // alto del rectangullo
+	mov x2, 15 // ancho del rectangulo
+	mov x9, 380 // posicion y del rectangulo
+	mov x3, 289 // posicion x del rectangulo
+	movz x6, 0x8038, lsl 00 
+	movk x6, 0x3838, lsl 16
+	add x3,x3,x19
+	add x9,x9,x27
+
+	add x1,x1,x24
+	add x2,x2,x25
+	//bl draw_rectangle
+
+	//LUZ DER
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 6 // alto del rectangullo
+	mov x2, 17 // ancho del rectangulo
+	mov x9, 360 // posicion y del rectangulo
+	mov x3, 289 // posicion x del rectangulo
+	movz x6, 0xFFFF, lsl 16 
+	movk x6, 0xFFFF, lsl 16
+	add x3,x3,x19
+	add x9,x9,x27
+
+	add x1,x1,x24
+	add x2,x2,x25
+	bl draw_rectangle
+
+	//LUZ IZQ
+	mov x0, x20 // reinicia framebuffer
+	mov x1, 6 // alto del rectangullo
+	mov x2, 17 // ancho del rectangulo
+	mov x9, 360 // posicion y del rectangulo
+	mov x3, 214 // posicion x del rectangulo
+	movz x6, 0xFFFF, lsl 16 
+	movk x6, 0xFFFF, lsl 16
+	add x3,x3,x19
+	add x9,x9,x27
+
+	add x1,x1,x24
+	add x2,x2,x25
+	bl draw_rectangle
+
+	//FIN AUTO
+    ldp  x29, x30, [sp], #16   // restaura fp/lr
+	
+	ret
+
+draw_car_2:
     //AUTO 1
-
-	mov x19, 30 //para mover la pos del auto en pos x
-	mov x18, 1 //mover el auto en pos y
-
+ 	stp  x29, x30, [sp, #-16]!   // guarda fp/lr
+    mov  x29, sp   
 	//1er rectangulo
 	mov x0, x20 // reinicia framebuffer
 	mov x1, 20 // alto del rectangullo
@@ -295,208 +616,41 @@ loop0:
 	add x3,x3,x19
 	add x9,x9,x18
 	bl draw_rectangle
+
+    ldp  x29, x30, [sp], #16   // restaura fp/lr
+	ret
 	//FIN AUTO 1
 
 
-	//AUTO 2
-	mov x18,x30
-	mov x19,x30
-
-	mov x19,76 //para mover la pos del auto en pos x
-	mov x18, -60 //mover el auto en pos y
-
-	mov x0, x20 // reinicia framebuffer
-	mov x1, 33 // alto del rectangullo
-	mov x2, 75 // ancho del rectangulo
-	mov x9, 338 // posicion y del rectangulo
-	mov x3, 223 // posicion x del rectangulo
-
-	movz x6, 0xF8, lsl 00 // 
-	movk x6, 0x3838, lsl 16
-
-	add x3,x3,x19
-	add x9,x9,x18
-
-
-	bl draw_rectangle
-
-	mov x0, x20 // reinicia framebuffer
-	mov x1, 20 // alto del rectangullo
-	mov x2, 100 // ancho del rectangulo
-	mov x9, 350 // posicion y del rectangulo
-	mov x3, 210 // posicion x del rectangulo
-
-	movz x6, 0xF8, lsl 00 // 
-	movk x6, 0x3838, lsl 16
-	
-	add x3,x3,x19
-	add x9,x9,x18
-	bl draw_rectangle
-
-	mov x0, x20 // reinicia framebuffer
-	mov x1, 10 // alto del rectangullo
-	mov x2, 46 // ancho del rectangulo
-	mov x9, 344 // posicion y del rectangulo
-	mov x3, 237 // posicion x del rectangulo
-
-	movz x6, 0x00, lsl 00 // 
-	movk x6, 0x0000, lsl 16
-	add x3,x3,x19
-	add x9,x9,x18
-	bl draw_rectangle
-
-	mov x0, x20 // reinicia framebuffer
-	mov x1, 5 // alto del rectangullo
-	mov x2, 24 // ancho del rectangulo
-	mov x9, 359 // posicion y del rectangulo
-	mov x3, 248 // posicion x del rectangulo
-	movz x6, 0xFF, lsl 16 // 
-	movk x6, 0xFFFF, lsl 00
-	add x3,x3,x19
-	add x9,x9,x18
-	bl draw_rectangle
-
-
-	mov x0, x20 // reinicia framebuffer
-	mov x1, 6 // alto del rectangullo
-	mov x2, 96 // ancho del rectangulo
-	mov x9, 369 // posicion y del rectangulo
-	mov x3, 212 // posicion x del rectangulo
-	movz x6, 0x00, lsl 00 
-	movk x6, 0x0000, lsl 16
-	add x3,x3,x19
-	add x9,x9,x18
-	bl draw_rectangle
-
-	mov x0, x20 // reinicia framebuffer
-	mov x1, 5 // alto del rectangullo
-	mov x2, 101 // ancho del rectangulo
-	mov x9, 374 // posicion y del rectangulo
-	mov x3, 209 // posicion x del rectangulo
-
-	movz x6, 0xF8, lsl 00 // 
-	movk x6, 0x3838, lsl 16
-	add x3,x3,x19
-	add x9,x9,x18
-	bl draw_rectangle
-
-	//RUEDA IZQ
-	mov x0, x20 // reinicia framebuffer
-	mov x1, 11 // alto del rectangullo
-	mov x2, 25 // ancho del rectangulo
-	mov x9, 379 // posicion y del rectangulo
-	mov x3, 212 // posicion x del rectangulo
-	movz x6, 0x00, lsl 00 
-	movk x6, 0x0000, lsl 16
-	add x3,x3,x19
-	add x9,x9,x18
-	bl draw_rectangle
-
-	//GUARDABARROS IZQ
-	mov x0, x20 // reinicia framebuffer
-	mov x1, 2 // alto del rectangullo
-	mov x2, 15 // ancho del rectangulo
-	mov x9, 380 // posicion y del rectangulo
-	mov x3, 216 // posicion x del rectangulo
-	movz x6, 0x8038, lsl 00 
-	movk x6, 0x3838, lsl 16
-	add x3,x3,x19
-	add x9,x9,x18
-	bl draw_rectangle
-
-	//RUEDA DER
-	mov x0, x20 // reinicia framebuffer
-	mov x1, 11 // alto del rectangullo
-	mov x2, 25 // ancho del rectangulo
-	mov x9, 379 // posicion y del rectangulo
-	mov x3, 284 // posicion x del rectangulo
-	movz x6, 0x00, lsl 00 
-	movk x6, 0x0000, lsl 16
-	add x3,x3,x19
-	add x9,x9,x18
-	bl draw_rectangle
-
-	//GUARDABARROS DER
-	mov x0, x20 // reinicia framebuffer
-	mov x1, 2 // alto del rectangullo
-	mov x2, 15 // ancho del rectangulo
-	mov x9, 380 // posicion y del rectangulo
-	mov x3, 289 // posicion x del rectangulo
-	movz x6, 0x8038, lsl 00 
-	movk x6, 0x3838, lsl 16
-	add x3,x3,x19
-	add x9,x9,x18
-	bl draw_rectangle
-
-	//LUZ DER
-	mov x0, x20 // reinicia framebuffer
-	mov x1, 6 // alto del rectangullo
-	mov x2, 17 // ancho del rectangulo
-	mov x9, 360 // posicion y del rectangulo
-	mov x3, 289 // posicion x del rectangulo
-	movz x6, 0xFFFF, lsl 16 
-	movk x6, 0xFFFF, lsl 16
-	add x3,x3,x19
-	add x9,x9,x18
-	bl draw_rectangle
-
-	//LUZ IZQ
-	mov x0, x20 // reinicia framebuffer
-	mov x1, 6 // alto del rectangullo
-	mov x2, 17 // ancho del rectangulo
-	mov x9, 360 // posicion y del rectangulo
-	mov x3, 214 // posicion x del rectangulo
-	movz x6, 0xFFFF, lsl 16 
-	movk x6, 0xFFFF, lsl 16
-	add x3,x3,x19
-	add x9,x9,x18
-	bl draw_rectangle
-
-	//FIN AUTO
-
-
-	//---------------------------------------------------------------
-	// Infinite Loop
-InfLoop:
-	b InfLoop
-
-
-//--------------------------------------------------------------------
-// SUBRUTINAS
-// -------------------------------------------------------------------
-
 // Subrutina: dibujar rectangulo
 draw_rectangle:
-	//stp x29, x30, [sp, #16]!   // guarda fp/lr en stack, ajusta sp
-    mov x29, sp   
+    stp   x29, x30, [sp, #-16]!   // decrementar SP en 16 y guardar FP/LR
+    mov   x29, sp                 // establecer nuevo frame pointer
 
-	mov x4, x1 // copia de parametro height
-	mov x7, SCREEN_WIDTH // copia de screen width
+
+    mov   x4, x1                  // altura
+    mov   x7, SCREEN_WIDTH
 
 loopy:
-	mov x10, x3 // copia de x
-	mov x5, x2 // copia de parametro width
-
+    mov   x10, x3
+    mov   x5, x2
 loopx:
-	// calcular pixel actual
-	mul x11, x9, x7 // y * screen width
-	add x11, x11, x10 // + x
-	lsl x11, x11, 2 // * 4
-	add x11, x0, x11 // + framebuffer
-	// x11 = framebuffer + ((y * SCREEN_WIDTH + x) * 4) = dirección del píxel (x,y)
+    mul   x11, x9, x7
+    add   x11, x11, x10
+    lsl   x11, x11, 2
+    add   x11, x0, x11
+    stur  w6, [x11]
 
-	stur w6, [x11] // colorea el pixel actual
+    add   x10, x10, 1
+    sub   x5, x5, 1
+    cbnz  x5, loopx
 
-	add x10, x10, 1 // avanza un píxel en X dentro de la fila
-	sub x5, x5, 1 // width - 1
-	cbnz x5, loopx // repite mientras queden píxeles horizontales (ancho del rectángulo)
+    add   x9, x9, 1
+    sub   x4, x4, 1
+    cbnz  x4, loopy
 
-	add x9, x9, 1 // avanza una fila en Y
-	sub x4, x4, 1 // height - 1
-	cbnz x4, loopy // repite mientras queden filas por pintar (alto del rectángulo)
-	//ldp    x29, x30, [sp], #16    // restaura fp/lr y ajusta sp
-	ret
-
+    ldp   x29, x30, [sp], #16     // restaurar FP/LR y subir SP
+    ret
 
 // Subrutina: dibujar circulo
 // (x-a)² + (y-b)² <= r²
@@ -545,14 +699,6 @@ skip_pixel:
 
 	ret
 
-
-//funcion_delay:
-//	mov x9, x8 //inicializa el contador con el valor de x8
-//delay:
-//	sub x9, x9, 1 // decrementa el contador
-//	cbnz x9, delay // si no es cero, sigue el bucle
-
-//	ret
 
 
 // Subrutina: dibujar linea entre dos puntos
@@ -645,7 +791,7 @@ end_line:
 	ret
 
 draw_right_triangle:
-    stp  x29, x30, [sp, #16]!   // guarda fp/lr
+    stp  x29, x30, [sp, #-16]!   // guarda fp/lr
     mov  x29, sp   
     mov  x15, #0               // contador de filas
 
@@ -671,7 +817,7 @@ end_loop:
 
 
 draw_triangle:
-    stp  x29, x30, [sp, #16]!   // guarda fp/lr
+    stp  x29, x30, [sp, #-16]!   // guarda fp/lr
     mov  x29, sp   
     mov  x15, #0               // contador de filas
 
@@ -695,19 +841,14 @@ for_loop_1:
 	mov x3,x28
 	add x3,x3,x18
 	
-
-
     bl  draw_rectangle        
     b	for_loop_1
 end_loop_1:
     ldp  x29, x30, [sp], #16   // restaura fp/lr
     ret
 
-
-
-
 draw_right_triangle_inverted:
-    stp  x29, x30, [sp, #16]!   // guarda fp/lr
+    stp  x29, x30, [sp, #-16]!   // guarda fp/lr
     mov  x29, sp   
     mov  x15, #0               // contador de filas
     mov  x0,  x20              // reset fb
@@ -735,7 +876,7 @@ end_loop_2:
 
 
 draw_route:
-    stp  x29, x30, [sp, #16]!   // guarda fp/lr
+    stp  x29, x30, [sp, #-16]!   // guarda fp/lr
     mov  x29, sp   
     //mov  x15, #90               // contador de filas
 
@@ -1126,3 +1267,4 @@ end_loop_3:
 //	movk x6, 0x0000, lsl 00
 //
 //	bl draw_rectangle
+
