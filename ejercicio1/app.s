@@ -167,6 +167,8 @@ loop0:
 	add x3,x3,x19
 	add x9,x9,x18
 	bl draw_rectangle
+	//bl loop_animacion
+
 
 	//2do rectangulo
 	mov x0, x20 // reinicia framebuffer
@@ -180,7 +182,9 @@ loop0:
 	add x3,x3,x19
 	add x9,x9,x18
 	bl draw_rectangle
+	//bl loop_animacion
     
+
 	//3er rectangulo
 	mov x0, x20 // reinicia framebuffer
 	mov x1, 30 // alto del rectangullo
@@ -193,6 +197,8 @@ loop0:
 	add x3,x3,x19
 	add x9,x9,x18
 	bl draw_rectangle
+	//bl loop_animacion
+
 
 	//ventanilla
 	mov x0, x20 // reinicia framebuffer
@@ -206,6 +212,8 @@ loop0:
 	add x3,x3,x19
 	add x9,x9,x18
 	bl draw_rectangle
+	//bl loop_animacion
+
 
 	//luces izquierdas
 	mov x0, x20 // reinicia framebuffer
@@ -219,6 +227,7 @@ loop0:
 	add x3,x3,x19
 	add x9,x9,x18
 	bl draw_rectangle
+	//bl loop_animacion
 
 	mov x0, x20 // reinicia framebuffer
 	mov x1, 10 // alto del rectangullo
@@ -231,6 +240,7 @@ loop0:
 	add x3,x3,x19
 	add x9,x9,x18
 	bl draw_rectangle
+	//bl loop_animacion
 
 	//luces derechas
 	mov x0, x20 // reinicia framebuffer
@@ -244,6 +254,7 @@ loop0:
 	add x3,x3,x19
 	add x9,x9,x18
 	bl draw_rectangle
+	//bl loop_animacion
 
 	mov x0, x20 // reinicia framebuffer
 	mov x1, 10 // alto del rectangullo
@@ -256,6 +267,7 @@ loop0:
 	add x3,x3,x19
 	add x9,x9,x18
 	bl draw_rectangle
+	//bl loop_animacion
 
 	//patente
 	mov x0, x20 // reinicia framebuffer
@@ -269,6 +281,7 @@ loop0:
 	add x3,x3,x19
 	add x9,x9,x18
 	bl draw_rectangle
+	//bl loop_animacion
 
 	//rueda izquierda
 	mov x0, x20 // reinicia framebuffer
@@ -282,7 +295,7 @@ loop0:
 	add x3,x3,x19
 	add x9,x9,x18
 	bl draw_rectangle
-	
+	//bl loop_animacion	
 	//rueda derecha
 	mov x0, x20 // reinicia framebuffer
 	mov x1, 25 // alto del rectangullo
@@ -295,6 +308,8 @@ loop0:
 	add x3,x3,x19
 	add x9,x9,x18
 	bl draw_rectangle
+	//bl loop_animacion
+	
 	//FIN AUTO 1
 
 
@@ -454,7 +469,7 @@ loop0:
 
 	//FIN AUTO
 
-
+	
 	//---------------------------------------------------------------
 	// Infinite Loop
 InfLoop:
@@ -546,13 +561,12 @@ skip_pixel:
 	ret
 
 
-//funcion_delay:
-//	mov x9, x8 //inicializa el contador con el valor de x8
-//delay:
-//	sub x9, x9, 1 // decrementa el contador
-//	cbnz x9, delay // si no es cero, sigue el bucle
-
-//	ret
+funcion_delay:
+    mov X8, #1000       // Ajusta este valor según necesites más tiempo
+delay:
+    sub X8, X8, #1     // Reduce el contador
+    cbnz x8, delay      
+    ret
 
 
 // Subrutina: dibujar linea entre dos puntos
@@ -766,6 +780,16 @@ for_loop_3:
 end_loop_3:
     ldp  x29, x30, [sp], #16   // restaura fp/lr
     ret
+
+//loop_animacion:
+//	add X18, X18, #1   // Mueve el auto hacia abajo
+//	add X19, X19, #2   // Mueve el auto hacia la derecha
+
+//	bl draw_rectangle  // Dibuja el auto en su nueva posición
+
+//    bl delay           // Pausa para controlar velocidad de animación
+
+//    ret
 
 
 //------SECCION BACKUP DE CODIGO DE TESTEO------------
