@@ -12,7 +12,7 @@ main:
 	// x0 contiene la direccion base del framebuffer
  	mov x20, x0	// Guarda la dirección base del framebuffer en x20
 	//---------------- CODE HERE ------------------------------------
-
+	
 	movz x10, 0x8B22,lsl 00 //Bits 0-15  
 	movk x10, 0xFF22,lsl 16 // del 16-31
 
@@ -54,7 +54,7 @@ loop0:
 	//mov x18, -60 //mover el auto en pos y
 	//bl draw_car_1
 
-	
+	bl draw_backgound
 	b input_loop
 	
 	//---------------------------------------------------------------
