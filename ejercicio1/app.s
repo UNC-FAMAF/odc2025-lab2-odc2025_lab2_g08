@@ -115,6 +115,61 @@ loop0:
 
 
 
+	//NUBE 1
+	
+	mov x0, x20
+	mov x1, 80 //centro x
+	mov x2, 40 //centro y
+	mov x3, 20 //radio
+	movz x6, 0xFF, lsl 16
+	movk x6, 0xFFFF, lsl 00 //Blanco
+	bl draw_circle
+	
+	mov x0, x20
+	mov x1, 100 //centro x
+	mov x2, 35 //centro y
+	mov x3, 25 //radio
+	movz x6, 0xFF, lsl 16
+	movk x6, 0xFFFF, lsl 00 //Blanco
+	bl draw_circle
+	
+	mov x0, x20
+	mov x1, 120 //centro x
+	mov x2, 40 //centro y
+	mov x3, 20 //radio
+	movz x6, 0xFF, lsl 16
+	movk x6, 0xFFFF, lsl 00 //Blanco
+	bl draw_circle
+
+	
+	//NUBE 2
+	
+	mov x0, x20
+	mov x1, 200 //centro x
+	mov x2, 50 //centro y
+	mov x3, 20 //radio
+	movz x6, 0xFF, lsl 16
+	movk x6, 0xFFFF, lsl 00 //Blanco
+	bl draw_circle
+	
+	mov x0, x20
+	mov x1, 220 //centro x
+	mov x2, 45 //centro y
+	mov x3, 25 //radio
+	movz x6, 0xFF, lsl 16
+	movk x6, 0xFFFF, lsl 00 //Blanco
+	bl draw_circle
+	
+	mov x0, x20
+	mov x1, 240 //centro x
+	mov x2, 50 //centro y
+	mov x3, 20 //radio
+	movz x6, 0xFF, lsl 16
+	movk x6, 0xFFFF, lsl 00 //Blanco
+	bl draw_circle
+
+
+
 	//Triangulo equilatero
 	mov x0, x20
 	mov x8, 100   // tamaño
@@ -147,6 +202,168 @@ loop0:
 	movz x6, 0x8C66, lsl 0 // color
 	movk x6, 0xFFB9, lsl 16
 	bl  draw_triangle
+
+
+        
+	//montaña lado opuesto
+		//Triangulo equilatero
+	mov x0, x20
+	mov x8, 100   // tamaño
+	mov x16, 1    // alto = 1 //pixel_size NO CAMBIAR
+	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
+	mov x4, 100   // Y inicial
+	mov x18, 460   // X inicial
+	movz x6, 0xB48C, lsl 0 // color
+	movk x6, 0xFFD2, lsl 16
+	bl  draw_triangle
+
+	//Triangulo equilatero
+	mov x0, x20
+	mov x8, 80   // tamaño
+	mov x16, 1    // alto = 1 //pixel_size NO CAMBIAR
+	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
+	mov x4, 120   // Y inicial
+	mov x18, 420   // X inicial
+	movz x6, 0x8C66, lsl 0 // color
+	movk x6, 0xFFB9, lsl 16
+	bl  draw_triangle
+
+	//Triangulo equilatero
+	mov x0, x20
+	mov x8, 100   // tamaño
+	mov x16, 1    // alto = 1 //pixel_size NO CAMBIAR
+	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
+	mov x4, 100   // Y inicial
+	mov x18, 500   // X inicial
+	movz x6, 0x8C66, lsl 0 // color
+	movk x6, 0xFFB9, lsl 16
+	bl  draw_triangle
+	
+
+
+	//ARBOL 1
+	
+	mov x0,x20
+	mov x1, 20 //alto
+	mov x2, 6 //ancho
+	mov x9, 190 //y
+	mov x3, 222 //x
+	movz x6, 0x5533, lsl 0
+	movk x6, 0x9966, lsl 16 //marron tronco
+	bl draw_rectangle
+	
+	//arbol 1 copa
+	mov x0, x20
+	mov x1, 225 //centro x
+	mov x2, 185 //centro y
+	mov x3, 12//radio
+	movz x6, 0xFF00, lsl 0
+	movk x6, 0x00, lsl 16 //Blanco
+	bl draw_circle
+
+	
+	//ARBOL 2
+	
+	mov x0,x20
+	mov x1, 20 //alto
+	mov x2, 6 //ancho
+	mov x9, 180 //y
+	mov x3, 202 //x
+	movz x6, 0x5533, lsl 0
+	movk x6, 0x9966, lsl 16 //marron tronco
+	bl draw_rectangle
+	
+
+	//arbol 2 copa
+	mov x0, x20
+	mov x1, 204 //centro x
+	mov x2, 180 //centro y
+	mov x3, 12//radio
+	movz x6, 0xFF00, lsl 0
+	movk x6, 0x00, lsl 16 //Blanco
+	bl draw_circle
+
+	
+	
+	//ARBOL 4
+	
+	mov x0,x20
+	mov x1, 20 //alto
+	mov x2, 6 //ancho
+	mov x9, 190 //y
+	mov x3, 380 //x
+	movz x6, 0x5533, lsl 0
+	movk x6, 0x9966, lsl 16 //marron tronco
+	bl draw_rectangle
+	
+	//arbol 4 copa
+	mov x0, x20
+	mov x1, 382 //centro x
+	mov x2, 185 //centro y
+	mov x3, 12//radio
+	movz x6, 0xFF00, lsl 0
+	movk x6, 0x00, lsl 16 //Blanco
+	bl draw_circle
+
+
+	//ARBOL 5
+	
+	mov x0,x20
+	mov x1, 20 //alto
+	mov x2, 6 //ancho
+	mov x9, 180 //y
+	mov x3, 400 //x
+	movz x6, 0x5533, lsl 0
+	movk x6, 0x9966, lsl 16 //marron tronco
+	bl draw_rectangle
+	
+
+	//arbol 5 copa
+	mov x0, x20
+	mov x1, 402 //centro x
+	mov x2, 180 //centro y
+	mov x3, 12//radio
+	movz x6, 0xFF00, lsl 0
+	movk x6, 0x00, lsl 16 //Blanco
+	bl draw_circle
+
+
+        //FIN ARBOLES
+
+ 
+	//CARTELES
+	//POSTE CARTEL 1 
+	
+	mov x0,x20
+	mov x1, 20 //alto
+	mov x2, 6 //ancho
+	mov x9, 300 //y
+	mov x3, 500 //x
+	movz x6, 0x5533, lsl 0
+	movk x6, 0x9966, lsl 16 //marron tronco
+	bl draw_rectangle
+	
+	//POSTE CARTEL 1 
+	
+	mov x0,x20
+	mov x1, 20 //alto
+	mov x2, 6 //ancho
+	mov x9, 300 //y
+	mov x3, 560//x
+	movz x6, 0x5533, lsl 0
+	movk x6, 0x9966, lsl 16 //marron tronco
+	bl draw_rectangle
+	
+
+	mov x0,x20
+	mov x1, 40 //alto
+	mov x2, 70//ancho
+	mov x9, 270 //y
+	mov x3, 500//x
+	movz x6, 0xFF, lsl 16
+	movk x6, 0xFFFF, lsl 00 //
+	bl draw_rectangle
+	
 
 
 
