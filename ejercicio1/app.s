@@ -355,14 +355,77 @@ loop0:
 	bl draw_rectangle
 	
 
-	mov x0,x20
-	mov x1, 40 //alto
-	mov x2, 70//ancho
-	mov x9, 270 //y
-	mov x3, 500//x
-	movz x6, 0xFF, lsl 16
-	movk x6, 0xFFFF, lsl 00 //
+	 //INICIO CODIGO PRUEBA CARTEL MOVIENDOSE
+
+	// Constantes iniciales
+	mov x21, 500        // x actual
+	mov x22, 300        // límite izquierdo
+	mov x23, -10        // delta de movimiento
+	mov x24, 500        // x anterior (inicialmente igual que x21)
+	mov x25, 70         // ancho del rectángulo
+	mov x26, 270        // y fijo
+	mov x27, 40         // alto
+	mov x28, 640        // SCREEN_WIDTH
+	sub x29, x28, x25   // límite derecho (SCREEN_WIDTH - ancho)
+
+	bucle_mover_rec:
+
+	// Chequeo de límites antes de borrar rectángulo anterior
+	cmp x24, #0
+	blt skip_borrar
+
+	cmp x24, x29   // x29 = límite derecho (SCREEN_WIDTH - ancho)
+	bgt skip_borrar
+	// BORRAR rectángulo anterior (en x24)
+	mov x0, x20
+	mov x1, x27            // alto
+	mov x2, x25            // ancho
+	mov x3, x24            // x anterior
+	mov x9, x26            // y
+	movz x6, 0x0000, lsl 16  // color negro (borrar)
+	movk x6, 0x0000, lsl 0
+	mov x7, SCREEN_WIDTH
 	bl draw_rectangle
+
+
+	skip_borrar:
+	// Actualizar posición
+	add x21, x21, x23
+	mov x24, x21    // guardar nueva posición para borrar en siguiente iteración
+
+	// Rebotar si llegamos a límites
+	cmp x21, x22
+	b.lt invertir_derecha
+
+	cmp x21, x29
+	b.gt invertir_izquierda
+
+	// DIBUJAR nuevo rectángulo
+	mov x0, x20
+	mov x1, x27
+	mov x2, x25
+	mov x3, x21
+	mov x9, x26
+	movz x6, 0xFF, lsl 16   // color rojo
+	movk x6, 0xFFFF, lsl 0
+	mov x7, SCREEN_WIDTH
+	bl draw_rectangle
+
+	bl funcion_delay
+
+	b bucle_mover_rec
+
+	invertir_izquierda:
+	mov x23, -10
+	b bucle_mover_rec
+
+	invertir_derecha:
+	mov x23, 10
+	b bucle_mover_rec
+
+
+
+     //FIN CODIGO PRUEBA CARTEL MOVIENDOSE
 	
 
 
