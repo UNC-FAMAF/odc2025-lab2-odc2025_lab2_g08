@@ -188,7 +188,7 @@ loop0:
 	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
 	mov x4, 120   // Y inicial
 	mov x18, 130   // X inicial
-	movz x6, 0x8C66, lsl 0 // color
+	movz x6, 0x8C66, lsl 0 // color 
 	movk x6, 0xFFB9, lsl 16
 	bl  draw_triangle
 
@@ -353,79 +353,451 @@ loop0:
 	movz x6, 0x5533, lsl 0
 	movk x6, 0x9966, lsl 16 //marron tronco
 	bl draw_rectangle
+
+	// BORDE CARTEL
+	mov x0, x20
+	mov x1, 85 // alto
+	mov x2, 145 // ancho
+	mov x9, 215 // y
+	mov x3, 460 // x
+	movz x6, 0xFFFF, lsl 0
+	movk x6, 0xFFFF, lsl 16
+	bl draw_rectangle
+
+
+	// CARTEL
+	mov x0, x20
+	mov x1, 70 // alto
+	mov x2, 130 // ancho
+	mov x9, 222 // y
+	mov x3, 467 // x
+	movz x6, 0x00, lsl 16
+	movk x6, 0x9900, lsl 00   
+	bl draw_rectangle
+
+
+	// Comienzo OdC
+
+	// O (OdC)
+	mov x0, x20
+	mov x1, 500 //centro x
+	mov x2, 245 //centro y
+	mov x3, 15 //radio
+	movz x6, 0xFF, lsl 16
+	movk x6, 0xFFFF, lsl 00 //Blanco
+	bl draw_circle
+
+	mov x0, x20
+	mov x1, 500 //centro x
+	mov x2, 245 //centro y
+	mov x3, 10 //radio
+	movz x6, 0x00, lsl 16
+	movk x6, 0x9900, lsl 00 //Blanco
+	bl draw_circle
+	// fin de o
+
+	// d (OdC)
+	mov x0, x20
+	mov x1, 533 //centro x
+	mov x2, 250 //centro y
+	mov x3, 10 //radio
+	movz x6, 0xFF, lsl 16
+	movk x6, 0xFFFF, lsl 00 //Blanco
+	bl draw_circle
+
+	mov x0, x20
+	mov x1, 533 //centro x
+	mov x2, 250 //centro y
+	mov x3, 5 //radio
+	movz x6, 0x00, lsl 16
+	movk x6, 0x9900, lsl 00 //Blanco
+	bl draw_circle
+
+	mov x0, x20
+	mov x1, 30 // alto
+	mov x2, 5 // ancho
+	mov x9, 230 // y
+	mov x3, 541 // x
+	movz x6, 0xFF, lsl 16
+	movk x6, 0xFFFF, lsl 00   
+	bl draw_rectangle
+	//fin de d
+
+	// C (OdC)
+	mov x0, x20
+	mov x1, 570 //centro x
+	mov x2, 245 //centro y
+	mov x3, 15 //radio
+	movz x6, 0xFF, lsl 16
+	movk x6, 0xFFFF, lsl 00 //Blanco
+	bl draw_circle
+
+	mov x0, x20
+	mov x1, 570 //centro x
+	mov x2, 245 //centro y
+	mov x3, 10 //radio
+	movz x6, 0x00, lsl 16
+	movk x6, 0x9900, lsl 00 //Blanco
+	bl draw_circle
+
+	mov x0, x20
+	mov x1, 30 // alto
+	mov x2, 10 // ancho
+	mov x9, 230 // y
+	mov x3, 578 // x
+	movz x6, 0x00, lsl 16
+	movk x6, 0x9900, lsl 00   
+	bl draw_rectangle
+	//fin de C
+
+	// Fin de OdC
+
+	// Comienzo 2025
+
+	// 2
+	mov x0, x20
+	mov x1, 478
+	mov x2, 275
+	mov x3, 480
+	mov x4, 270
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 //Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 480
+	mov x2, 270
+	mov x3, 487
+	mov x4, 270
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 //Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 487
+	mov x2, 270
+	mov x3, 490
+	mov x4, 275
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 //Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 490
+	mov x2, 275
+	mov x3, 478
+	mov x4, 285
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 //Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 478
+	mov x2, 285
+	mov x3, 490
+	mov x4, 285
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 //Blanco
+	bl draw_line
+	// fin 2
+
+	// 0
+	mov x0, x20
+	mov x1, 495
+	mov x2, 270
+	mov x3, 495
+	mov x4, 285
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 //Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 495
+	mov x2, 285
+	mov x3, 505
+	mov x4, 285
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 //Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 505
+	mov x2, 285
+	mov x3, 505
+	mov x4, 270
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 //Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 505
+	mov x2, 270
+	mov x3, 495
+	mov x4, 270
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 //Blanco
+	bl draw_line
+	// fin 0
+
+	// 2
+	mov x0, x20
+	mov x1, 510
+	mov x2, 275
+	mov x3, 512
+	mov x4, 270
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 //Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 512
+	mov x2, 270
+	mov x3, 519
+	mov x4, 270
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 //Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 519
+	mov x2, 270
+	mov x3, 522
+	mov x4, 275
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 //Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 522
+	mov x2, 275
+	mov x3, 510
+	mov x4, 285
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 //Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 510
+	mov x2, 285
+	mov x3, 522
+	mov x4, 285
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 //Blanco
+	bl draw_line
+	// fin 2
+
+	// 5
+	mov x0, x20
+	mov x1, 528
+	mov x2, 270
+	mov x3, 538
+	mov x4, 270
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 // Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 528
+	mov x2, 270
+	mov x3, 528
+	mov x4, 277
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 // Blanco
+	bl draw_line
 	
+	mov x0, x20
+	mov x1, 528
+	mov x2, 277
+	mov x3, 538
+	mov x4, 277
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 // Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 538
+	mov x2, 277
+	mov x3, 538
+	mov x4, 285
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 // Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 538
+	mov x2, 285
+	mov x3, 528
+	mov x4, 285
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 // Blanco
+	bl draw_line
+	// fin 5
+	// Fin 2025
+
+	//Inicio km
+	// k
+	mov x0, x20
+	mov x1, 548
+	mov x2, 270
+	mov x3, 548
+	mov x4, 285
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 // Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 548
+	mov x2, 278
+	mov x3, 558
+	mov x4, 285
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 // Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 548
+	mov x2, 278
+	mov x3, 558
+	mov x4, 271
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 // Blanco
+	bl draw_line
+	// fin k
+
+	// m
+	mov x0, x20
+	mov x1, 563
+	mov x2, 270
+	mov x3, 563
+	mov x4, 285
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 // Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 563
+	mov x2, 270
+	mov x3, 568
+	mov x4, 285
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 // Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 573
+	mov x2, 270
+	mov x3, 568
+	mov x4, 285
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 // Blanco
+	bl draw_line
+
+	mov x0, x20
+	mov x1, 573
+	mov x2, 270
+	mov x3, 573
+	mov x4, 285
+	movz x8, 0xFF, lsl 16
+	movk x8, 0xFFFF, lsl 00 // Blanco
+	bl draw_line
+	//fin m
+	//Fin km
+
+	// Inicio flecha
+
+	mov x0, x20
+	mov x1, 7 // alto
+	mov x2, 5 // ancho
+	mov x9, 279 // y
+	mov x3, 583 // x
+	movz x6, 0xFF, lsl 16
+	movk x6, 0xFFFF, lsl 00   
+	bl draw_rectangle
+
+	mov x0, x20
+	mov x8, 11   // tamaño
+	mov x16, 1    // alto = 1 //pixel_size NO CAMBIAR
+	mov x17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
+	mov x4, 270   // Y inicial
+	mov x18, 580   // X inicial
+	movz x6, 0xFF, lsl 16 // color
+	movk x6, 0xFFFF, lsl 00
+	bl  draw_triangle
+
+	// Fin flecha
+
+
 
 	 //INICIO CODIGO PRUEBA CARTEL MOVIENDOSE
 
 	// Constantes iniciales
 	mov x21, 500        // x actual
-	mov x22, 300        // límite izquierdo
+ 	mov x22, 300        // límite izquierdo
 	mov x23, -10        // delta de movimiento
 	mov x24, 500        // x anterior (inicialmente igual que x21)
 	mov x25, 70         // ancho del rectángulo
-	mov x26, 270        // y fijo
+	mov x26, 200        // y fijo
 	mov x27, 40         // alto
 	mov x28, 640        // SCREEN_WIDTH
 	sub x29, x28, x25   // límite derecho (SCREEN_WIDTH - ancho)
 
-	bucle_mover_rec:
+	// bucle_mover_rec:
 
-	// Chequeo de límites antes de borrar rectángulo anterior
-	cmp x24, #0
-	blt skip_borrar
+	// // Chequeo de límites antes de borrar rectángulo anterior
+	// cmp x24, #0
+	// blt skip_borrar
 
-	cmp x24, x29   // x29 = límite derecho (SCREEN_WIDTH - ancho)
-	bgt skip_borrar
-	// BORRAR rectángulo anterior (en x24)
-	mov x0, x20
-	mov x1, x27            // alto
-	mov x2, x25            // ancho
-	mov x3, x24            // x anterior
-	mov x9, x26            // y
-	movz x6, 0x0000, lsl 16  // color negro (borrar)
-	movk x6, 0x0000, lsl 0
-	mov x7, SCREEN_WIDTH
-	bl draw_rectangle
-
-
-	skip_borrar:
-	// Actualizar posición
-	add x21, x21, x23
-	mov x24, x21    // guardar nueva posición para borrar en siguiente iteración
-
-	// Rebotar si llegamos a límites
-	cmp x21, x22
-	b.lt invertir_derecha
-
-	cmp x21, x29
-	b.gt invertir_izquierda
-
-	// DIBUJAR nuevo rectángulo
-	mov x0, x20
-	mov x1, x27
-	mov x2, x25
-	mov x3, x21
-	mov x9, x26
-	movz x6, 0xFF, lsl 16   // color rojo
-	movk x6, 0xFFFF, lsl 0
-	mov x7, SCREEN_WIDTH
-	bl draw_rectangle
-
-	bl funcion_delay
-
-	b bucle_mover_rec
-
-	invertir_izquierda:
-	mov x23, -10
-	b bucle_mover_rec
-
-	invertir_derecha:
-	mov x23, 10
-	b bucle_mover_rec
+	// cmp x24, x29   // x29 = límite derecho (SCREEN_WIDTH - ancho)
+	// bgt skip_borrar
+	// // BORRAR rectángulo anterior (en x24)
+	// mov x0, x20
+	// mov x1, x27            // alto
+	// mov x2, x25            // ancho
+	// mov x3, x24            // x anterior
+	// mov x9, x26            // y
+	// movz x6, 0x0000, lsl 16  // color negro (borrar)
+	// movk x6, 0x0000, lsl 0
+	// mov x7, SCREEN_WIDTH
+	// bl draw_rectangle
 
 
+	// skip_borrar:
+	// // Actualizar posición
+	// add x21, x21, x23
+	// mov x24, x21    // guardar nueva posición para borrar en siguiente iteración
 
-     //FIN CODIGO PRUEBA CARTEL MOVIENDOSE
+	// // Rebotar si llegamos a límites
+	// cmp x21, x22
+	// b.lt invertir_derecha
+
+	// cmp x21, x29
+	// b.gt invertir_izquierda
+
+	// // DIBUJAR nuevo rectángulo
+	// mov x0, x20
+	// mov x1, x27
+	// mov x2, x25
+	// mov x3, x21
+	// mov x9, x26
+	// movz x6, 0xFF, lsl 16   // color rojo
+	// movk x6, 0xFFFF, lsl 0
+	// mov x7, SCREEN_WIDTH
+	// bl draw_rectangle
+
+	//bl funcion_delay
+
+	// b bucle_mover_rec
+
+	// invertir_izquierda:
+	// mov x23, -10
+	// b bucle_mover_rec
+
+	// invertir_derecha:
+	// mov x23, 10
+	// b bucle_mover_rec
+
+
+	 //FIN CODIGO PRUEBA CARTEL MOVIENDOSE
 	
 
 
