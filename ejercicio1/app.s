@@ -82,13 +82,13 @@ loop0:
 	mov  x15, #72
 	bl  draw_route
 
-	//LIneas de la ruta
+	//Lineas de la ruta
 	mov x15,#1
 	mov x0, x20 // reinicia framebuffer
 	mov x1, 15 // alto del rectangullo
 	mov x2, 4 // ancho del rectangulo
 	mov x9, 196 // posicion y del rectangulo
-		
+
 	loop_linea:
 		cmp x15,#7
 		b.ge end_loop_line
@@ -103,6 +103,97 @@ loop0:
 		bl draw_rectangle
 		b loop_linea
 	end_loop_line:
+		
+
+    /*  Inicializa la posicion Y de las lineas
+    mov x21, #200            // y de línea 1
+    mov x22, #230            // y de línea 2
+    mov x23, #260            // y de línea 3
+    mov x24, #290            // y de línea 4
+    mov x25, #320            // y de línea 5
+    mov x26, #350            // y de línea 6
+
+	mov x27, 200
+
+linea_loop:
+    // Borra las lineas (las pinta del color de la ruta)
+    movz x6, 0x3838, lsl 0
+	movk x6, 0x3838, lsl 16
+    mov x3, #318      // X fijo de las lineas
+    mov x2, #4        // Ancho
+    mov x1, #15       // Alto
+
+    mov x9, x21
+	bl draw_rectangle
+    mov x9, x22
+	bl draw_rectangle
+    mov x9, x23
+	bl draw_rectangle
+    mov x9, x24
+	bl draw_rectangle
+    mov x9, x25
+	bl draw_rectangle
+    mov x9, x26
+	bl draw_rectangle
+
+    // === Actualiza  las posiciones de las lineas constantemente
+    add x21, x21, #2
+    add x22, x22, #2
+    add x23, x23, #2
+    add x24, x24, #2
+    add x25, x25, #2
+    add x26, x26, #2
+
+    // Controla si las lineas se salen y las reinicia en caso de que si 
+    mov x12, #465      // 480 (pantalla) - 15 (alto de la linea)
+    cmp x21, x12
+    b.lt ok1
+    mov x21, #200
+ok1:
+    cmp x22, x12
+    b.lt ok2
+    mov x22, #200
+ok2:
+    cmp x23, x12
+    b.lt ok3
+    mov x23, #200
+ok3:
+    cmp x24, x12
+    b.lt ok4
+    mov x24, #200
+ok4:
+    cmp x25, x12
+    b.lt ok5
+    mov x25, #200
+ok5:
+    cmp x26, x12
+    b.lt ok6
+    mov x26, #200
+ok6:
+
+    // Dibujar líneas (color blanco)
+    movz x6, #0xFF, lsl 16
+    movk x6, #0xFFFF, lsl 0
+    mov x3, #318
+    mov x2, #4
+    mov x1, #15
+
+    mov x9, x21
+	bl draw_rectangle
+    mov x9, x22
+	bl draw_rectangle
+    mov x9, x23
+	bl draw_rectangle
+    mov x9, x24
+	bl draw_rectangle
+    mov x9, x25
+	bl draw_rectangle
+    mov x9, x26
+	bl draw_rectangle
+
+    bl funcion_delay
+    b linea_loop
+*/
 
 	//sol
 	mov x0, x20 
@@ -1224,12 +1315,13 @@ skip_pixel:
 	ret
 
 
-//funcion_delay:
- //   mov X8, #1000       // Ajusta este valor según necesites más tiempo
-//delay:
-//    sub X8, X8, #1     // Reduce el contador
-//    cbnz x8, delay      
-//    ret
+
+funcion_delay:
+   mov X8, #60000     // Ajusta este valor según necesites más tiempo
+delay:
+   sub X8, X8, #1     // Reduce el contador
+    cbnz x8, delay      
+    ret
 
 
 // Subrutina: dibujar linea entre dos puntos
