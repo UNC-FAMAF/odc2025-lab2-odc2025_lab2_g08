@@ -1223,6 +1223,67 @@ draw_car_2:
 
 	//FIN AUTO
 
+
+
+	//COMINEZO DE ANIMACION 
+ 
+	mov x19, 0        // posición Y actual del auto
+	mov x22, 0        // posición Y anterior
+	mov x21, 480      // límite en Y (altura de pantalla)
+
+bucle_animacion:
+	// limpiar área anterior (auto en posición Y anterior)
+	mov x0, x20          // framebuffer
+ 	//LA ZONA ECTANGULO SE HIZO LO MAS CHICA POSIBLE, DADO QUE AFECTABA LA VISTA
+	mov x1, 2          // alto de la zona del auto (Y)
+	mov x2, 2          // ancho zona auto (X)
+	mov x3, 150          // X fijo (offset)
+	add x9, x22, 350     // Y = posición anterior + offset (ajusta según donde dibujas)
+	
+	// color negro para limpiar
+	movz x6, 0x0000, lsl 0
+	movk x6, 0x0000, lsl 16
+	bl draw_rectangle
+
+	// dibujar auto en posición actual Y (x19)
+	// dentro de draw_car_2, suma x19 a Y (x9), no a X (x3)
+	bl draw_car_2
+
+	// cuanto mas se llama mas lento se logra ver la animacion
+	bl funcion_delay
+	bl funcion_delay
+	bl funcion_delay
+	bl funcion_delay
+	
+	bl funcion_delay
+	bl funcion_delay
+	bl funcion_delay
+	bl funcion_delay
+
+	// actualizar posición anterior
+	mov x22, x19
+ //delay por las dudas, no se si afecta en la velocidad
+	bl funcion_delay
+	// avanzar en Y
+	add x19, x19, 105
+
+	bl funcion_delay
+	bl funcion_delay
+	bl funcion_delay
+	bl funcion_delay
+	bl funcion_delay
+	bl funcion_delay
+	bl funcion_delay
+	bl funcion_delay
+
+	// condición para continuar animación
+	cmp x19, x21
+	blt bucle_animacion
+	bl funcion_delay
+	ret
+
+	//FIN DE LA ANIMACION
+
 	
 	//---------------------------------------------------------------
 	// Infinite Loop
