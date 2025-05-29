@@ -13,7 +13,7 @@ draw_background:
 
     movz x6, 0x8B22, lsl00     //Bits 0-15
     movk x6, 0xFF22, lsl16     // del 16-31
-
+    
     bl draw_rectangle
 
     //cielo
@@ -25,7 +25,7 @@ draw_background:
 
     movz x6, 0xCEEB, lsl00 // color
     movk x6, 0xFF87, lsl16
-
+    
     bl draw_rectangle
 
     ////banquina

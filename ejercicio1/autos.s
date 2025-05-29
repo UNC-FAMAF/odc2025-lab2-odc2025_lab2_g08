@@ -1,123 +1,262 @@
-.section .rodata
-.align 4
-.global car_desc
-car_desc:
+//DEFINE DE FIGURAS
+    .equ CIRCLE, -3
+    .equ SQUARE, -4
+    .equ RECTANGLE, -5
+    .equ LINE, -6
+    .equ TRIANGLE, -7
+    .equ VALOR_DE_CORTE, -999
+.section .data //Los siguientes datos se almacenaran en RAM
+.global car_1
+car_1:
     //auto 1
-    .word 33, 75, 223, 338  -20, 0x00F8, 0x3838   // carrocería principal
-    .word 20, 100, 210, 350 -20, 0x00F8, 0x3838  // techo
-    .word 10, 46, 237, 344  -20, 0x0000, 0x0000   // ventana
-    .word 5, 24, 248, 359   -20, 0xFFFF, 0xFFFF    // luz frontal
-    .word 6, 96, 212, 369   -20, 0x0000, 0x0000    // base inferior
-    .word 5, 101, 209, 374  -20, 0x00F8, 0x3838   // franja lateral
-    .word 11, 25, 212, 379  -20, 0x0000, 0x0000   // rueda izq
-    .word 2, 15, 216, 380   -20, 0x8038, 0x3838    // guardabarros izq
-    .word 11, 25, 284, 379  -20, 0x0000, 0x0000   // rueda der
-    .word 2, 15, 289, 380   -20, 0x8038, 0x3838    // guardabarros der
-    .word 6, 17, 289, 360   -20, 0xFFFF, 0xFFFF    // luz der
-    .word 6, 17, 214, 360   -20, 0xFFFF, 0xFFFF    // luz izq
+    // TIPO |ALTO | ANCHO | X | Y | C1 |
+    .word RECTANGLE, 33, 75, 223+45, 338+20, 0x20389F  // carrocería principal
+    .word RECTANGLE, 20, 100, 210+45, 350+20, 0x20389F // techo
+    .word RECTANGLE, 10, 46, 237+45, 344+20, 0x00000000 // ventana
+    .word RECTANGLE, 5, 24, 248+45, 359+20, 0xFFFFFFFF              // luz frontal
+    .word RECTANGLE, 6, 96, 212+45, 369+20, 0x00000000              // base inferior
+    .word RECTANGLE, 5, 101, 209+45, 374+20, 0x20389F // franja lateral
+    .word RECTANGLE, 11, 25, 212+45, 379+20, 0x00000000  // rueda izq
+    .word RECTANGLE, 2, 15, 216+45, 380+20, 0x80383838   // guardabarros izq
+    .word RECTANGLE, 11, 25, 284+45, 379+20, 0x00000000  // rueda der
+    .word RECTANGLE, 2, 15, 289+45, 380+20, 0x80383838              // guardabarros der
+    .word RECTANGLE, 6, 17, 289+45, 360+20, 0xFFFFFFFF              // luz der
+    .word RECTANGLE, 6, 17, 214+45, 360+20, 0xFFFFFFFF              // luz izq
+    .word VALOR_DE_CORTE //poner VALOR_DE_CORTE asi el procedimiento render_shape sabe cuando termina un auto
+car_1_end:
 
-    //auto 2
-    .word 33, 75, 223+50, 338+50, 0x00F8, 0x3838    // carrocería principal
-    .word 20, 100, 210+50, 350+50, 0x00F8, 0x3838   // techo
-    .word 10, 46, 237+50, 344+50, 0x0000, 0x0000    // ventana
-    .word 5, 24, 248+50, 359+50, 0xFFFF, 0xFFFF     // luz frontal
-    .word 6, 96, 212+50, 369+50, 0x0000, 0x0000     // base inferior
-    .word 5, 101, 209+50, 374+50, 0x00F8, 0x3838    // franja lateral
-    .word 11, 25, 212+50, 379+50, 0x0000, 0x0000    // rueda izq
-    .word 2, 15, 216+50, 380+50, 0x8038, 0x3838     // guardabarros izq
-    .word 11, 25, 284+50, 379+50, 0x0000, 0x0000    // rueda der
-    .word 2, 15, 289+50, 380+50, 0x8038, 0x3838     // guardabarros der
-    .word 6, 17, 289+50, 360+50, 0xFFFF, 0xFFFF     // luz der
-    .word 6, 17, 214+50, 360+50, 0xFFFF, 0xFFFF     // luz izq
+.global car_2
+car_2:
+    // AUTO 2 (escalado al 60 % para reducir 40 %)
 
-    //auto 3
-    .word 33 , 75 , 223 +50 +120 , 338 + 20, 0x3030, 0x3030 // carrocería principal
-    .word 20 , 100, 210 +50 +120 , 350 + 20, 0x3030, 0x3030 // techo
-    .word 10 , 46 , 237 +50 +120 , 344 + 20, 0x0000, 0x0000 // ventana
-    .word 5  , 24 , 248 +50 +120 , 359 + 20, 0xFFFF, 0xFFFF       // luz frontal
-    .word 6  , 96 , 212 +50 +120 , 369 + 20, 0x0000, 0x0000       // base inferior
-    .word 5  , 101, 209 +50 +120 , 374 + 20, 0x3030, 0x3030      // franja lateral
-    .word 11 , 25 , 212 +50 +120 , 379 + 20, 0x0000, 0x0000      // rueda izq
-    .word 2  , 15 , 216 +50 +120 , 380 + 20, 0x8038, 0x3838       // guardabarros izq
-    .word 11 , 25 , 284 +50 +120 , 379 + 20, 0x0000, 0x0000      // rueda der
-    .word 2  , 15 , 289 +50 +120 , 380 + 20, 0x8038, 0x3838       // guardabarros der
-    .word 6  , 17 , 289 +50 +120 , 360 + 20, 0xFFFF, 0xFFFF       // luz der
-    .word 6  , 17 , 214 +50 +120 , 360 + 20, 0xFFFF, 0xFFFF       // luz izq
+    // TIPO |ALTO | ANCHO | X | Y | C1 | C2 |
+    .word RECTANGLE, 12, 72, 162+140, 120+100, 0xFF00FF00
+    .word RECTANGLE, 12, 84, 156+140, 132+100, 0xFF00FF00
+    .word RECTANGLE, 18, 96, 150+140, 144+100, 0xFF00FF00
+    .word RECTANGLE, 15, 60, 168+140, 126+100, 0x00000000
+    .word RECTANGLE, 6, 6, 150+140, 150+100, 0x00000000
+    .word RECTANGLE, 6, 6, 156+140, 150+100, 0x00F5BF42
+    .word RECTANGLE, 6, 6, 240+140, 150+100, 0x00000000
+    .word RECTANGLE, 6, 6, 240+140, 150+100, 0x00000000
+    .word RECTANGLE, 6, 6, 234+140, 150+100, 0x00F5BF42
+    .word RECTANGLE, 9, 24, 186+140, 150+100, 0xFFFFFFFF
+    .word RECTANGLE, 15, 18, 150+140, 162+100, 0x00000000
+    .word RECTANGLE, 15, 18, 228+140, 162+100, 0x00000000
+    .word VALOR_DE_CORTE
+car_2_end:
 
-   
-    // AUTO 4 (escalado al 60 % para reducir 40 %)
-    .word 12,  72, 162 + 140 , 120 + 100, 0xFF00, 0xFF00   // antes 20×120 @270,200
-    .word 12,  84, 156 + 140 , 132 + 100, 0xFF00, 0xFF00   // antes 20×140 @260,220
-    .word 18,  96, 150 + 140 , 144 + 100, 0xFF00, 0xFF00   // antes 30×160 @250,240
-    .word 15,  60, 168 + 140 , 126 + 100, 0x0000, 0x0000   // antes 25×100 @280,210
-    .word  6,   6, 150 + 140 , 150 + 100, 0x0000, 0x0000   // antes 10×10  @250,250
-    .word  6,   6, 156 + 140 , 150 + 100, 0x00F5, 0xBF42   // antes 10×10  @260,250
-    .word  6,   6, 240 + 140 , 150 + 100, 0x0000, 0x0000   // antes 10×10  @400,250
-    .word  6,   6, 240 + 140 , 150 + 100, 0x0000, 0x0000   // antes 10×10  @400,250
-    .word  6,   6, 234 + 140 , 150 + 100, 0x00F5, 0xBF42   // antes 10×10  @390,250
-    .word  9,  24, 186 + 140 , 150 + 100, 0xFFFF, 0xFFFF   // antes 15×40  @310,250
-    .word 15,  18, 150 + 140 , 162 + 100, 0x0000, 0x0000   // antes 25×30  @250,270
-    .word 15,  18, 228 + 140 , 162 + 100, 0x0000, 0x0000   // antes 25×30  @380,270
+.global rand
 
-car_desc_end:
+rand:
+    //      TIPO    |ALTO | ANCHO | X | Y | C |
+    .word RECTANGLE, 480, 640, 0, 165, 0x52b589
+    .word RECTANGLE, 150, 640, 0, 200, 0x309E6F
 
-.equ CAR_PARTS, (car_desc_end- car_desc)/(6*4)
+    .word VALOR_DE_CORTE //valor de corte
 
+rand_end:
 
-.global render_car
-render_car:
-    // --- 1) Carga la dirección base de car_desc en x8 ---
-    ADRP    x8, car_desc
-    ADD     x8, x8, :lo12:car_desc
+//El opcode ADR carga en un registro una dirección de memoria,
+//calculada en tiempo de "compilacion", relativa a la posición actual del programa (pc: Program Counter registro
+//que contiene la direccion de la instruccion en el programa que esta siendo ejecutada
+//entradas:
+// X8 = Direccion base del auto que se quiera cargar
+//(se utiliza la instruccion ADR, que carga una dirección relativa cercana
+// cuando la etiqueta está dentro de ±1MB)
+//En este caso los datos que componen al auto estan cerca los 7 * 12 palabras que componen al auto
+.global render_shape
+render_shape:
+    STP X29, X30, [SP, #-16]!
+    MOV X29, SP
 
-    // --- 2) (Opcional) guarda puntero al framebuffer en x20 antes de entrar
-    //     por ejemplo, supongamos que x20 ya contiene la dirección del framebuffer.
+.loop_component:
+    LDR W17, [X8], #4 // W0 = tipo
+    CMP W17, #VALOR_DE_CORTE
+    BEQ .done
 
-    MOV     x1, #0 // x1 = índice de parte (cuántas partes hemos dibujado)
+    LDR W1, [X8], #4          // altura
+    LDR W2, [X8], #4          // ancho
+    LDR W3, [X8], #4          // posX
+    LDR W9, [X8], #4          // posY
+    LDR W4, [X8], #4          // color1
 
-loop_parts:
-    CMP     x1, #CAR_PARTS // ¿leímos todas las partes?
-    B.EQ    done
+    MOV W6, W4
 
-    // --- 3) Carga de la descripción de la parte (6 palabras) ---
-    //   .word W,   H,    X,    Y,    COLOR_LO, COLOR_HI
-    LDP     w3, w2, [x8], #8    // w2=W (ancho),  w3=H (alto),   x8+=8
-    LDP     w4, w5, [x8], #8    // w4=X (posX),   w5=Y (posY),   x8+=8
-    LDR     w6, [x8], #4        // w6=COLOR_LO (16b bajo),       x8+=4
-    LDR     w7, [x8], #4        // w7=COLOR_HI (16b alto),       x8+=4
+    MOV X0, X20 // X20 contiene framebuffer o contexto de dibujo
 
-    // --- 4) Prepara los argumentos para draw_rectangle ---
-    MOV     x0, x20             // framebuffer pointer
-    MOV     x1, x3              // x1 ← alto  = w3
-    MOV     x2, x2              // x2 ← ancho = w2   (ya está en w2→x2)
-    MOV     x3, x4              // x3 ← posX  = w4
-    MOV     x9, x5              // x9 ← posY  = w5
+    // "switch (tipo)"
+    CMP W17, #RECTANGLE
+    BEQ .draw_rect
 
-    // --- 5) Reconstruye el color de 32 bits: (COLOR_HI << 16) | COLOR_LO ---
-    LSL     x7, x7, #16         // x7 = COLOR_HI << 16
-    ORR     x6, x7, x6          // x6 = x7 | COLOR_LO
+    CMP W17, #CIRCLE
+    BEQ .draw_circ
 
-    // --- 6) Llama a tu rutina de dibujo ---
-    BL      draw_rectangle
+    CMP W17, #LINE
+    BEQ .draw_line
 
-    // --- 7) Avanza al siguiente índice y repite ---
-    ADD     x1, x1, #1
-    B       loop_parts
+    CMP W17, #TRIANGLE
+    BEQ .draw_triang
 
-done:
+    B .loop_component // Si no se reconoce, ignora
+
+.draw_rect:
+    BL draw_rectangle
+    B .loop_component
+
+.draw_triang:
+    //Triangulo equilatero
+    MOV W8, W1 // tamaño
+    //MOV     X16, 1    // alto = 1 //pixel_size NO CAMBIAR
+    //MOV     X17, 1    // ancho base = 1 //dejar en 1 porque se va ir ensanchando solo
+    MOV W4, W9        // Y inicial
+    MOV W18, W3       // X inicial
+    BL draw_triangle
+
+    B .loop_component
+
+.draw_circ:
+
+    MOV W3, W1
+
+    BL draw_circle
+
+    B .loop_component
+
+.draw_line:
+    BL draw_line
+
+    B .loop_component
+
+.done:
+    LDP X29, X30, [SP], #16
     RET
 
-.global draw_car_1
-draw_car_1:
+.global move_shape
+move_shape:
+    STP X29, X30, [SP, #-16]!
+    MOV X29, SP
 
+    // Entradas:
+    // X8 = puntero al primer componente de la forma
+    // W1 = deltaX, W2 = deltaY
+
+    MOV X10, X8 // puntero cursor
+
+.loop_move:
+    LDR W17, [X10]// W17 = tipo
+    CMP W17, #VALOR_DE_CORTE
+    BEQ .done_move
+
+    // --- actualizar posX (offset 12 bytes: campo #4) ---
+    LDR W3, [X10, #12]
+    ADD W3, W3, W1
+    STR W3, [X10, #12]
+
+    // --- actualizar posY (offset 16 bytes: campo #5) ---
+    LDR W4, [X10, #16]
+    ADD W4, W4, W2
+    STR W4, [X10, #16]
+
+    // --- avanzar al siguiente componente según el tipo ---
+    // RECTANGLE=-5, LINE=-6 → 6 campos (6×4=24 bytes)
+    CMP W17, #RECTANGLE
+    BEQ .skip_6
+    CMP W17, #LINE
+    BEQ .skip_6
+
+    // CIRCLE=-3, TRIANGLE=-7 → 7 campos (7×4=28 bytes)
+    CMP W17, #CIRCLE
+    BEQ .skip_7
+    CMP W17, #TRIANGLE
+    BEQ .skip_7
+
+    // si no coincide, saltamos 6 por defecto
+.skip_6:
+    ADD X10, X10, #24
+    B .loop_move
+
+.skip_7:
+    ADD X10, X10, #28
+    B .loop_move
+
+.done_move:
+    LDP X29, X30, [SP], #16
     RET
 
-.global draw_car_2
-draw_car_2:
-    //AUTO 1
-    STP     x29, x30, [sp, #-16]! // guarda fp/lr
-    MOV     x29, sp
 
-    LDP     x29, x30, [sp], #16 // restaura fp/lr
+
+
+
+    .global scale_shape
+// ----------------------------------------------------------------------------
+// scale_shape:
+//   Escala en el lugar todas las componentes de una figura.
+// Entradas:
+//   X8 = puntero al primer campo (tipo) de la forma
+//   W1 = factor de escala en %, p. ej. 60 → reduce al 60%
+// ----------------------------------------------------------------------------
+scale_shape:
+    STP     X29, X30, [SP, #-16]!  // prologue
+    MOV     X29, SP
+
+    MOV     W7, #100               // divisor fijo para porcentajes
+    MOV     X10, X8               // cursor = base de la forma
+    MOV     W2, W1                // W2 = scale_percent
+
+.loop:
+    LDR     W17, [X10]            // tipo
+    CMP     W17, #VALOR_DE_CORTE
+    BEQ     .done1
+
+    // --- altura @ offset +4 ---
+    ADD     X11, X10, #4
+    LDR     W3, [X11]
+    MUL     W3, W3, W2
+    UDIV    W3, W3, W7
+    STR     W3, [X11]
+
+    // --- ancho @ offset +8 ---
+    ADD     X12, X10, #8
+    LDR     W4, [X12]
+    MUL     W4, W4, W2
+    UDIV    W4, W4, W7
+    STR     W4, [X12]
+
+    // --- posX @ offset +12 ---
+    ADD     X11, X10, #12
+    LDR     W5, [X11]
+    MUL     W5, W5, W2
+    UDIV    W5, W5, W7
+    STR     W5, [X11]
+
+    // --- posY @ offset +16 ---
+    ADD     X12, X10, #16
+    LDR     W6, [X12]
+    MUL     W6, W6, W2
+    UDIV    W6, W6, W7
+    STR     W6, [X12]
+
+    // Avanzar al siguiente componente:
+    // RECTANGLE/LINE: 6 campos ×4 = 24 bytes
+    // CIRCLE/TRIANGLE: 7 campos ×4 = 28 bytes
+    CMP     W17, #RECTANGLE
+    BEQ     .skip6
+    CMP     W17, #LINE
+    BEQ     .skip6
+    CMP     W17, #CIRCLE
+    BEQ     .skip7
+    CMP     W17, #TRIANGLE
+    BEQ     .skip7
+
+.skip6:
+    ADD     X10, X10, #24
+    B       .loop
+
+.skip7:
+    ADD     X10, X10, #28
+    B       .loop
+
+.done1:
+    LDP     X29, X30, [SP], #16   // epilogue
     RET
-    //FIN AUTO 1
+

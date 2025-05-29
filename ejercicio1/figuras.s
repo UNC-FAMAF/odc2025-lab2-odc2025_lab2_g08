@@ -1,7 +1,57 @@
 .equ SCREEN_WIDTH, 640
 .equ SCREEN_HEIGH, 480
-.global draw_rectangle
 
+//Entradas:
+//x3 = pos y
+//x4 = pos x
+//x5 = tamaño del cuadrado
+//x10 = color
+.global draw_square
+draw_square:
+    stp x29, x30, [sp, #-16]! // guarda fp/lr
+    mov x29, sp
+    
+	MOV X12,#0
+	for_y:
+		CMP X12,X5
+		BGE end_for_y
+		ADD X12,X12,#1
+		MOV X11,#0
+		for_x:
+			CMP X11,X5
+			BGE end_for_x
+			ADD X11,X11,#1
+			ADD X4,X4,#1
+			BL calc_address
+			STUR W10,[x7]  // Colorear el pixel N
+			B for_x
+		end_for_x:
+		SUB X4,X4,X11 // ESTO ES COMO HACER:  MOV X4, (X INICIAL)
+		ADD X3,X3,1
+		B for_y
+	end_for_y:
+    
+    ldp x29, x30, [sp], #16 // restaurar FP/LR y subir SP
+	RET
+
+.global calc_address
+calc_address:
+    // Entrada:
+    //   X0 = base del framebuffer
+    //   X1 = SCREEN_WIDTH
+    //   X3 = pos Y
+    //   X4 = pos X
+    // Salida:
+    //   X7 = dirección final = base + 4 * ( X4 + X3 * SCREEN_WIDTH )
+    MUL     x6, x3, x1        // X6 = Y * SCREEN_WIDTH
+    ADD     x6, x6, x4        // X6 = Y*W + X
+    LSL     x6, x6, #2        // X6 = (Y*W + X) * 4 
+    ADD     x7, x0, x6        // X7 = fb_base + offset
+    RET
+
+
+
+.global draw_rectangle
 // Subrutina: dibujar rectangulo
 draw_rectangle:
     stp x29, x30, [sp, #-16]!     // decrementar SP en 16 y guardar FP/LR
@@ -35,6 +85,8 @@ loopx:
 // (x-a)² + (y-b)² <= r²
 .global draw_circle
 draw_circle:
+    stp x29, x30, [sp, #-16]!     // decrementar SP en 16 y guardar FP/LR
+    mov x29, sp                   // establecer nuevo frame pointer
     sub x9, x2, x3 //y = b - r (posicion inicial y)
 
     mul x11, x3, x3    //r²
@@ -76,6 +128,7 @@ skip_pixel:
     sub x13, x13, 1 // 2r - 1
     cbnz x13, circ_loopy // repite mientras queden filas por pintar (alto del circulo)
 
+    ldp x29, x30, [sp], #16 // restaurar FP/LR y subir SP
     ret
 
 
@@ -167,6 +220,7 @@ step_y:
 end_line:
     ret
 
+
 .global draw_right_triangle
 draw_right_triangle:
     stp x29, x30, [sp, #-16]! // guarda fp/lr
@@ -196,6 +250,7 @@ end_loop:
 draw_triangle:
     stp x29, x30, [sp, #-16]! // guarda fp/lr
     mov x29, sp
+    
     mov x15, #0 // contador de filas
 
     mov x0, x20                // reset fb
