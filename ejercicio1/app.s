@@ -58,6 +58,29 @@ loop0:
 
 	bl draw_rectangle
 	
+	//Franja de pasto arriba
+	mov x0,x20
+	mov x1, 30
+	mov x2, 640
+	mov x9, 200
+	mov x3, 0
+	
+	movz x6, 0x994C, lsl 00
+	movk x6, 0x00, lsl 16
+	bl draw_rectangle
+
+	//Franja de pasto de abajo
+	mov x0, x20
+	mov x1, 100
+	mov x2, 640
+	mov x9, 380
+	mov x3, 0
+
+	movz x6, 0x994C, lsl 00
+	movk x6, 0x00,  lsl 16
+	bl draw_rectangle
+
+
 	////banquina
 	mov x0, x20
 	mov x8, 620   // tamaño
@@ -69,6 +92,7 @@ loop0:
 	movk x6, 0x40FF, lsl 16
 	mov  x15, #90 //MOdificando este valor me permite "cortar" la cuspide del triangulo
 	bl  draw_route
+
 
 	////ruta
 	mov x0, x20
