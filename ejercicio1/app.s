@@ -57,29 +57,91 @@ loop0:
 	movk x6, 0xFF87, lsl 16
 
 	bl draw_rectangle
-	
-	//Franja de pasto arriba
-	mov x0,x20
-	mov x1, 30
-	mov x2, 640
-	mov x9, 200
-	mov x3, 0
-	
-	movz x6, 0x994C, lsl 00
-	movk x6, 0x00, lsl 16
-	bl draw_rectangle
 
-	//Franja de pasto de abajo
+
 	mov x0, x20
-	mov x1, 100
-	mov x2, 640
-	mov x9, 380
-	mov x3, 0
+// Franja de arriba (pasto)
+    mov x1, 30           // alto
+    mov x2, 640          // ancho
+    mov x3, 0            // posicion x
+    mov x9, 200          // posicion y
+    movz x6, 0x994C, lsl 0 // color
+    movk x6, 0x00, lsl 16
+    bl draw_rectangle
 
-	movz x6, 0x994C, lsl 00
-	movk x6, 0x00,  lsl 16
-	bl draw_rectangle
+//Franja de abajo (pasto)
+    mov x1, 100          // alto
+    mov x2, 640          // ancho
+    mov x3, 0            // posicion x
+    mov x9, 380          // posicion y
+    movz x6, 0x994C, lsl 0 // color
+    movk x6, 0x00, lsl 16
+    bl draw_rectangle
+/*
+    mov x21, 200      // y franja arriba
+    mov x22, 100      // altura actual franja abajo
+    mov x23, 480      // base de la franja abajo (final de pantalla)
+    mov x24, 200      // y original franja arriba
+    mov x25, 100      // altura original franja abajo
+    mov x26, 150      // altura máxima franja abajo (modificar en caso necesario )
 
+
+loop_franja:
+    // borrar franja de arriba (pintar del mismo color que el pasto, no le atine al color jaja)
+    movz x6, 0x9E6F, lsl 0
+    movk x6, 0x30, lsl 16
+    mov x1, 30
+    mov x2, 640
+    mov x3, 0
+    mov x9, x21
+    bl draw_rectangle
+
+    // borrar franja de abajo usando altura máxima Y ajustando y-top
+    sub x27, x23, x26   // y-top = base - altura máxima
+    mov x1, x26
+    mov x2, 640
+    mov x3, 0
+    mov x9, x27
+    movz x6, 0x9E6F, lsl 0
+    movk x6, 0x30, lsl 16
+    bl draw_rectangle
+
+    // Animacion franja arriba
+    sub x21, x21, #5 // aca se modifica la velocidad en la que se mueve la franja de arriba 
+    cmp x21, #160
+    b.ge seguir_farriba
+    mov x21, x24
+seguir_farriba:
+
+    // Animacion franja abajo (crece hacia arriba)
+    add x22, x22, #4 // aca se modifica cuanto crece por cada ciclo (sirve mucho para controlar velocidad )
+    cmp x22, x26
+    ble seguir_fabajo
+    mov x22, x25
+seguir_fabajo:
+
+    // dibujar franja de arriba
+    movz x6, 0x994C, lsl 0
+    movk x6, 0x00, lsl 16
+    mov x1, 30
+    mov x2, 640
+    mov x3, 0
+    mov x9, x21
+    bl draw_rectangle
+
+    // dibujar franja de abajo creciendo hacia arriba
+    sub x27, x23, x22   // y-top = base - altura actual
+    movz x6, 0x994C, lsl 0
+    movk x6, 0x00, lsl 16
+    mov x1, x22
+    mov x2, 640
+    mov x3, 0
+    mov x9, x27
+    bl draw_rectangle
+
+    bl funcion_delay
+    b loop_franja
+*/ 
 
 	////banquina
 	mov x0, x20
@@ -1402,7 +1464,8 @@ skip_pixel:
 
 
 funcion_delay:
-   mov X8, #60000     // Ajusta este valor según necesites más tiempo
+   LDR x8, =0x04ffffff
+   //mov X8, #60000     // Ajusta este valor según necesites más tiempo
 delay:
    sub X8, X8, #1     // Reduce el contador
     cbnz x8, delay      
