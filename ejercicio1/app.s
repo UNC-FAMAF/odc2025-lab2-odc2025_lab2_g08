@@ -50,13 +50,14 @@ main:
 
 main_init:
 
-    //Procedimiento escrito en: [background.s]
+    //Procedimiento [draw_static_background] escrito en: [background.s]
 	BL draw_static_background
 
+    //Procedimiento [render_shape] escrito en: [shape_renderer.s]
     ADR X8,car_1
     BL render_shape
 
- 
+    //Procedimiento [render_shape] escrito en: [shape_renderer.s]
     ADR X8,car_2
     BL render_shape
 
