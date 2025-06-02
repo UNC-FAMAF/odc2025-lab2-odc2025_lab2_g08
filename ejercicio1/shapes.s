@@ -842,7 +842,7 @@ draw_signals:
     MOV     x4, 14       // alto: 20 * 0.7 = 14
     MOV     x5, 4        // ancho: 6 * 0.7 = 4
     MOV     x2, 270      // y: 260 + 10 = 270
-    MOV     x1, 522      // x: 492 + 30 = 522
+    MOV     x1, 525      // x: 492 + 30 = 522
     MOVZ    x3, 0x5533, lsl 0
     MOVK    x3, 0x9966, lsl 16  // marrón tronco
     BL      draw_rectangle
@@ -861,8 +861,8 @@ draw_signals:
     // CARTEL
 
     MOV     x0, x20
-    MOV     x4, 49       // alto: 70 * 0.7 = 49
-    MOV     x5, 91       // ancho: 130 * 0.7 = 91
+    MOV     x4, 51       // alto: 70 * 0.7 = 49
+    MOV     x5, 92       // ancho: 130 * 0.7 = 91
     MOV     x2, 215      // y: 205 + 10 = 215
     MOV     x1, 457      // x: 427 + 30 = 457
     MOVZ    x3, 0x0000, lsl 16
