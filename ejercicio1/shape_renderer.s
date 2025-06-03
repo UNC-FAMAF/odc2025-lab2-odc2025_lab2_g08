@@ -273,19 +273,129 @@ car_5:
 car_5_end:
 
 
-
-
-
 .global plane_1
 plane_1:
-    // Dibujar una avioneta pequeña usando sólo rectángulos
-    //
-    // TIPO      | ALTO | ANCHO |    X     |    Y     |   COLOR
-    // ----------------------------------------------------------------
-    // Fuselaje (rojo)
-    .word RECTANGLE,    4,    40,    200,  50,  0x888888  
     
+    // Format: .word RECTANGLE, height, width, X, Y, ARGB_COLOR
+    
+    .word RECTANGLE, 5, 1, 8, 10, 0x585555
+    .word RECTANGLE, 7, 1, 9, 9, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 7, 12, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 8, 12, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 9, 9, 0x585555
+    .word RECTANGLE, 1, 1, 9, 15, 0x585555
+    .word RECTANGLE, 1, 1, 9, 12, 0x585555
+    .word RECTANGLE, 3, 1, 10, 11, 0x2B2B2B
+    .word RECTANGLE, 1, 2, 11, 10, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 13, 9, 0x2B2B2B
+    .word RECTANGLE, 1, 6, 14, 8, 0x2B2B2B
+    .word RECTANGLE, 1, 6, 20, 9, 0x2B2B2B
+    .word RECTANGLE, 2, 1, 26, 7, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 27, 6, 0x2B2B2B
+    .word RECTANGLE, 1, 4, 28, 5, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 31, 6, 0x2B2B2B
+    .word RECTANGLE, 7, 1, 30, 7, 0x2B2B2B
+    .word RECTANGLE, 1, 3, 31, 12, 0x2B2B2B
+    .word RECTANGLE, 1, 4, 26, 13, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 26, 14, 0x2B2B2B
+    .word RECTANGLE, 1, 6, 20, 14, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 20, 15, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 21, 16, 0x2B2B2B
+    .word RECTANGLE, 2, 1, 22, 17, 0x2B2B2B
+    .word RECTANGLE, 1, 6, 17, 18, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 16, 17, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 15, 16, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 15, 15, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 14, 15, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 11, 14, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 12, 15, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 13, 15, 0x2B2B2B
+    .word RECTANGLE, 2, 2, 11, 11, 0xFD1C1C
+    .word RECTANGLE, 2, 2, 14, 9, 0x00FFFF
+    .word RECTANGLE, 1, 1, 13, 10, 0x00FFFF
+    .word RECTANGLE, 1, 3, 17, 9, 0xFD1C1C
+    .word RECTANGLE, 1, 8, 19, 10, 0xFD1C1C
+    .word RECTANGLE, 1, 1, 26, 9, 0xFD1C1C
+    .word RECTANGLE, 2, 1, 27, 7, 0xFD1C1C
+    .word RECTANGLE, 1, 3, 28, 6, 0xFD1C1C
+    .word RECTANGLE, 1, 1, 28, 7, 0xFD1C1C
+    .word RECTANGLE, 1, 1, 29, 7, 0xFD1C1C
+    .word RECTANGLE, 2, 1, 16, 9, 0x2B2B2B
+    .word RECTANGLE, 1, 3, 13, 11, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 17, 11, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 18, 10, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 13, 11, 0x800000
+    .word RECTANGLE, 1, 1, 15, 10, 0x008080
+    .word RECTANGLE, 5, 2, 28, 8, 0x800000
+    .word RECTANGLE, 4, 1, 27, 9, 0x800000
+    .word RECTANGLE, 1, 5, 25, 11, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 25, 12, 0x2B2B2B
+    .word RECTANGLE, 1, 2, 28, 12, 0xFFFF00
+    .word RECTANGLE, 1, 1, 27, 12, 0xFFA500
+    .word RECTANGLE, 1, 1, 26, 12, 0xFFA500
+    .word RECTANGLE, 1, 5, 17, 17, 0xFFA500
+    .word RECTANGLE, 1, 4, 17, 16, 0xFFFF00
+    .word RECTANGLE, 1, 3, 17, 15, 0xFFFF00
+    .word RECTANGLE, 1, 7, 18, 11, 0x800000
+    .word RECTANGLE, 1, 5, 13, 12, 0x800000
+    .word RECTANGLE, 1, 1, 16, 11, 0x800000
+    .word RECTANGLE, 1, 1, 17, 10, 0x800000
+    .word RECTANGLE, 1, 1, 16, 11, 0xFD1C1C
+    .word RECTANGLE, 1, 15, 11, 13, 0x800000
+    .word RECTANGLE, 1, 3, 12, 14, 0x800000
+    .word RECTANGLE, 1, 1, 14, 14, 0x2B2B2B
+    .word RECTANGLE, 1, 5, 15, 14, 0xFFFF00
+    .word RECTANGLE, 1, 1, 16, 15, 0xFFFF00
+    .word RECTANGLE, 1, 1, 16, 16, 0xFFFF00
+    .word RECTANGLE, 1, 4, 21, 12, 0xFFFF00
+    .word RECTANGLE, 1, 3, 18, 12, 0xFFA500
+    .word RECTANGLE, 1, 5, 34, 12, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 39, 11, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 40, 10, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 41, 9, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 39, 13, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 40, 14, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 41, 15, 0x2B2B2B
+    .word RECTANGLE, 8, 1, 42, 8, 0x2B2B2B
+    .word RECTANGLE, 1, 25, 43, 16, 0x2B2B2B
+    .word RECTANGLE, 8, 1, 68, 8, 0x2B2B2B
+    .word RECTANGLE, 1, 25, 43, 7, 0x2B2B2B
+    .word RECTANGLE, 1, 2, 43, 8, 0xFFFFFF
+    .word RECTANGLE, 8, 25, 43, 8, 0xFFFFFF
+    .word RECTANGLE, 1, 3, 45, 9, 0x000000
+    .word RECTANGLE, 4, 1, 44, 10, 0x000000
+    .word RECTANGLE, 1, 3, 45, 14, 0x000000
+    .word RECTANGLE, 4, 1, 48, 10, 0x000000
+    .word RECTANGLE, 6, 1, 50, 9, 0x000000
+    .word RECTANGLE, 1, 1, 51, 9, 0x000000
+    .word RECTANGLE, 1, 1, 52, 10, 0x000000
+    .word RECTANGLE, 2, 1, 53, 11, 0x000000
+    .word RECTANGLE, 1, 1, 51, 14, 0x000000
+    .word RECTANGLE, 1, 1, 52, 13, 0x000000
+    .word RECTANGLE, 1, 3, 56, 9, 0x000000
+    .word RECTANGLE, 4, 1, 55, 10, 0x000000
+    .word RECTANGLE, 1, 3, 56, 14, 0x000000
+    .word RECTANGLE, 1, 3, 60, 9, 0x000000
+    .word RECTANGLE, 1, 1, 62, 10, 0x000000
+    .word RECTANGLE, 1, 1, 61, 11, 0x000000
+    .word RECTANGLE, 1, 1, 60, 12, 0x000000
+    .word RECTANGLE, 1, 1, 60, 13, 0x000000
+    .word RECTANGLE, 1, 1, 60, 14, 0x000000
+    .word RECTANGLE, 1, 2, 61, 14, 0x000000
+    .word RECTANGLE, 1, 1, 61, 12, 0x000000
+    .word RECTANGLE, 1, 1, 62, 11, 0x000000
+    .word RECTANGLE, 1, 3, 64, 9, 0x000000
+    .word RECTANGLE, 1, 1, 64, 10, 0x000000
+    .word RECTANGLE, 1, 1, 64, 11, 0x000000
+    .word RECTANGLE, 1, 1, 65, 11, 0x000000
+    .word RECTANGLE, 1, 1, 66, 11, 0x000000
+    .word RECTANGLE, 1, 1, 66, 12, 0x000000
+    .word RECTANGLE, 1, 1, 66, 13, 0x000000
+    .word RECTANGLE, 1, 1, 65, 14, 0x000000
+    .word RECTANGLE, 1, 1, 64, 14, 0x000000
+
     .word VALOR_DE_CORTE
+
 plane_1_end:
 
 

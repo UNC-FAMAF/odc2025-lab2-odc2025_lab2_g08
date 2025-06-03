@@ -98,8 +98,12 @@ main_init:
     BL scale_shape
     BL render_shape
 
-    //ADR X8,plane_1    
-    //BL render_shape
+    ADR X8,plane_1
+    MOV W1,#103
+    MOV W2,#60
+    BL move_shape
+   
+    BL render_shape
 
 
 inf_loop:
