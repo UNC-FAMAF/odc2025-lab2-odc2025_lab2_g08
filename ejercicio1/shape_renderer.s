@@ -276,8 +276,7 @@ car_5_end:
 .global plane_1
 plane_1:
     
-    // Format: .word RECTANGLE, height, width, X, Y, ARGB_COLOR
-    
+    //.word RECTANGLE, height, width, X, Y, ARGB_COLOR
     .word RECTANGLE, 5, 1, 8, 10, 0x585555
     .word RECTANGLE, 7, 1, 9, 9, 0x2B2B2B
     .word RECTANGLE, 1, 1, 7, 12, 0x2B2B2B

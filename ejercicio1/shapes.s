@@ -113,9 +113,8 @@ draw_square:
     MOV X29,SP
 
     MOV X5,X4          // ANCHO = TAMANO
-    B draw_rectangle   // Llamo a draw_rectangle
+    BL draw_rectangle   // Llamo a draw_rectangle
 
-    // Restauracion (no se llega aqui, porque B salta)
     LDR X4,[SP,#32]
     LDR X2,[SP,#24]
     LDR X1,[SP,#16]
