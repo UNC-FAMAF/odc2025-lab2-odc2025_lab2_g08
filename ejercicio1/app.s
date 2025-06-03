@@ -60,18 +60,45 @@ main_init:
     MOV W2,#-60
     BL move_shape
     
+
     MOV X1,#130
     BL scale_shape
-
     BL render_shape
 
-    
+
+    ADR X8,car_3
+    MOV W1,#183
+    MOV W2,#20
+    BL move_shape
+    MOV X1,#60
+    BL scale_shape
+    BL render_shape
+
     //Procedimiento [render_shape] escrito en: [shape_renderer.s]
     ADR X8,car_2
+    MOV W1,#35
+    MOV W2,#50
+    BL move_shape
     BL render_shape
 
 
-    //ADR X8,plane_1
+    ADR X8,car_4
+    MOV W1,#10
+    MOV W2,#20
+    BL move_shape
+    BL render_shape
+
+
+    ADR X8,car_5
+    MOV W1,#560
+    MOV W2,#110
+    BL move_shape
+
+    MOV X1,#42
+    BL scale_shape
+    BL render_shape
+
+    //ADR X8,plane_1    
     //BL render_shape
 
 

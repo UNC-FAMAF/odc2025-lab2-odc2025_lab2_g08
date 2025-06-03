@@ -10,20 +10,20 @@
 .global car_1
 car_1:
     // TIPO      | ALTO | ANCHO |    X     |    Y     |   COLOR
-    .word RECTANGLE, 7,    70,      223, 338, 0x057CA1
-    .word RECTANGLE, 17,    80,     219, 344, 0x097194
-    .word RECTANGLE, 7,    105,     207, 354, 0x097194
-    .word RECTANGLE, 6,    9,       207, 354, 0x000000//ESPEJO IZQ
-    .word RECTANGLE, 6,    9,       302, 354, 0x000000//ESPEJO DER
-    .word RECTANGLE, 11,    48,     235, 349, 0x000000 //LUNETA TRASERA
-    .word RECTANGLE, 21,    112,    203, 360, 0x057CA1
-    .word RECTANGLE, 9,    25,     203, 367, 0x383838//BACK LUZ IZQ
-    .word RECTANGLE, 9,    25,     290, 367, 0x383838//BACK LUZ DER
-    .word RECTANGLE, 5,    10,     206, 371, 0xFBB372//LUZ IZ1
+    .word RECTANGLE, 7,    70,      223, 338,0x057CA1
+    .word RECTANGLE, 17,    80,     219, 344,0x097194
+    .word RECTANGLE, 7,    105,     207, 354,0x097194
+    .word RECTANGLE, 6,    9,       207, 354,0x000000 //ESPEJO IZQ
+    .word RECTANGLE, 6,    9,       302, 354,0x000000 //ESPEJO DER
+    .word RECTANGLE, 11,    48,     235, 349,0x000000 //LUNETA TRASERA
+    .word RECTANGLE, 21,    112,    203, 360,0x057CA1
+    .word RECTANGLE, 9,    25,     203, 367, 0x383838 //BACK LUZ IZQ
+    .word RECTANGLE, 9,    25,     290, 367, 0x383838 //BACK LUZ DER
+    .word RECTANGLE, 5,    10,     206, 371, 0xFBB372 //LUZ IZ1
     .word RECTANGLE, 5,    10,     215, 371, 0xEE6F54
-    .word RECTANGLE, 5,    10,     293, 371, 0xEE6F54//LUZ DER
+    .word RECTANGLE, 5,    10,     293, 371, 0xEE6F54 //LUZ DER
     .word RECTANGLE, 5,    10,     302, 371, 0xFBB372
-    .word RECTANGLE, 7,    35,     242, 370, 0xFFFFFF   //PATENTE
+    .word RECTANGLE, 7,    35,     242, 370, 0xFFFFFF //PATENTE
     .word RECTANGLE, 4,    104,    206, 381, 0x000000 // PARTE DE PARAGOLPES
     .word RECTANGLE, 5,    60,     230, 390, 0x353E46 //SOMBRA
     //INI RUEDAS
@@ -57,6 +57,7 @@ car_1:
     .word VALOR_DE_CORTE
 car_1_end:
 
+
 .global car_2
 car_2:
     // TIPO      | ALTO | ANCHO |    X      |    Y      |    COLOR
@@ -82,6 +83,198 @@ rand:
     .word RECTANGLE, 150,  640,     0,    200, 0x309E6F
     .word VALOR_DE_CORTE
 rand_end:
+
+.global car_3
+car_3:
+    // TIPO      | ALTO | ANCHO |    X     |    Y     |   COLOR
+    .word RECTANGLE, 7,    70,      223, 338,0x700be3
+    .word RECTANGLE, 17,    80,     219, 344,0x610ac4
+    .word RECTANGLE, 7,    105,     207, 354,0x610ac4
+    .word RECTANGLE, 6,    9,       207, 354,0x000000 //ESPEJO IZQ
+    .word RECTANGLE, 6,    9,       302, 354,0x000000 //ESPEJO DER
+    .word RECTANGLE, 11,    48,     235, 349,0x000000 //LUNETA TRASERA
+    .word RECTANGLE, 21,    112,    203, 360,0x700be3
+    .word RECTANGLE, 9,    25,     203, 367, 0x383838 //BACK LUZ IZQ
+    .word RECTANGLE, 9,    25,     290, 367, 0x383838 //BACK LUZ DER
+    .word RECTANGLE, 5,    10,     206, 371, 0xFBB372 //LUZ IZ1
+    .word RECTANGLE, 5,    10,     215, 371, 0xEE6F54
+    .word RECTANGLE, 5,    10,     293, 371, 0xEE6F54 //LUZ DER
+    .word RECTANGLE, 5,    10,     302, 371, 0xFBB372
+    .word RECTANGLE, 7,    35,     242, 370, 0xFFFFFF //PATENTE
+    .word RECTANGLE, 4,    104,    206, 381, 0x000000 // PARTE DE PARAGOLPES
+    .word RECTANGLE, 5,    60,     230, 390, 0x353E46 //SOMBRA
+    //INI RUEDAS
+    .word RECTANGLE,   10,      25,    207 -2, 389, 0x000000
+    .word RECTANGLE,    2,    17,    210 -2,  395,  0x888888
+    .word RECTANGLE, 10,    25,    285 +2, 389, 0x000000
+    .word RECTANGLE,  2,    17,    289 +2,  395,  0x888888
+    //FIN RUEDAS
+    .word RECTANGLE, 6,    114,    202, 384, 0x700be3 //PARAGOLPES TRASERO
+    //INICIO PATENTE
+   
+    .word VALOR_DE_CORTE
+car_3_end:
+
+
+
+.global car_4
+car_4:
+    //horas invertidas en este auto: 3 hs
+
+    // TIPO      | ALTO | ANCHO |    X      |    Y      |    COLOR
+    .word RECTANGLE, 7,70, 180, 300,0x06608a
+    .word RECTANGLE, 7,80, 175, 306,0x06608a
+    .word RECTANGLE, 23,90, 170, 312,0x003a51
+
+
+    .word RECTANGLE, 40,135, 148, 350 ,0x000000
+
+    .word RECTANGLE, 45,130, 150, 345 ,0x003a51
+
+
+    .word RECTANGLE, 45,110, 160, 330 ,0x06608a
+    .word RECTANGLE, 25,120, 155, 340 ,0x06608a
+
+
+    .word RECTANGLE, 6,115, 157, 317,0x06608a
+    .word RECTANGLE, 6,125, 152, 322,0x06608a
+    .word RECTANGLE, 6,125, 152, 328,0x003a51
+
+    .word RECTANGLE, 30,68, 181, 312 ,0x000000
+    .word RECTANGLE, 17,80, 175, 318 ,0x000000
+
+    .word RECTANGLE, 18,58, 186, 318 ,0x172227
+    .word RECTANGLE, 10,70, 180, 322 ,0x172227
+
+    .word RECTANGLE, 5,5, 170, 312 ,0x000000
+    .word RECTANGLE, 5,5, 255, 312 ,0x000000
+
+    .word RECTANGLE, 10,10, 170, 325 ,0x000000
+    .word RECTANGLE, 6,10, 165, 329 ,0x000000
+
+    .word RECTANGLE, 10,10, 250, 325 ,0x000000
+    .word RECTANGLE, 6,10, 255, 329 ,0x000000
+
+
+    .word RECTANGLE, 5,10, 185, 342 ,0x003a51
+    .word RECTANGLE, 5,5,  190, 347 ,0x003a51
+    .word RECTANGLE, 5,5,  194, 352 ,0x003a51
+
+    .word RECTANGLE, 5,10, 235, 342 ,0x003a51
+    .word RECTANGLE, 5,5,  235, 347 ,0x003a51
+    .word RECTANGLE, 5,5,  231, 352 ,0x003a51
+
+    //luz izq
+    .word RECTANGLE, 15,15, 162, 350 ,0x000000
+    .word RECTANGLE, 10,14, 168, 355 ,0xfdc551
+    .word RECTANGLE, 5,20,  168, 365 ,0xeea032
+    .word RECTANGLE, 5,5,   177, 355 ,0x000000
+    .word RECTANGLE, 5,5,   182, 360 ,0x000000
+    .word RECTANGLE, 5,5,   187, 365 ,0x000000
+    .word RECTANGLE, 5,5,   167, 365 ,0x000000
+
+    // Luz derecha
+    .word RECTANGLE, 15,15, 253, 350 ,0x000000
+    .word RECTANGLE, 10,15, 248, 355 ,0xfdc551
+    .word RECTANGLE, 5,21,  242, 365 ,0xeea032
+    .word RECTANGLE, 5,5,   248, 355 ,0x000000
+    .word RECTANGLE, 5,5,   248-5, 355+5 ,0x000000
+    .word RECTANGLE, 5,5,   248-5 -5, 355+5 +5 ,0x000000
+    .word RECTANGLE, 5,5,   258, 365 ,0x000000
+
+
+
+    .word RECTANGLE, 15,92, 169, 379 ,0x000000
+
+    .word RECTANGLE, 6,120, 155, 390 ,0x06608a
+    .word RECTANGLE, 8,8, 153, 385 ,0x06608a
+    .word RECTANGLE, 8,8, 269, 385 ,0x06608a
+
+    .word VALOR_DE_CORTE
+
+car_4_end:
+
+
+
+.global car_5
+car_5:
+    //horas invertidas en este auto: 3 hs
+    // TIPO      | ALTO | ANCHO |    X      |    Y      |    COLOR
+    .word RECTANGLE, 8,70, 181, 300,0xc22419
+    .word RECTANGLE, 8,80, 176, 306,0xc22419
+    .word RECTANGLE, 23,90, 170,312,0x9c2017
+
+
+    .word RECTANGLE, 40,135, 148, 350 ,0x000000
+
+    .word RECTANGLE, 45,130, 150, 345 ,0x9c2017
+
+
+    .word RECTANGLE, 45,110, 160, 330 ,0xc22419
+    .word RECTANGLE, 25,120, 155, 340 ,0xc22419
+
+
+    .word RECTANGLE, 6,115, 157, 317,0xc22419
+    .word RECTANGLE, 6,125, 152, 322,0xc22419
+    .word RECTANGLE, 6,125, 152, 328,0x9c2017
+
+    .word RECTANGLE, 30,68, 181, 312 ,0x000000
+    .word RECTANGLE, 17,80, 175, 318 ,0x000000
+
+    .word RECTANGLE, 18,58, 186, 318 ,0x172227
+    .word RECTANGLE, 10,70, 180, 322 ,0x172227
+
+    .word RECTANGLE, 5,5, 170, 312 ,0x000000
+    .word RECTANGLE, 5,5, 255, 312 ,0x000000
+
+    .word RECTANGLE, 10,10, 170, 325 ,0x000000
+    .word RECTANGLE, 6,10, 165, 329 ,0x000000
+
+    .word RECTANGLE, 10,10, 250, 325 ,0x000000
+    .word RECTANGLE, 6,10, 255, 329 ,0x000000
+
+
+    .word RECTANGLE, 5,10, 185, 342 ,0x9c2017
+    .word RECTANGLE, 5,5,  190, 347 ,0x9c2017
+    .word RECTANGLE, 5,5,  194, 352 ,0x9c2017
+
+    .word RECTANGLE, 5,10, 235, 342 ,0x9c2017
+    .word RECTANGLE, 5,5,  235, 347 ,0x9c2017
+    .word RECTANGLE, 5,5,  231, 352 ,0x9c2017
+
+    //luz izq
+    .word RECTANGLE, 15,15, 162, 350 ,0x000000
+    .word RECTANGLE, 10,14, 168, 355 ,0xfdc551
+    .word RECTANGLE, 5,20,  168, 365 ,0xeea032
+    .word RECTANGLE, 5,5,   177, 355 ,0x000000
+    .word RECTANGLE, 5,5,   182, 360 ,0x000000
+    .word RECTANGLE, 5,5,   187, 365 ,0x000000
+    .word RECTANGLE, 5,5,   167, 365 ,0x000000
+
+    // Luz derecha
+    .word RECTANGLE, 15,15, 253, 350 ,0x000000
+    .word RECTANGLE, 10,15, 248, 355 ,0xfdc551
+    .word RECTANGLE, 5,21,  242, 365 ,0xeea032
+    .word RECTANGLE, 5,5,   248, 355 ,0x000000
+    .word RECTANGLE, 5,5,   248-5, 355+5 ,0x000000
+    .word RECTANGLE, 5,5,   248-5 -5, 355+5 +5 ,0x000000
+    .word RECTANGLE, 5,5,   258, 365 ,0x000000
+
+
+
+    .word RECTANGLE, 15,92, 169, 379 ,0x000000
+
+    .word RECTANGLE, 6,120, 155, 390-1 ,0xc22419
+    .word RECTANGLE, 8,8, 153, 385 ,0xc22419
+    .word RECTANGLE, 8,8, 269, 385 ,0xc22419
+
+    .word VALOR_DE_CORTE
+
+car_5_end:
+
+
+
+
 
 .global plane_1
 plane_1:
