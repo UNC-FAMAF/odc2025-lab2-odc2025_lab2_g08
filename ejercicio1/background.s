@@ -21,7 +21,7 @@ draw_static_background:
     LDR x3, =0x309E6F // //color
     MOV x4, #165 // alto
     MOV x5, #640 // ancho
-    //BL draw_rectangle
+    BL draw_rectangle
 
 
     //BANQUINA 1
