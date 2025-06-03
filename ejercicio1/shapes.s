@@ -294,19 +294,20 @@ draw_route:
     STR     X2,[SP,#24]     // guardar posicion Y
     MOV     X29,SP
 
-    MOV     X13, XZR        // contador = 0
+    MOV     X19, XZR        // contador = 0
 
 do_draw_route:
-    CMP     X13, X5        // comparar contador con ANCHO inicial
+    CMP     X19, #109      // comparar contador con ANCHO inicial
     B.GE    end_draw_route
 
-    SUB     X2, X2, X4     // Y = Y - alto
-    SUB     X5, X5, X4     // ANCHO = ANCHO - alto
-    ADD     X1, X1, #1     // X = X + 1
+    ADD     X2, X2,#3      // Y = Y - alto
+    ADD     X5, X5,#4      // ANCHO = ANCHO - alto
+    ADD     X1, X1, #-2     // X = X + 1
+
 
     BL      draw_rectangle // llama a draw_rectangle con X0..X5
 
-    ADD     X13, X13, #80  // incrementar contador en 80
+    ADD     X19, X19, #1  // incrementar contador en 80
     B       do_draw_route
 
 end_draw_route:
@@ -318,35 +319,9 @@ end_draw_route:
     RET
 
 
-/*
-    Funcion: [draw_lft_shoulder]
-    Descripcion: Dibuja la banquina izquierda con rectangulos succesivos
-                 desplazados y reduciendo tamano. Similar a draw_route pero con valores fijos
-                 de desplazamiento en Y y reduccion de ancho por iteracion.
 
-    Parametros:
-        FB_BASE_ADDRESS --> X0
-        POSICION X      --> X1  (coordenada X inicial)
-        POSICION Y      --> X2  (coordenada Y inicial)
-        COLOR           --> X3  (valor de color 32 bits)
-        ALTO            --> X4  (alto de rectangulo)
-        ANCHO           --> X5  (ancho de rectangulo inicial)
-
-    Salidas:
-        No tiene un valor de retorno explicito en registros.
-        Dibuja varios rectangulos en forma de banquina izquierda hasta que
-        contador >= ANCHO inicial.
-
-    Registros usados (recap):
-        input:  {X0,X1,X2,X3,X4,X5}
-        output: {}
-        temp:   {X13}   // contador de iteraciones
-
-    Guardar/Restaurar:
-        Se guarda en pila X29,X30, X1,X2.
-*/
-.global "draw_lft_shoulder"
-draw_lft_shoulder:
+.global "draw_shoulder_1"
+draw_shoulder_1:
     SUB     SP,SP,#32       // Reservo 32 bytes en pila
     STR     X29,[SP,#0]
     STR     X30,[SP,#8]
@@ -354,89 +329,65 @@ draw_lft_shoulder:
     STR     X2,[SP,#24]     // guardar posicion Y
     MOV     X29,SP
 
-    MOV     X13, XZR        // contador = 0
+    MOV     X19, XZR        // contador = 0
 
-do_lft_shoulder:
-    CMP     X13, X5        // comparar contador con ANCHO inicial
-    B.GE    end_lft_shoulder
+do_draw_shoulder_1:
+    CMP     X19, #79      // comparar contador con ANCHO inicial
+    B.GE    end_draw_shoulder_1
 
-    SUB     X2, X2, #7     // Y = Y - 7
-    SUB     X5, X5, #4     // ANCHO = ANCHO - 4
-    ADD     X1, X1, #4     // X = X + 4
-
-    BL      draw_rectangle // llama a draw_rectangle con X0..X5
-
-    ADD     X13, X13, #155 // incrementar contador en 155
-    B       do_lft_shoulder
-
-end_lft_shoulder:
-    LDR     X2,[SP,#24]    // restaurar posicion Y
-    LDR     X1,[SP,#16]    // restaurar posicion X
-    LDR     X30,[SP,#8]
-    LDR     X29,[SP,#0]
-    ADD     SP,SP,#32
-    
-    RET
-
-
-/*
-    Funcion: [draw_rgt_shoulder]
-    Descripcion: Dibuja la banquina derecha con rectangulos sucesivos
-                 desplazados y reduciendo tamano. Similar a draw_route pero con valores fijos
-                 de desplazamiento en Y y reduccion de ancho por iteracion.
-
-    Parametros:
-        FB_BASE_ADDRESS --> X0
-        POSICION X      --> X1  (coordenada X inicial)
-        POSICION Y      --> X2  (coordenada Y inicial)
-        COLOR           --> X3  (valor de color 32 bits)
-        ALTO            --> X4  (alto de rectangulo)
-        ANCHO           --> X5  (ancho de rectangulo inicial)
-
-    Salidas:
-        No tiene un valor de retorno explicito en registros.
-        Dibuja varios rectangulos en forma de banquina derecha hasta que
-        contador >= ANCHO inicial.
-
-    Registros usados (recap):
-        input:  {X0,X1,X2,X3,X4,X5}
-        output: {}
-        temp:   {X13}   // contador de iteraciones
-
-    Guardar/Restaurar:
-        Se guarda en pila X29,X30, X1,X2.
-*/
-.global "draw_rgt_shoulder"
-draw_rgt_shoulder:
-    SUB     SP,SP,#32       // Reservo 32 bytes en pila
-    STR     X29,[SP,#0]
-    STR     X30,[SP,#8]
-    STR     X1,[SP,#16]     // guardar posicion X
-    STR     X2,[SP,#24]     // guardar posicion Y
-    MOV     X29,SP
-
-    MOV     X13, XZR        // contador = 0
-
-do_rgt_shoulder:
-    CMP     X13, X5        // comparar contador con ANCHO inicial
-    B.GE    end_rgt_shoulder
-
-    SUB     X2, X2, #7     // Y = Y - 7
-    SUB     X5, X5, #5     // ANCHO = ANCHO - 5
+    ADD     X2, X2,#4      // Y = Y - alto
+    ADD     X5, X5,#2      // ANCHO = ANCHO - alto
     ADD     X1, X1, #1     // X = X + 1
 
+
     BL      draw_rectangle // llama a draw_rectangle con X0..X5
 
-    ADD     X13, X13, #108 // incrementar contador en 108
-    B       do_rgt_shoulder
+    ADD     X19, X19, #1  // incrementar contador en 80
+    B       do_draw_shoulder_1
 
-end_rgt_shoulder:
+end_draw_shoulder_1:
     LDR     X2,[SP,#24]    // restaurar posicion Y
     LDR     X1,[SP,#16]    // restaurar posicion X
     LDR     X30,[SP,#8]
     LDR     X29,[SP,#0]
     ADD     SP,SP,#32
     RET
+
+
+
+.global "draw_shoulder_2"
+draw_shoulder_2:
+    SUB     SP,SP,#32       // Reservo 32 bytes en pila
+    STR     X29,[SP,#0]
+    STR     X30,[SP,#8]
+    STR     X1,[SP,#16]     // guardar posicion X
+    STR     X2,[SP,#24]     // guardar posicion Y
+    MOV     X29,SP
+
+    MOV     X19, XZR        // contador = 0
+
+do_draw_shoulder_2:
+    CMP     X19, #79      // comparar contador con ANCHO inicial
+    B.GE    end_draw_shoulder_2
+
+    ADD     X2, X2,#4      // Y = Y - alto
+    ADD     X5, X5,#2      // ANCHO = ANCHO - alto
+    ADD     X1, X1, #-3     // X = X + 1
+
+
+    BL      draw_rectangle // llama a draw_rectangle con X0..X5
+
+    ADD     X19, X19, #1  // incrementar contador en 80
+    B       do_draw_shoulder_2
+
+end_draw_shoulder_2:
+    LDR     X2,[SP,#24]    // restaurar posicion Y
+    LDR     X1,[SP,#16]    // restaurar posicion X
+    LDR     X30,[SP,#8]
+    LDR     X29,[SP,#0]
+    ADD     SP,SP,#32
+    RET
+
 
 
 /*
@@ -618,70 +569,33 @@ skip_step_y:
 draw_route_lines:
     STP X29,X30,[SP,#-16]!
     MOV X29,SP
+    
     MOV X0,X20
-    MOV X1,#317
-    MOV X2,#170
+    MOV X1,#305
+    MOV X2,#169
     LDR x3, =0xFFFFFF //color
-    MOV x4, #24 // alto
-    MOV x5, #5 // ancho
+    MOV x4, #16 // alto
+    MOV x5, #3 // ancho
     BL draw_rectangle
 
-    MOV X0,X20
-    MOV X1,#317
-    MOV X2,#170 +39 
-    LDR x3, =0xFFFFFF //color
-    MOV x4, #24 // alto
-    MOV x5, #5 // ancho
+    MOV X19,#0
+for_route_lines:
+    CMP X19,#11 
+    B.GE end_route_lines
+    
+    
+    MOVZ    x3, 0xFFFF, lsl 0
+    MOVK    x3, 0xFFFF, lsl 16
+    MOV x4, #17 // alto
+    MOV x5, #3 // ancho
+    ADD X2,X2,#28
     BL draw_rectangle
 
-    MOV X0,X20
-    MOV X1,#317
-    MOV X2,#170 +39 + 39
-    LDR x3, =0xFFFFFF //color
-    MOV x4, #24 // alto
-    MOV x5, #5 // ancho
-    BL draw_rectangle
 
-    MOV X0,X20
-    MOV X1,#317
-    MOV X2,#170 +39 + 39 +39
-    LDR x3, =0xFFFFFF //color
-    MOV x4, #24 // alto
-    MOV x5, #5 // ancho
-    BL draw_rectangle
+    ADD X19,X19,#1
+    B for_route_lines
 
-    MOV X0,X20
-    MOV X1,#317
-    MOV X2,#170 +39 + 39 +39 + 39
-    LDR x3, =0xFFFFFF //color
-    MOV x4, #24 // alto
-    MOV x5, #5 // ancho
-    BL draw_rectangle
-
-    MOV X0,X20
-    MOV X1,#317
-    MOV X2,#170 +39 + 39 +39 + 39 +39
-    LDR x3, =0xFFFFFF //color
-    MOV x4, #24 // alto
-    MOV x5, #5 // ancho
-    BL draw_rectangle
-
-    MOV X0,X20
-    MOV X1,#317
-    MOV X2,#170 +39 + 39 +39 + 39 +39+39
-    LDR x3, =0xFFFFFF //color
-    MOV x4, #24 // alto
-    MOV x5, #5 // ancho
-    BL draw_rectangle
-
-    MOV X0,X20
-    MOV X1,#317
-    MOV X2,#170 +39 + 39 +39 + 39 +39+39+ 39
-    LDR x3, =0xFFFFFF //color
-    MOV x4, #24 // alto
-    MOV x5, #5 // ancho
-    BL draw_rectangle
-
+end_route_lines:
     LDP X29,X30,[SP],#16
     RET
 

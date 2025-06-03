@@ -21,34 +21,34 @@ draw_static_background:
     LDR x3, =0x309E6F // //color
     MOV x4, #165 // alto
     MOV x5, #640 // ancho
-    BL draw_rectangle
-
-    //BANQUINA IZQ
-    MOV x0, x20
-    MOV x1, #48
-    MOV x2, #495
-    LDR x3, =0xf7caa2
-    MOV x4, #7
-    MOV X5,#350
-    BL draw_lft_shoulder
+    //BL draw_rectangle
 
 
-    //BANQUINA DER
-    MOV x0, x20
-    MOV x1, #241
-    MOV x2, #500
-    LDR x3, =0xf7caa2
-    MOV x4, #7
-    MOV X5,#350
-    BL draw_rgt_shoulder
+    //BANQUINA 1
+    MOV X0,X20
+    MOV X1, #282
+    MOV X2,#160
+    LDR X3, =0xf7caa2
+    MOV X4,#7
+    MOV X5,#80
+    BL draw_shoulder_1
+
+    //BANQUINA 2
+    MOV X0,X20
+    MOV X1, #250
+    MOV X2,#160
+    LDR X3, =0xf7caa2
+    MOV X4,#7
+    MOV X5,#80
+    BL draw_shoulder_2
     
     //RUTA
     MOV X0,X20
-    MOV X1, #120
-    MOV X2,#480
+    MOV X1, #286
+    MOV X2,#150
     LDR X3, =0x50748c
-    MOV X4,#2
-    MOV X5,#400
+    MOV X4,#4
+    MOV X5,#40
     BL draw_route
 
     //CIELO 

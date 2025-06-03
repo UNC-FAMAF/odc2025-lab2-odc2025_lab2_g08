@@ -55,11 +55,24 @@ main_init:
 
     //Procedimiento [render_shape] escrito en: [shape_renderer.s]
     ADR X8,car_1
+    
+    MOV W1,#45
+    MOV W2,#-60
+    BL move_shape
+    
+    MOV X1,#130
+    BL scale_shape
+
     BL render_shape
 
+    
     //Procedimiento [render_shape] escrito en: [shape_renderer.s]
-    ADR X8,car_2
-    BL render_shape
+    //ADR X8,car_2
+    //BL render_shape
+
+
+    //ADR X8,plane_1
+    //BL render_shape
 
 
 inf_loop:

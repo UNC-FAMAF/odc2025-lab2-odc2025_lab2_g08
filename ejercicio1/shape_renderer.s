@@ -4,24 +4,66 @@
     .equ RECTANGLE, -5
     .equ LINE,      -6
     .equ TRIANGLE,  -7
-    .equ VALOR_DE_CORTE, -999
+    .equ VALOR_DE_CORTE, -999 //similar a como C maneja los strings en printf
 
 .section .data
 .global car_1
 car_1:
     // TIPO      | ALTO | ANCHO |    X     |    Y     |   COLOR
-    .word RECTANGLE, 33,    75,    223+45, 338+20, 0x20389F  // carrocería principal
-    .word RECTANGLE, 20,   100,    210+45, 350+20, 0x20389F  // techo
-    .word RECTANGLE, 10,    46,    237+45, 344+20, 0x000000  // ventana
-    .word RECTANGLE,  5,    24,    248+45, 359+20, 0xFFFFFF  // luz frontal
-    .word RECTANGLE,  6,    96,    212+45, 369+20, 0x000000  // base inferior
-    .word RECTANGLE,  5,   101,    209+45, 374+20, 0x20389F  // franja lateral
-    .word RECTANGLE, 11,    25,    212+45, 379+20, 0x000000  // rueda izq
-    .word RECTANGLE,  2,    15,    216+45, 380+20, 0x80383838 // guardabarros izq
-    .word RECTANGLE, 11,    25,    284+45, 379+20, 0x000000  // rueda der
-    .word RECTANGLE,  2,    15,    289+45, 380+20, 0x80383838 // guardabarros der
-    .word RECTANGLE,  6,    17,    289+45, 360+20, 0xFFFFFF  // luz der
-    .word RECTANGLE,  6,    17,    214+45, 360+20, 0xFFFFFF  // luz izq
+    .word RECTANGLE, 7,    70,      223, 338, 0x057CA1
+    .word RECTANGLE, 17,    80,     219, 344, 0x097194
+    .word RECTANGLE, 7,    105,     207, 354, 0x097194
+
+    .word RECTANGLE, 6,    9,       207, 354, 0x000000//ESPEJO IZQ
+    .word RECTANGLE, 6,    9,       302, 354, 0x000000//ESPEJO DER
+    .word RECTANGLE, 11,    48,     235, 349, 0x000000 //LUNETA TRASERA
+    .word RECTANGLE, 21,    112,    203, 360, 0x057CA1
+
+    .word RECTANGLE, 9,    25,     203, 367, 0x383838//BACK LUZ IZQ
+    .word RECTANGLE, 9,    25,     290, 367, 0x383838//BACK LUZ DER
+
+    .word RECTANGLE, 5,    10,     206, 371, 0xFBB372//LUZ IZ1
+    .word RECTANGLE, 5,    10,     215, 371, 0xEE6F54
+
+    .word RECTANGLE, 5,    10,     293, 371, 0xEE6F54//LUZ DER
+    .word RECTANGLE, 5,    10,     302, 371, 0xFBB372
+
+    .word RECTANGLE, 7,    35,     242, 370, 0xFFFFFF   //PATENTE
+
+    .word RECTANGLE, 4,    104,    206, 381, 0x000000 // PARTE DE PARAGOLPES
+
+    .word RECTANGLE, 5,    60,     230, 390, 0x353E46 //SOMBRA
+    //INI RUEDAS
+    .word RECTANGLE,   10,      25,    207 -2, 389, 0x000000
+    .word RECTANGLE,    2,    17,    210 -2,  395,  0x888888
+
+    .word RECTANGLE, 10,    25,    285 +2, 389, 0x000000
+    .word RECTANGLE,  2,    17,    289 +2,  395,  0x888888
+    //FIN RUEDAS
+
+    .word RECTANGLE, 6,    114,    202, 384, 0x057CA1 //PARAGOLPES TRASERO
+
+    ////INICIO PATENTE
+    ////S
+    //.word RECTANGLE, 6,    5,     243 +2 , 371   , 0x000000
+    //.word RECTANGLE, 1,    3,     246 +2 , 373   , 0XFFFFFF
+    //.word RECTANGLE, 1,    3,     243 +2 , 374   , 0XFFFFFF    
+    ////A
+    //.word RECTANGLE, 1,    4,     244+6 +2,   371, 0x000000
+    //.word RECTANGLE, 6,    1,     244+6 +2,   371, 0x000000
+    //.word RECTANGLE, 6,    1,     251+2 +2,   371, 0x000000
+    //.word RECTANGLE, 1,    4,     244+6 +2,   374, 0x000000
+    ////N
+    //.word RECTANGLE, 6,    1,     250+6 +2,   371, 0x000000
+    //.word RECTANGLE, 1,    3,     250+6 +2,   371, 0x000000
+    //.word RECTANGLE, 6,    1,     256+2 +2,   371, 0x000000
+    ////T
+    //.word RECTANGLE, 6,    1,     260+3 +2,   371, 0x000000
+    //.word RECTANGLE, 1,    4,     262   +2,     371, 0x000000
+    ////I
+    //.word RECTANGLE, 6,    1,     263+4 +2,   371, 0x000000
+
+
     .word VALOR_DE_CORTE
 car_1_end:
 
@@ -50,6 +92,21 @@ rand:
     .word RECTANGLE, 150,  640,     0,    200, 0x309E6F
     .word VALOR_DE_CORTE
 rand_end:
+
+.global plane_1
+plane_1:
+    // Dibujar una avioneta pequeña usando sólo rectángulos
+    //
+    // TIPO      | ALTO | ANCHO |    X     |    Y     |   COLOR
+    // ----------------------------------------------------------------
+    // Fuselaje (rojo)
+    .word RECTANGLE,    4,    40,    200,  50,  0x888888  
+    
+    .word VALOR_DE_CORTE
+plane_1_end:
+
+
+
 
 // render_shape:
 //   X0 = dirección base del framebuffer
@@ -87,7 +144,6 @@ render_shape:
     // Preparar framebuffer/contexto
     MOV     X0, X20
 
-    
     CMP     W9, #RECTANGLE
     BEQ     .draw_rect
     CMP     W9, #CIRCLE
@@ -97,15 +153,10 @@ render_shape:
     CMP     W9, #TRIANGLE
     BEQ     .draw_triang
     // Si no coincide ningún tipo, ignorar y continuar
-
-    
     B       .loop_component
 
 .draw_rect:
-   
-
     BL      draw_rectangle
-
     B      .loop_component
 
 .draw_circ:
@@ -123,3 +174,132 @@ render_shape:
 .done:
     LDP     X29, X30, [SP], #16      // restaurar FP y LR
     RET
+
+
+
+
+.global move_shape
+move_shape:
+    STP     X29, X30, [SP, #-16]!    // Guardar FP y LR
+    MOV     X29, SP
+
+    // Entradas:
+    //   X8 = puntero al primer componente de la forma
+    //   W1 = deltaX, W2 = deltaY
+
+    MOV     X11, X1      // X11 = deltaX
+    MOV     X12, X2      // X12 = deltaY
+    MOV     X10, X8      // X10 = cursor en memoria de la forma
+
+.loop_move:
+    LDR     W9, [X10]    // W9 = tipo
+    CMP     W9, #VALOR_DE_CORTE
+    BEQ     .done_move
+
+    // --- actualizar posX (offset 3*4 = 12 bytes) ---
+    LDR     W1, [X10, #12]   // W1 = posX
+    ADD    W1, W1, W11      // W1 += deltaX
+    STR     W1, [X10, #12]
+
+    // --- actualizar posY (offset 4*4 = 16 bytes) ---
+    LDR     W2, [X10, #16]   // W2 = posY
+    ADD    W2, W2, W12      // W2 += deltaY
+    STR     W2, [X10, #16]
+
+    // --- desplazarse al siguiente componente según tipo ---
+    // RECTANGLE (-5) y LINE (-6) tienen 6 campos (6×4 = 24 bytes)
+    CMP     W9, #RECTANGLE
+    BEQ     .skip_6
+    CMP     W9, #LINE
+    BEQ     .skip_6
+
+    // CIRCLE (-3) y TRIANGLE (-7) tienen 7 campos (7×4 = 28 bytes)
+    CMP     W9, #CIRCLE
+    BEQ     .skip_7
+    CMP     W9, #TRIANGLE
+    BEQ     .skip_7
+
+    // Por defecto, tratar como 6 campos
+.skip_6:
+    ADD     X10, X10, #24
+    B       .loop_move
+
+.skip_7:
+    ADD     X10, X10, #28
+    B       .loop_move
+
+.done_move:
+    LDP     X29, X30, [SP], #16     // Restaurar FP y LR
+    RET
+
+// ----------------------------------------------------------------------------
+// scale_shape:
+//   Escala en el lugar todas las componentes de una figura.
+// Entradas:
+//   X8 = puntero al primer campo (tipo) de la forma
+//   W1 = factor de escala en %, p. ej. 60 → reduce al 60%
+// Convención: X1 - X5, X7 pueden clobber; X20 = framebuffer/contexto (no usado aquí)
+// ----------------------------------------------------------------------------
+.global scale_shape
+scale_shape:
+    STP     X29, X30, [SP, #-16]!   // prologue: guardar FP y LR
+    MOV     X29, SP
+
+    MOV    X2, X1                 // X2 = scale_percent (extendido)
+    MOV     W7, #100               // divisor fijo para porcentajes
+    MOV     X10, X8                // X10 = cursor sobre componentes
+
+.loop:
+    // Leer tipo en W17
+    LDR     W17, [X10]             
+    CMP     W17, #VALOR_DE_CORTE   
+    BEQ     .done1                 // si es VALOR_DE_CORTE, salir
+
+    // --- Escalar alto en offset #4 ---
+    LDR     W3, [X10, #4]          // W3 = alto_actual
+    MUL     W3, W3, W2             // W3 = alto_actual * scale_percent
+    UDIV    W3, W3, W7             // W3 = (alto_actual * scale%) / 100
+    STR     W3, [X10, #4]          // guardar alto escalado
+
+    // --- Escalar ancho en offset #8 ---
+    LDR     W4, [X10, #8]          // W4 = ancho_actual
+    MUL     W4, W4, W2             // W4 = ancho_actual * scale_percent
+    UDIV    W4, W4, W7             // W4 = (ancho_actual * scale%) / 100
+    STR     W4, [X10, #8]          // guardar ancho escalado
+
+    // --- Escalar posX en offset #12 ---
+    LDR     W5, [X10, #12]         // W5 = posX_actual
+    MUL     W5, W5, W2             // W5 = posX_actual * scale_percent
+    UDIV    W5, W5, W7             // W5 = (posX_actual * scale%) / 100
+    STR     W5, [X10, #12]         // guardar posX escalada
+
+    // --- Escalar posY en offset #16 ---
+    LDR     W6, [X10, #16]         // W6 = posY_actual
+    MUL     W6, W6, W2             // W6 = posY_actual * scale_percent
+    UDIV    W6, W6, W7             // W6 = (posY_actual * scale%) / 100
+    STR     W6, [X10, #16]         // guardar posY escalada
+
+    // --- Avanzar al siguiente componente ---
+    // RECTANGLE y LINE usan 6 campos (6×4 = 24 bytes)
+    CMP     W17, #RECTANGLE
+    BEQ     .skip6
+    CMP     W17, #LINE
+    BEQ     .skip6
+    // CIRCLE y TRIANGLE usan 7 campos (7×4 = 28 bytes)
+    CMP     W17, #CIRCLE
+    BEQ     .skip7
+    CMP     W17, #TRIANGLE
+    BEQ     .skip7
+    // Por defecto, tratar como 6 campos
+.skip6:
+    ADD     X10, X10, #24
+    B       .loop
+
+.skip7:
+    ADD     X10, X10, #28
+    B       .loop
+
+.done1:
+    LDP     X29, X30, [SP], #16     // epilogue: restaurar FP y LR
+    RET
+
