@@ -67,8 +67,8 @@ main_init:
 
     
     //Procedimiento [render_shape] escrito en: [shape_renderer.s]
-    //ADR X8,car_2
-    //BL render_shape
+    ADR X8,car_2
+    BL render_shape
 
 
     //ADR X8,plane_1

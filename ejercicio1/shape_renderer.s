@@ -13,41 +13,33 @@ car_1:
     .word RECTANGLE, 7,    70,      223, 338, 0x057CA1
     .word RECTANGLE, 17,    80,     219, 344, 0x097194
     .word RECTANGLE, 7,    105,     207, 354, 0x097194
-
     .word RECTANGLE, 6,    9,       207, 354, 0x000000//ESPEJO IZQ
     .word RECTANGLE, 6,    9,       302, 354, 0x000000//ESPEJO DER
     .word RECTANGLE, 11,    48,     235, 349, 0x000000 //LUNETA TRASERA
     .word RECTANGLE, 21,    112,    203, 360, 0x057CA1
-
     .word RECTANGLE, 9,    25,     203, 367, 0x383838//BACK LUZ IZQ
     .word RECTANGLE, 9,    25,     290, 367, 0x383838//BACK LUZ DER
-
     .word RECTANGLE, 5,    10,     206, 371, 0xFBB372//LUZ IZ1
     .word RECTANGLE, 5,    10,     215, 371, 0xEE6F54
-
     .word RECTANGLE, 5,    10,     293, 371, 0xEE6F54//LUZ DER
     .word RECTANGLE, 5,    10,     302, 371, 0xFBB372
-
     .word RECTANGLE, 7,    35,     242, 370, 0xFFFFFF   //PATENTE
-
     .word RECTANGLE, 4,    104,    206, 381, 0x000000 // PARTE DE PARAGOLPES
-
     .word RECTANGLE, 5,    60,     230, 390, 0x353E46 //SOMBRA
     //INI RUEDAS
     .word RECTANGLE,   10,      25,    207 -2, 389, 0x000000
     .word RECTANGLE,    2,    17,    210 -2,  395,  0x888888
-
     .word RECTANGLE, 10,    25,    285 +2, 389, 0x000000
     .word RECTANGLE,  2,    17,    289 +2,  395,  0x888888
     //FIN RUEDAS
-
     .word RECTANGLE, 6,    114,    202, 384, 0x057CA1 //PARAGOLPES TRASERO
-
-    ////INICIO PATENTE
+    //INICIO PATENTE
     ////S
     //.word RECTANGLE, 6,    5,     243 +2 , 371   , 0x000000
     //.word RECTANGLE, 1,    3,     246 +2 , 373   , 0XFFFFFF
-    //.word RECTANGLE, 1,    3,     243 +2 , 374   , 0XFFFFFF    
+    //.word RECTANGLE, 1,    3,     243 +2 , 374   , 0XFFFFFF
+    //.word RECTANGLE, 1,    2,     243 +2 , 371   , 0XFFFFFF    
+    //.word RECTANGLE, 1,    2,     247 +2 , 376   , 0XFFFFFF    
     ////A
     //.word RECTANGLE, 1,    4,     244+6 +2,   371, 0x000000
     //.word RECTANGLE, 6,    1,     244+6 +2,   371, 0x000000
@@ -62,8 +54,6 @@ car_1:
     //.word RECTANGLE, 1,    4,     262   +2,     371, 0x000000
     ////I
     //.word RECTANGLE, 6,    1,     263+4 +2,   371, 0x000000
-
-
     .word VALOR_DE_CORTE
 car_1_end:
 
@@ -75,11 +65,11 @@ car_2:
     .word RECTANGLE, 18,    96,   150+140, 144+100, 0xFF00FF00
     .word RECTANGLE, 15,    60,   168+140, 126+100, 0x00000000
     .word RECTANGLE,  6,     6,   150+140, 150+100, 0x00000000
-    .word RECTANGLE,  6,     6,   156+140, 150+100, 0x00F5BF42
+    .word RECTANGLE,  6,     6,   156+140, 150+100, 0xFFFFFFFF
     .word RECTANGLE,  6,     6,   240+140, 150+100, 0x00000000
     .word RECTANGLE,  6,     6,   240+140, 150+100, 0x00000000
-    .word RECTANGLE,  6,     6,   234+140, 150+100, 0x00F5BF42
-    .word RECTANGLE,  9,    24,   186+140, 150+100, 0xFFFFFF00
+    .word RECTANGLE,  6,     6,   234+140, 150+100, 0xFFFFFFFF
+    .word RECTANGLE,  9,    24,   186+140, 150+100, 0xFFFFFFFF
     .word RECTANGLE, 15,    18,   150+140, 162+100, 0x00000000
     .word RECTANGLE, 15,    18,   228+140, 162+100, 0x00000000
     .word VALOR_DE_CORTE
