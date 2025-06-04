@@ -729,8 +729,8 @@ car_6_end:
 
 
 
-.global car_7
-car_7:
+.global car_9
+car_9:
     
     .word RECTANGLE, 5, 57, 44, 39, 0x000000
     .word RECTANGLE, 9, 65, 40, 41, 0x000000
@@ -973,7 +973,7 @@ car_7:
 
     .word VALOR_DE_CORTE
 
-car_7_end:
+car_9_end:
 
 
 

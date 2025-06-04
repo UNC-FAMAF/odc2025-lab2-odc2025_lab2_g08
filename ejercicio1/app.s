@@ -67,8 +67,8 @@ main_init:
     BL move_shape
     BL render_shape
 
-    ADR X8,car_7
-    MOV X1,#95
+    ADR X8,car_9
+    MOV X1,#92
     BL scale_shape
     MOV W1,#289
     MOV W2,#210
