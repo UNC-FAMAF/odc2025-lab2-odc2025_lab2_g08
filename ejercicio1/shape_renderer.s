@@ -198,7 +198,7 @@ car_4_end:
 
 .global car_5
 car_5:
-    //horas invertidas en este auto: 3 hs
+    //Compia de car 4 pero de otro color (el cambio de color podria ser implementado en un procedimiento tambien)
     // TIPO      | ALTO | ANCHO |    X      |    Y      |    COLOR
     .word RECTANGLE, 8,70, 181, 300,0xc22419
     .word RECTANGLE, 8,80, 176, 306,0xc22419
