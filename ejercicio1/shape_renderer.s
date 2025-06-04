@@ -4,7 +4,7 @@
     .equ RECTANGLE, -5
     .equ LINE,      -6
     .equ TRIANGLE,  -7
-    .equ VALOR_DE_CORTE, -999 //similar a como C maneja los strings en printf verificando [\0]
+    .equ VALOR_DE_CORTE, -999 //similar a como la stdio.h maneja los strings en printf verificando [\0]
 
 .section .data
 .global car_1
