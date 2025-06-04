@@ -274,7 +274,7 @@ car_5_end:
 
 .global car_6
 car_6:
-    .word RECTANGLE, 36, 108, 18, 61, 0x000000
+ .word RECTANGLE, 36, 108, 18, 61, 0x000000
     .word RECTANGLE, 2, 16, 20, 97, 0x000000
     .word RECTANGLE, 2, 16, 108, 97, 0x000000
     .word RECTANGLE, 24, 104, 20, 63, 0x00374CD
@@ -477,82 +477,31 @@ car_6:
     .word RECTANGLE, 2, 2, 32, 94, 0x00374C
     .word RECTANGLE, 2, 2, 34, 92, 0x00374C
     .word RECTANGLE, 2, 1, 36, 79, 0x054E6C
-    .word RECTANGLE, 1, 1, 36, 80, 0x054E6C
     .word RECTANGLE, 4, 1, 35, 78, 0x054E6C
     .word RECTANGLE, 12, 82, 34, 75, 0x054E6C
     .word RECTANGLE, 8, 38, 52, 70, 0xFFFFFF
     .word RECTANGLE, 11, 1, 52, 69, 0x054E6C
     .word RECTANGLE, 1, 6, 26, 68, 0x000000
-    .word RECTANGLE, 1, 1, 40, 65, 0xC7120C
-    .word RECTANGLE, 1, 1, 41, 64, 0xC7120C
-    .word RECTANGLE, 1, 1, 40, 64, 0xC7120C
-    .word RECTANGLE, 1, 1, 42, 68, 0x054E6C
-    .word RECTANGLE, 1, 1, 43, 68, 0x054E6C
-    .word RECTANGLE, 1, 1, 45, 65, 0x000000
-    .word RECTANGLE, 1, 1, 45, 65, 0x000000
-    .word RECTANGLE, 1, 1, 44, 65, 0x000000
-    .word RECTANGLE, 1, 1, 46, 65, 0x000000
-    .word RECTANGLE, 1, 1, 97, 64, 0x000000
-    .word RECTANGLE, 1, 1, 97, 65, 0x000000
-    .word RECTANGLE, 1, 1, 48, 61, 0x054E6C
     .word RECTANGLE, 5, 1, 55, 71, 0x000000
     .word RECTANGLE, 1, 4, 56, 76, 0x000000
     .word RECTANGLE, 5, 1, 60, 71, 0x000000
     .word RECTANGLE, 1, 4, 56, 70, 0x000000
     .word RECTANGLE, 6, 1, 62, 71, 0x000000
-    .word RECTANGLE, 1, 1, 62, 70, 0x000000
     .word RECTANGLE, 5, 1, 66, 71, 0x000000
-    .word RECTANGLE, 1, 1, 63, 76, 0x000000
-    .word RECTANGLE, 1, 1, 64, 75, 0x000000
-    .word RECTANGLE, 1, 1, 65, 75, 0x000000
-    .word RECTANGLE, 1, 1, 66, 75, 0xFFFFFF
-    .word RECTANGLE, 1, 1, 63, 70, 0x000000
-    .word RECTANGLE, 1, 1, 65, 71, 0x000000
-    .word RECTANGLE, 1, 1, 64, 70, 0x000000
-    .word RECTANGLE, 1, 1, 66, 71, 0xFFFFFF
-    .word RECTANGLE, 1, 1, 64, 75, 0xFFFFFF
-    .word RECTANGLE, 1, 1, 64, 76, 0x000000
     .word RECTANGLE, 1, 4, 69, 70, 0x000000
-    .word RECTANGLE, 1, 1, 68, 71, 0x000000
     .word RECTANGLE, 5, 1, 68, 71, 0x000000
     .word RECTANGLE, 1, 4, 69, 76, 0x000000
     .word RECTANGLE, 1, 5, 75, 70, 0x000000
-    .word RECTANGLE, 1, 1, 79, 70, 0x000000
-    .word RECTANGLE, 1, 1, 79, 71, 0x000000
-    .word RECTANGLE, 1, 1, 78, 72, 0x000000
-    .word RECTANGLE, 1, 1, 77, 72, 0x000000
-    .word RECTANGLE, 1, 1, 76, 73, 0x000000
-    .word RECTANGLE, 1, 1, 76, 74, 0x000000
-    .word RECTANGLE, 1, 1, 76, 75, 0x000000
-    .word RECTANGLE, 1, 1, 76, 76, 0x000000
-    .word RECTANGLE, 1, 1, 78, 76, 0x000000
-    .word RECTANGLE, 1, 1, 79, 76, 0x000000
-    .word RECTANGLE, 1, 1, 77, 76, 0x000000
     .word RECTANGLE, 1, 6, 81, 71, 0x000000
     .word RECTANGLE, 3, 1, 81, 71, 0x000000
     .word RECTANGLE, 1, 4, 82, 73, 0x000000
     .word RECTANGLE, 4, 1, 85, 73, 0x000000
     .word RECTANGLE, 1, 5, 81, 76, 0x000000
     .word RECTANGLE, 1, 6, 81, 71, 0xFFFFFF
-    .word RECTANGLE, 1, 1, 81, 71, 0x000000
-    .word RECTANGLE, 1, 1, 81, 70, 0x000000
     .word RECTANGLE, 1, 5, 82, 70, 0x000000
-    .word RECTANGLE, 1, 1, 86, 70, 0xFFFFFF
-    .word RECTANGLE, 1, 1, 75, 74, 0x000000
-    .word RECTANGLE, 1, 1, 75, 75, 0x000000
-    .word RECTANGLE, 1, 1, 76, 75, 0xFFFFFF
-    .word RECTANGLE, 1, 1, 76, 75, 0xFFFFFF
-    .word RECTANGLE, 1, 1, 76, 74, 0xFFFFFF
-    .word RECTANGLE, 1, 1, 74, 71, 0x000000
-    .word RECTANGLE, 1, 1, 75, 76, 0x000000
-    .word RECTANGLE, 1, 1, 76, 74, 0x000000
-    .word RECTANGLE, 1, 1, 77, 73, 0x000000
-    .word RECTANGLE, 1, 1, 75, 71, 0x000000
     .word RECTANGLE, 2, 12, 102, 65, 0xC7120C
     .word RECTANGLE, 1, 3, 114, 67, 0x000000
     .word RECTANGLE, 1, 3, 114, 68, 0x000000
-    .word RECTANGLE, 1, 1, 26, 64, 0xC7120C
-    .word RECTANGLE, 1, 1, 40, 66, 0xC7120C
     .word RECTANGLE, 4, 1, 102, 61, 0xC7120C
     .word RECTANGLE, 4, 63, 43, 82, 0x000000
     .word RECTANGLE, 4, 3, 41, 82, 0x000000
@@ -564,132 +513,51 @@ car_6:
     .word RECTANGLE, 3, 22, 40, 85, 0x000000
     .word RECTANGLE, 2, 7, 54, 88, 0x000000
     .word RECTANGLE, 1, 30, 57, 92, 0x000000
-    .word RECTANGLE, 1, 1, 87, 92, 0x000000
     .word RECTANGLE, 5, 2, 56, 89, 0x000000
     .word RECTANGLE, 4, 2, 86, 89, 0x000000
     .word RECTANGLE, 6, 2, 38, 87, 0x000000
-    .word RECTANGLE, 1, 1, 39, 86, 0x000000
-    .word RECTANGLE, 1, 1, 38, 86, 0x000000
-    .word RECTANGLE, 1, 1, 39, 85, 0x000000
-    .word RECTANGLE, 1, 1, 38, 84, 0x000000
-    .word RECTANGLE, 1, 1, 38, 85, 0x000000
     .word RECTANGLE, 5, 1, 37, 86, 0x000000
-    .word RECTANGLE, 1, 1, 36, 91, 0x000000
-    .word RECTANGLE, 1, 1, 37, 91, 0x000000
-    .word RECTANGLE, 1, 1, 38, 82, 0x054E6C
-    .word RECTANGLE, 1, 1, 39, 82, 0x054E6C
     .word RECTANGLE, 5, 3, 39, 88, 0x000000
-    .word RECTANGLE, 1, 1, 43, 89, 0x000000
     .word RECTANGLE, 3, 2, 42, 87, 0x000000
     .word RECTANGLE, 3, 6, 100, 87, 0x000000
     .word RECTANGLE, 3, 5, 102, 90, 0x000000
-    .word RECTANGLE, 1, 1, 105, 86, 0x000000
-    .word RECTANGLE, 1, 1, 104, 87, 0x000000
     .word RECTANGLE, 8, 3, 105, 84, 0x000000
-    .word RECTANGLE, 1, 1, 104, 86, 0x000000
-    .word RECTANGLE, 1, 1, 108, 91, 0x054E6C
-    .word RECTANGLE, 1, 1, 109, 91, 0x000000
-    .word RECTANGLE, 1, 1, 108, 90, 0x000000
-    .word RECTANGLE, 1, 1, 108, 91, 0x000000
-    .word RECTANGLE, 1, 1, 108, 89, 0x000000
-    .word RECTANGLE, 1, 1, 108, 88, 0x000000
-    .word RECTANGLE, 1, 1, 108, 87, 0x000000
     .word RECTANGLE, 2, 2, 104, 82, 0x054E6C
-    .word RECTANGLE, 1, 1, 104, 83, 0x000000
-    .word RECTANGLE, 1, 1, 106, 83, 0x000000
-    .word RECTANGLE, 1, 1, 105, 83, 0x000000
-    .word RECTANGLE, 1, 1, 104, 82, 0x000000
-    .word RECTANGLE, 1, 1, 105, 82, 0x000000
-    .word RECTANGLE, 1, 1, 108, 85, 0x000000
-    .word RECTANGLE, 1, 1, 108, 86, 0x000000
-    .word RECTANGLE, 1, 1, 109, 91, 0x00374C
-    .word RECTANGLE, 1, 1, 109, 92, 0x00374C
-    .word RECTANGLE, 1, 1, 111, 89, 0x00374C
-    .word RECTANGLE, 1, 1, 111, 88, 0x00374C
-    .word RECTANGLE, 1, 1, 110, 89, 0x00374C
-    .word RECTANGLE, 1, 1, 109, 91, 0x00374C
-    .word RECTANGLE, 1, 1, 109, 90, 0x00374C
-    .word RECTANGLE, 1, 1, 33, 89, 0x00374C
-    .word RECTANGLE, 1, 1, 34, 89, 0x00374C
-    .word RECTANGLE, 1, 1, 34, 88, 0x00374C
-    .word RECTANGLE, 1, 1, 35, 89, 0x00374C
-    .word RECTANGLE, 1, 1, 36, 90, 0x00374C
-    .word RECTANGLE, 1, 1, 105, 82, 0x054E6C
-    .word RECTANGLE, 1, 1, 106, 83, 0x054E6C
-    .word RECTANGLE, 1, 1, 107, 84, 0x054E6C
-    .word RECTANGLE, 1, 1, 108, 85, 0x054E6C
-    .word RECTANGLE, 1, 1, 108, 86, 0x054E6C
     .word RECTANGLE, 8, 1, 108, 87, 0x054E6C
-    .word RECTANGLE, 1, 1, 109, 93, 0x054E6C
-    .word RECTANGLE, 1, 1, 111, 95, 0x00374C
-    .word RECTANGLE, 1, 1, 111, 94, 0x00374C
-    .word RECTANGLE, 1, 1, 108, 94, 0x000000
-    .word RECTANGLE, 1, 1, 108, 92, 0x000000
     .word RECTANGLE, 2, 1, 107, 92, 0x000000
-    .word RECTANGLE, 1, 1, 107, 93, 0x000000
-    .word RECTANGLE, 1, 1, 108, 93, 0x000000
-    .word RECTANGLE, 1, 1, 108, 91, 0x000000
-    .word RECTANGLE, 1, 1, 107, 89, 0x000000
-    .word RECTANGLE, 1, 1, 108, 91, 0x000000
-    .word RECTANGLE, 1, 1, 107, 89, 0x000000
-    .word RECTANGLE, 1, 1, 108, 90, 0x000000
     .word RECTANGLE, 15, 12, 103, 81, 0x054E6C
     .word RECTANGLE, 2, 10, 111, 94, 0x00374C
     .word RECTANGLE, 11, 3, 102, 85, 0x000000
     .word RECTANGLE, 10, 3, 104, 87, 0x000000
-    .word RECTANGLE, 1, 1, 103, 84, 0x000000
-    .word RECTANGLE, 1, 1, 102, 84, 0x000000
-    .word RECTANGLE, 1, 1, 103, 84, 0x000000
-    .word RECTANGLE, 1, 1, 103, 83, 0x000000
-    .word RECTANGLE, 1, 1, 105, 86, 0x000000
-    .word RECTANGLE, 1, 1, 104, 84, 0x000000
-    .word RECTANGLE, 1, 1, 105, 85, 0x000000
-    .word RECTANGLE, 1, 1, 107, 95, 0x000000
     .word RECTANGLE, 1, 2, 107, 94, 0x000000
-    .word RECTANGLE, 1, 1, 108, 95, 0x000000
-    .word RECTANGLE, 1, 1, 107, 93, 0x000000
     .word RECTANGLE, 2, 1, 107, 90, 0x000000
     .word RECTANGLE, 2, 1, 106, 91, 0x000000
-    .word RECTANGLE, 1, 1, 107, 91, 0x000000
-    .word RECTANGLE, 1, 1, 107, 91, 0x000000
-    .word RECTANGLE, 1, 1, 107, 92, 0x000000
-    .word RECTANGLE, 1, 1, 107, 89, 0x000000
-    .word RECTANGLE, 1, 1, 107, 89, 0x000000
-    .word RECTANGLE, 1, 1, 107, 87, 0x000000
-    .word RECTANGLE, 1, 1, 107, 88, 0x000000
-    .word RECTANGLE, 1, 1, 106, 86, 0x000000
-    .word RECTANGLE, 1, 1, 105, 84, 0x000000
-    .word RECTANGLE, 1, 1, 105, 86, 0x000000
-    .word RECTANGLE, 1, 1, 106, 86, 0x000000
-    .word RECTANGLE, 1, 1, 106, 85, 0x000000
-    .word RECTANGLE, 1, 1, 104, 84, 0x000000
-    .word RECTANGLE, 1, 1, 104, 83, 0x000000
-    .word RECTANGLE, 1, 1, 103, 82, 0x000000
-    .word RECTANGLE, 1, 1, 107, 86, 0x054E6C
-    .word RECTANGLE, 1, 1, 107, 88, 0x054E6C
-    .word RECTANGLE, 1, 1, 107, 86, 0x054E6C
-    .word RECTANGLE, 1, 1, 107, 87, 0x054E6C
     .word RECTANGLE, 7, 8, 110, 89, 0x00374C
-    .word RECTANGLE, 1, 1, 109, 95, 0x00374C
-    .word RECTANGLE, 1, 1, 110, 94, 0x00374C
-    .word RECTANGLE, 1, 1, 109, 94, 0x00374C
-    .word RECTANGLE, 1, 1, 108, 93, 0x00374C
-    .word RECTANGLE, 1, 1, 109, 92, 0x00374C
-    .word RECTANGLE, 1, 1, 109, 93, 0x00374C
-    .word RECTANGLE, 1, 1, 109, 91, 0x00374C
-    .word RECTANGLE, 1, 1, 108, 92, 0x00374C
-    .word RECTANGLE, 1, 1, 110, 89, 0x054E6C
     .word RECTANGLE, 1, 6, 109, 88, 0x00374C
     .word RECTANGLE, 4, 2, 109, 88, 0x00374C
     .word RECTANGLE, 4, 2, 108, 88, 0x00374C
-    .word RECTANGLE, 1, 1, 107, 88, 0x00374C
-    .word RECTANGLE, 1, 1, 35, 88, 0x00374C
-    .word RECTANGLE, 1, 1, 36, 89, 0x00374C
-    .word RECTANGLE, 1, 1, 36, 88, 0x00374C
     .word RECTANGLE, 8, 14, 31, 72, 0x054E6C
     .word RECTANGLE, 10, 2, 120, 62, 0x054E6C
     .word RECTANGLE, 6, 2, 22, 63, 0x054E6C
+    .word RECTANGLE, 4, 6, 37, 75, 0x054E6C
+    .word RECTANGLE, 3, 12, 107, 89, 0x00374C
+    .word RECTANGLE, 1, 1, 108, 88, 0x00374C
+    .word RECTANGLE, 1, 1, 108, 86, 0x054E6C
+    .word RECTANGLE, 1, 1, 108, 86, 0x054E6C
+    .word RECTANGLE, 1, 1, 108, 87, 0x054E6C
+    .word RECTANGLE, 1, 1, 104, 81, 0x054E6C
+    .word RECTANGLE, 1, 1, 104, 81, 0x054E6C
+    .word RECTANGLE, 2, 7, 103, 80, 0x054E6C
+    .word RECTANGLE, 2, 2, 107, 81, 0x054E6C
+    .word RECTANGLE, 1, 4, 104, 81, 0x054E6C
+    .word RECTANGLE, 1, 1, 104, 82, 0x054E6C
+    .word RECTANGLE, 1, 1, 105, 83, 0x054E6C
+    .word RECTANGLE, 1, 1, 106, 85, 0x054E6C
+    .word RECTANGLE, 1, 1, 106, 86, 0x054E6C
+    .word RECTANGLE, 1, 1, 40, 77, 0x054E6C
+    .word RECTANGLE, 3, 7, 38, 76, 0x054E6C
     .word RECTANGLE, 1, 1, 102, 59, 0xC7120C
+    .word RECTANGLE, 1, 1, 48, 61, 0x054E6C
     .word RECTANGLE, 1, 1, 48, 61, 0x000000
     .word RECTANGLE, 1, 1, 94, 61, 0x000000
     .word RECTANGLE, 1, 1, 94, 61, 0x054E6C
@@ -702,20 +570,153 @@ car_6:
     .word RECTANGLE, 1, 1, 121, 62, 0x054E6C
     .word RECTANGLE, 1, 1, 122, 62, 0x054E6C
     .word RECTANGLE, 1, 1, 123, 62, 0x054E6C
+    .word RECTANGLE, 1, 1, 26, 64, 0xC7120C
     .word RECTANGLE, 1, 1, 27, 64, 0xC7120C
     .word RECTANGLE, 1, 1, 28, 64, 0xC7120C
     .word RECTANGLE, 1, 1, 29, 64, 0xC7120C
+    .word RECTANGLE, 1, 1, 40, 64, 0xC7120C
+    .word RECTANGLE, 1, 1, 41, 64, 0xC7120C
+    .word RECTANGLE, 1, 1, 97, 64, 0x000000
+    .word RECTANGLE, 1, 1, 40, 65, 0xC7120C
     .word RECTANGLE, 1, 1, 44, 65, 0x000000
+    .word RECTANGLE, 1, 1, 45, 65, 0x000000
+    .word RECTANGLE, 1, 1, 46, 65, 0x000000
+    .word RECTANGLE, 1, 1, 97, 65, 0x000000
     .word RECTANGLE, 1, 1, 98, 65, 0x000000
+    .word RECTANGLE, 1, 1, 40, 66, 0xC7120C
+    .word RECTANGLE, 1, 1, 42, 68, 0x054E6C
+    .word RECTANGLE, 1, 1, 43, 68, 0x054E6C
+    .word RECTANGLE, 1, 1, 62, 70, 0x000000
+    .word RECTANGLE, 1, 1, 63, 70, 0x000000
+    .word RECTANGLE, 1, 1, 64, 70, 0x000000
+    .word RECTANGLE, 1, 1, 79, 70, 0x000000
+    .word RECTANGLE, 1, 1, 81, 70, 0x000000
+    .word RECTANGLE, 1, 1, 86, 70, 0xFFFFFF
+    .word RECTANGLE, 1, 1, 65, 71, 0x000000
+    .word RECTANGLE, 1, 1, 66, 71, 0xFFFFFF
+    .word RECTANGLE, 1, 1, 68, 71, 0x000000
+    .word RECTANGLE, 1, 1, 74, 71, 0x000000
+    .word RECTANGLE, 1, 1, 75, 71, 0x000000
+    .word RECTANGLE, 1, 1, 79, 71, 0x000000
+    .word RECTANGLE, 1, 1, 81, 71, 0x000000
+    .word RECTANGLE, 1, 1, 34, 72, 0x054E6C
+    .word RECTANGLE, 1, 1, 60, 72, 0x000000
     .word RECTANGLE, 1, 1, 60, 72, 0xFFFFFF
     .word RECTANGLE, 1, 1, 74, 72, 0x000000
+    .word RECTANGLE, 1, 1, 77, 72, 0x000000
+    .word RECTANGLE, 1, 1, 78, 72, 0x000000
+    .word RECTANGLE, 1, 1, 76, 73, 0x000000
+    .word RECTANGLE, 1, 1, 77, 73, 0x000000
+    .word RECTANGLE, 1, 1, 75, 74, 0x000000
+    .word RECTANGLE, 1, 1, 76, 74, 0x000000
+    .word RECTANGLE, 1, 1, 76, 74, 0xFFFFFF
+    .word RECTANGLE, 1, 1, 64, 75, 0x000000
+    .word RECTANGLE, 1, 1, 64, 75, 0xFFFFFF
+    .word RECTANGLE, 1, 1, 65, 75, 0x000000
+    .word RECTANGLE, 1, 1, 66, 75, 0xFFFFFF
+    .word RECTANGLE, 1, 1, 75, 75, 0x000000
+    .word RECTANGLE, 1, 1, 76, 75, 0x000000
+    .word RECTANGLE, 1, 1, 76, 75, 0xFFFFFF
+    .word RECTANGLE, 1, 1, 63, 76, 0x000000
+    .word RECTANGLE, 1, 1, 64, 76, 0x000000
     .word RECTANGLE, 1, 1, 74, 76, 0x000000
+    .word RECTANGLE, 1, 1, 75, 76, 0x000000
+    .word RECTANGLE, 1, 1, 76, 76, 0x000000
+    .word RECTANGLE, 1, 1, 77, 76, 0x000000
+    .word RECTANGLE, 1, 1, 78, 76, 0x000000
+    .word RECTANGLE, 1, 1, 79, 76, 0x000000
     .word RECTANGLE, 1, 1, 38, 77, 0x054E6C
+    .word RECTANGLE, 1, 1, 40, 77, 0x054E6C
+    .word RECTANGLE, 1, 1, 41, 77, 0x054E6C
     .word RECTANGLE, 1, 1, 104, 77, 0x054E6C
     .word RECTANGLE, 1, 1, 40, 78, 0x000000
     .word RECTANGLE, 1, 1, 41, 78, 0x000000
+    .word RECTANGLE, 1, 1, 41, 78, 0x054E6C
+    .word RECTANGLE, 1, 1, 36, 80, 0x054E6C
     .word RECTANGLE, 1, 1, 37, 80, 0x054E6C
+    .word RECTANGLE, 1, 1, 46, 80, 0x054E6C
+    .word RECTANGLE, 1, 1, 38, 82, 0x054E6C
+    .word RECTANGLE, 1, 1, 39, 82, 0x054E6C
+    .word RECTANGLE, 1, 1, 103, 82, 0x000000
+    .word RECTANGLE, 1, 1, 104, 82, 0x000000
+    .word RECTANGLE, 1, 1, 105, 82, 0x000000
+    .word RECTANGLE, 1, 1, 105, 82, 0x054E6C
+    .word RECTANGLE, 1, 1, 103, 83, 0x000000
+    .word RECTANGLE, 1, 1, 104, 83, 0x000000
+    .word RECTANGLE, 1, 1, 105, 83, 0x000000
+    .word RECTANGLE, 1, 1, 106, 83, 0x000000
+    .word RECTANGLE, 1, 1, 106, 83, 0x054E6C
+    .word RECTANGLE, 1, 1, 38, 84, 0x000000
+    .word RECTANGLE, 1, 1, 102, 84, 0x000000
+    .word RECTANGLE, 1, 1, 103, 84, 0x000000
+    .word RECTANGLE, 1, 1, 104, 84, 0x000000
+    .word RECTANGLE, 1, 1, 105, 84, 0x000000
+    .word RECTANGLE, 1, 1, 107, 84, 0x054E6C
+    .word RECTANGLE, 1, 1, 38, 85, 0x000000
+    .word RECTANGLE, 1, 1, 39, 85, 0x000000
+    .word RECTANGLE, 1, 1, 105, 85, 0x000000
+    .word RECTANGLE, 1, 1, 106, 85, 0x000000
+    .word RECTANGLE, 1, 1, 108, 85, 0x000000
+    .word RECTANGLE, 1, 1, 108, 85, 0x054E6C
+    .word RECTANGLE, 1, 1, 38, 86, 0x000000
+    .word RECTANGLE, 1, 1, 39, 86, 0x000000
+    .word RECTANGLE, 1, 1, 104, 86, 0x000000
+    .word RECTANGLE, 1, 1, 105, 86, 0x000000
+    .word RECTANGLE, 1, 1, 106, 86, 0x000000
+    .word RECTANGLE, 1, 1, 107, 86, 0x054E6C
+    .word RECTANGLE, 1, 1, 108, 86, 0x000000
+    .word RECTANGLE, 1, 1, 108, 86, 0x054E6C
+    .word RECTANGLE, 1, 1, 104, 87, 0x000000
+    .word RECTANGLE, 1, 1, 107, 87, 0x000000
+    .word RECTANGLE, 1, 1, 107, 87, 0x054E6C
+    .word RECTANGLE, 1, 1, 108, 87, 0x000000
+    .word RECTANGLE, 1, 1, 34, 88, 0x00374C
+    .word RECTANGLE, 1, 1, 35, 88, 0x00374C
+    .word RECTANGLE, 1, 1, 36, 88, 0x00374C
+    .word RECTANGLE, 1, 1, 107, 88, 0x000000
+    .word RECTANGLE, 1, 1, 107, 88, 0x054E6C
+    .word RECTANGLE, 1, 1, 107, 88, 0x00374C
+    .word RECTANGLE, 1, 1, 108, 88, 0x000000
+    .word RECTANGLE, 1, 1, 111, 88, 0x00374C
+    .word RECTANGLE, 1, 1, 33, 89, 0x00374C
+    .word RECTANGLE, 1, 1, 34, 89, 0x00374C
+    .word RECTANGLE, 1, 1, 35, 89, 0x00374C
+    .word RECTANGLE, 1, 1, 36, 89, 0x00374C
+    .word RECTANGLE, 1, 1, 43, 89, 0x000000
+    .word RECTANGLE, 1, 1, 107, 89, 0x000000
+    .word RECTANGLE, 1, 1, 108, 89, 0x000000
+    .word RECTANGLE, 1, 1, 110, 89, 0x00374C
+    .word RECTANGLE, 1, 1, 110, 89, 0x054E6C
+    .word RECTANGLE, 1, 1, 111, 89, 0x00374C
+    .word RECTANGLE, 1, 1, 36, 90, 0x00374C
+    .word RECTANGLE, 1, 1, 108, 90, 0x000000
+    .word RECTANGLE, 1, 1, 109, 90, 0x00374C
+    .word RECTANGLE, 1, 1, 36, 91, 0x000000
+    .word RECTANGLE, 1, 1, 37, 91, 0x000000
+    .word RECTANGLE, 1, 1, 107, 91, 0x000000
+    .word RECTANGLE, 1, 1, 108, 91, 0x054E6C
+    .word RECTANGLE, 1, 1, 108, 91, 0x000000
+    .word RECTANGLE, 1, 1, 109, 91, 0x000000
+    .word RECTANGLE, 1, 1, 109, 91, 0x00374C
+    .word RECTANGLE, 1, 1, 87, 92, 0x000000
+    .word RECTANGLE, 1, 1, 107, 92, 0x000000
+    .word RECTANGLE, 1, 1, 108, 92, 0x000000
+    .word RECTANGLE, 1, 1, 108, 92, 0x00374C
+    .word RECTANGLE, 1, 1, 109, 92, 0x00374C
+    .word RECTANGLE, 1, 1, 107, 93, 0x000000
+    .word RECTANGLE, 1, 1, 108, 93, 0x000000
+    .word RECTANGLE, 1, 1, 108, 93, 0x00374C
+    .word RECTANGLE, 1, 1, 109, 93, 0x054E6C
+    .word RECTANGLE, 1, 1, 109, 93, 0x00374C
+    .word RECTANGLE, 1, 1, 108, 94, 0x000000
+    .word RECTANGLE, 1, 1, 109, 94, 0x00374C
+    .word RECTANGLE, 1, 1, 110, 94, 0x00374C
+    .word RECTANGLE, 1, 1, 111, 94, 0x00374C
     .word RECTANGLE, 1, 1, 102, 95, 0x000000
+    .word RECTANGLE, 1, 1, 107, 95, 0x000000
+    .word RECTANGLE, 1, 1, 108, 95, 0x000000
+    .word RECTANGLE, 1, 1, 109, 95, 0x00374C
+    .word RECTANGLE, 1, 1, 111, 95, 0x00374C
     .word RECTANGLE, 1, 1, 100, 96, 0xFFFFFF
     .word RECTANGLE, 1, 1, 100, 96, 0x000000
     .word RECTANGLE, 1, 1, 101, 96, 0xFFFFFF
@@ -727,6 +728,252 @@ car_6:
 car_6_end:
 
 
+
+.global car_7
+car_7:
+    
+    .word RECTANGLE, 5, 57, 44, 39, 0x000000
+    .word RECTANGLE, 9, 65, 40, 41, 0x000000
+    .word RECTANGLE, 8, 71, 37, 48, 0x000000
+    .word RECTANGLE, 3, 50, 47, 42, 0x00FFFF
+    .word RECTANGLE, 5, 53, 46, 44, 0x00FFFF
+    .word RECTANGLE, 5, 57, 44, 48, 0x00FFFF
+    .word RECTANGLE, 4, 58, 44, 35, 0x808080
+    .word RECTANGLE, 2, 71, 37, 56, 0x808080
+    .word RECTANGLE, 5, 3, 101, 36, 0x808080
+    .word RECTANGLE, 5, 1, 103, 37, 0x808080
+    .word RECTANGLE, 7, 3, 105, 41, 0x808080
+    .word RECTANGLE, 5, 3, 41, 36, 0x808080
+    .word RECTANGLE, 6, 2, 38, 42, 0x808080
+    .word RECTANGLE, 8, 3, 37, 41, 0x808080
+    .word RECTANGLE, 7, 3, 34, 49, 0x808080
+    .word RECTANGLE, 6, 2, 108, 49, 0x808080
+    .word RECTANGLE, 6, 2, 108, 47, 0x808080
+    .word RECTANGLE, 7, 60, 43, 28, 0x000080
+    .word RECTANGLE, 8, 44, 51, 25, 0x000080
+    .word RECTANGLE, 6, 5, 38, 30, 0x000080
+    .word RECTANGLE, 5, 2, 39, 36, 0x000080
+    .word RECTANGLE, 5, 5, 35, 36, 0x000080
+    .word RECTANGLE, 9, 2, 35, 41, 0x000080
+    .word RECTANGLE, 8, 3, 32, 41, 0x000080
+    .word RECTANGLE, 8, 4, 30, 48, 0x000080
+    .word RECTANGLE, 6, 5, 102, 30, 0x000080
+    .word RECTANGLE, 6, 2, 104, 35, 0x000080
+    .word RECTANGLE, 5, 4, 105, 36, 0x000080
+    .word RECTANGLE, 8, 3, 108, 39, 0x000080
+    .word RECTANGLE, 8, 3, 110, 47, 0x000080
+    .word RECTANGLE, 2, 3, 34, 56, 0x000000
+    .word RECTANGLE, 2, 3, 108, 56, 0x000000
+    .word RECTANGLE, 5, 2, 108, 51, 0x808080
+    .word RECTANGLE, 6, 1, 111, 49, 0x0000FF
+    .word RECTANGLE, 7, 1, 111, 48, 0x000080
+    .word RECTANGLE, 6, 4, 110, 50, 0x000080
+    .word RECTANGLE, 1, 1, 42, 35, 0x000080
+    .word RECTANGLE, 1, 1, 42, 34, 0x000080
+    .word RECTANGLE, 1, 1, 42, 35, 0x000080
+    .word RECTANGLE, 4, 3, 41, 33, 0x000080
+    .word RECTANGLE, 6, 11, 57, 25, 0xFFFFFF
+    .word RECTANGLE, 10, 13, 74, 25, 0xFFFFFF
+    .word RECTANGLE, 10, 12, 57, 25, 0xFFFFFF
+    .word RECTANGLE, 10, 6, 58, 58, 0xFFFFFF
+    .word RECTANGLE, 5, 88, 28, 59, 0x000080
+    .word RECTANGLE, 9, 9, 25, 56, 0x000080
+    .word RECTANGLE, 7, 2, 111, 56, 0x000080
+    .word RECTANGLE, 11, 7, 112, 54, 0x000080
+    .word RECTANGLE, 15, 79, 34, 58, 0x000080
+    .word RECTANGLE, 15, 12, 59, 58, 0xFFFFFF
+    .word RECTANGLE, 13, 10, 78, 59, 0xFFFFFF
+    .word RECTANGLE, 15, 10, 77, 58, 0xFFFFFF
+    .word RECTANGLE, 12, 9, 78, 57, 0xFFFFFF
+    .word RECTANGLE, 1, 1, 96, 102, 0xFFFFFF
+    .word RECTANGLE, 2, 31, 77, 57, 0x808080
+    .word RECTANGLE, 2, 49, 37, 57, 0x808080
+    .word RECTANGLE, 2, 16, 65, 57, 0x000000
+    .word RECTANGLE, 3, 19, 63, 58, 0x000000
+    .word RECTANGLE, 6, 2, 61, 58, 0x808080
+    .word RECTANGLE, 5, 1, 82, 58, 0x808080
+    .word RECTANGLE, 4, 1, 82, 59, 0x808080
+    .word RECTANGLE, 5, 2, 82, 59, 0x808080
+    .word RECTANGLE, 4, 18, 64, 53, 0x808080
+    .word RECTANGLE, 5, 15, 65, 55, 0x000000
+    .word RECTANGLE, 2, 10, 64, 57, 0x000000
+    .word RECTANGLE, 2, 21, 62, 60, 0x000000
+    .word RECTANGLE, 2, 65, 39, 73, 0x808080
+    .word RECTANGLE, 14, 2, 104, 74, 0x808080
+    .word RECTANGLE, 11, 2, 37, 75, 0x808080
+    .word RECTANGLE, 3, 2, 39, 85, 0x808080
+    .word RECTANGLE, 3, 2, 102, 87, 0x808080
+    .word RECTANGLE, 2, 64, 40, 89, 0x808080
+    .word RECTANGLE, 2, 3, 40, 88, 0x808080
+    .word RECTANGLE, 11, 65, 39, 75, 0x000000
+    .word RECTANGLE, 2, 62, 42, 85, 0x000000
+    .word RECTANGLE, 4, 61, 41, 85, 0x000000
+    .word RECTANGLE, 6, 9, 43, 79, 0xFFFF00
+    .word RECTANGLE, 6, 9, 91, 79, 0xFFFF00
+    .word RECTANGLE, 3, 7, 44, 78, 0xFFFF00
+    .word RECTANGLE, 3, 2, 52, 81, 0xFFFF00
+    .word RECTANGLE, 5, 2, 42, 80, 0xFFFF00
+    .word RECTANGLE, 3, 6, 44, 84, 0xFFFF00
+    .word RECTANGLE, 3, 6, 92, 78, 0xFFFF00
+    .word RECTANGLE, 4, 1, 90, 80, 0xFFFF00
+    .word RECTANGLE, 1, 6, 93, 85, 0xFFFF00
+    .word RECTANGLE, 5, 1, 100, 80, 0xFFFF00
+    .word RECTANGLE, 2, 5, 45, 86, 0xFFFF00
+    .word RECTANGLE, 2, 1, 49, 85, 0xFFFF00
+    .word RECTANGLE, 2, 1, 50, 85, 0xFFFF00
+    .word RECTANGLE, 1, 3, 94, 86, 0xFFFF00
+    .word RECTANGLE, 26, 14, 23, 63, 0x000080
+    .word RECTANGLE, 23, 6, 21, 64, 0x000080
+    .word RECTANGLE, 19, 10, 106, 70, 0x000080
+    .word RECTANGLE, 23, 9, 111, 64, 0x000080
+    .word RECTANGLE, 4, 15, 25, 88, 0x000080
+    .word RECTANGLE, 4, 15, 104, 88, 0x000080
+    .word RECTANGLE, 7, 3, 116, 83, 0x000080
+    .word RECTANGLE, 21, 5, 119, 65, 0x000080
+    .word RECTANGLE, 13, 8, 115, 57, 0x000080
+    .word RECTANGLE, 18, 4, 121, 61, 0x000080
+    .word RECTANGLE, 19, 4, 122, 68, 0x000080
+    .word RECTANGLE, 9, 6, 119, 81, 0x000080
+    .word RECTANGLE, 16, 4, 23, 59, 0x000080
+    .word RECTANGLE, 20, 4, 20, 66, 0x000080
+    .word RECTANGLE, 5, 94, 23, 91, 0xC0C0C0
+    .word RECTANGLE, 4, 92, 24, 94, 0xC0C0C0
+    .word RECTANGLE, 3, 64, 40, 90, 0x808080
+    .word RECTANGLE, 4, 66, 39, 71, 0x808080
+    .word RECTANGLE, 11, 2, 37, 75, 0x808080
+    .word RECTANGLE, 10, 1, 105, 75, 0x808080
+    .word RECTANGLE, 2, 1, 20, 84, 0x0000FF
+    .word RECTANGLE, 3, 94, 24, 97, 0x000080
+    .word RECTANGLE, 3, 93, 24, 99, 0x000080
+    .word RECTANGLE, 6, 5, 118, 89, 0x000080
+    .word RECTANGLE, 4, 3, 117, 91, 0x000080
+    .word RECTANGLE, 3, 3, 20, 84, 0x000080
+    .word RECTANGLE, 5, 4, 21, 86, 0x000080
+    .word RECTANGLE, 4, 2, 21, 90, 0x000080
+    .word RECTANGLE, 5, 1, 21, 90, 0x000080
+    .word RECTANGLE, 6, 3, 20, 87, 0x000080
+    .word RECTANGLE, 17, 2, 19, 73, 0x000080
+    .word RECTANGLE, 3, 21, 25, 101, 0x000080
+    .word RECTANGLE, 2, 23, 92, 102, 0x000080
+    .word RECTANGLE, 15, 3, 19, 92, 0x000000
+    .word RECTANGLE, 17, 11, 21, 94, 0x000000
+    .word RECTANGLE, 14, 7, 19, 96, 0x000000
+    .word RECTANGLE, 10, 5, 29, 99, 0x000000
+    .word RECTANGLE, 3, 80, 33, 104, 0x000000
+    .word RECTANGLE, 17, 13, 110, 94, 0x000000
+    .word RECTANGLE, 9, 15, 109, 101, 0x000000
+    .word RECTANGLE, 6, 5, 110, 97, 0x000000
+    .word RECTANGLE, 11, 3, 121, 96, 0x000000
+    .word RECTANGLE, 3, 52, 43, 95, 0x000000
+    .word RECTANGLE, 1, 1, 25, 92, 0x808080
+    .word RECTANGLE, 4, 92, 24, 91, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 56, 77, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 56, 80, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 56, 83, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 56, 86, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 59, 86, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 62, 86, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 65, 86, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 69, 86, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 73, 86, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 76, 87, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 78, 86, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 81, 86, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 87, 86, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 83, 86, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 60, 77, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 60, 81, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 60, 84, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 64, 84, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 65, 82, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 64, 77, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 68, 78, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 74, 78, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 78, 78, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 85, 78, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 85, 82, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 81, 81, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 77, 81, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 72, 81, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 70, 83, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 74, 83, 0xC0C0C0
+    .word RECTANGLE, 1, 1, 79, 83, 0xC0C0C0
+    .word RECTANGLE, 12, 30, 55, 92, 0x000000
+    .word RECTANGLE, 5, 14, 85, 99, 0x000080
+    .word RECTANGLE, 5, 12, 43, 99, 0x000080
+    .word RECTANGLE, 1, 5, 62, 95, 0xFFFFFF
+    .word RECTANGLE, 6, 1, 61, 96, 0xFFFFFF
+    .word RECTANGLE, 1, 6, 62, 98, 0xFFFFFF
+    .word RECTANGLE, 4, 3, 66, 99, 0xFFFFFF
+    .word RECTANGLE, 2, 5, 62, 102, 0xFFFFFF
+    .word RECTANGLE, 5, 2, 60, 97, 0xFFFFFF
+    .word RECTANGLE, 1, 6, 72, 95, 0xFFFFFF
+    .word RECTANGLE, 5, 1, 77, 95, 0xFFFFFF
+    .word RECTANGLE, 4, 2, 72, 95, 0xFFFFFF
+    .word RECTANGLE, 2, 5, 73, 98, 0xFFFFFF
+    .word RECTANGLE, 4, 2, 77, 100, 0xFFFFFF
+    .word RECTANGLE, 1, 3, 74, 103, 0xFFFFFF
+    .word RECTANGLE, 2, 2, 58, 94, 0xFFFFFF
+    .word RECTANGLE, 3, 1, 59, 95, 0xFFFFFF
+    .word RECTANGLE, 10, 32, 55, 77, 0x000000
+    .word RECTANGLE, 7, 16, 71, 81, 0x000000
+    .word RECTANGLE, 8, 1, 61, 79, 0xFFFFFF
+    .word RECTANGLE, 2, 2, 61, 79, 0xFFFFFF
+    .word RECTANGLE, 2, 2, 62, 80, 0xFFFFFF
+    .word RECTANGLE, 2, 1, 64, 81, 0xFFFFFF
+    .word RECTANGLE, 2, 2, 64, 82, 0xFFFFFF
+    .word RECTANGLE, 2, 2, 65, 83, 0xFFFFFF
+    .word RECTANGLE, 2, 2, 66, 85, 0xFFFFFF
+    .word RECTANGLE, 9, 1, 68, 78, 0xFFFFFF
+    .word RECTANGLE, 9, 1, 73, 78, 0xFFFFFF
+    .word RECTANGLE, 2, 3, 73, 81, 0xFFFFFF
+    .word RECTANGLE, 5, 2, 73, 79, 0xFFFFFF
+    .word RECTANGLE, 2, 2, 76, 80, 0xFFFFFF
+    .word RECTANGLE, 2, 1, 78, 79, 0xFFFFFF
+    .word RECTANGLE, 1, 3, 74, 83, 0xFFFFFF
+    .word RECTANGLE, 2, 1, 77, 84, 0xFFFFFF
+    .word RECTANGLE, 1, 1, 78, 85, 0xFFFFFF
+    .word RECTANGLE, 1, 1, 79, 86, 0xFFFFFF
+    .word RECTANGLE, 1, 2, 79, 87, 0xFFFFFF
+    .word RECTANGLE, 2, 4, 116, 53, 0xFFFFFF
+    .word RECTANGLE, 2, 2, 117, 53, 0xFFFFFF
+    .word RECTANGLE, 3, 3, 117, 53, 0x000080
+    .word RECTANGLE, 6, 7, 118, 49, 0x000080
+    .word RECTANGLE, 4, 5, 123, 52, 0x000080
+    .word RECTANGLE, 2, 4, 119, 54, 0x000080
+    .word RECTANGLE, 2, 6, 23, 55, 0x000080
+    .word RECTANGLE, 3, 6, 20, 53, 0x000080
+    .word RECTANGLE, 4, 6, 18, 54, 0x000080
+    .word RECTANGLE, 1, 1, 19, 52, 0x000080
+    .word RECTANGLE, 1, 1, 18, 53, 0x000080
+    .word RECTANGLE, 1, 1, 20, 54, 0x000080
+    .word RECTANGLE, 2, 1, 18, 52, 0x000080
+    .word RECTANGLE, 1, 2, 19, 54, 0x000080
+    .word RECTANGLE, 2, 1, 20, 54, 0x000080
+    .word RECTANGLE, 1, 1, 19, 54, 0x000080
+    .word RECTANGLE, 2, 1, 20, 52, 0x000080
+    .word RECTANGLE, 2, 1, 21, 52, 0x000080
+    .word RECTANGLE, 1, 1, 21, 54, 0x000080
+    .word RECTANGLE, 1, 2, 19, 54, 0x000080
+    .word RECTANGLE, 2, 1, 18, 53, 0x000080
+    .word RECTANGLE, 1, 1, 17, 53, 0x000080
+    .word RECTANGLE, 5, 2, 17, 53, 0x000080
+    .word RECTANGLE, 2, 1, 19, 53, 0x000080
+    .word RECTANGLE, 1, 1, 22, 57, 0x000080
+    .word RECTANGLE, 1, 4, 17, 58, 0x000080
+    .word RECTANGLE, 2, 5, 18, 57, 0x000080
+    .word RECTANGLE, 2, 3, 122, 55, 0x000080
+    .word RECTANGLE, 3, 8, 119, 47, 0xFFFFFF
+    .word RECTANGLE, 2, 4, 117, 48, 0xFFFFFF
+    .word RECTANGLE, 6, 3, 127, 51, 0xFFFFFF
+    .word RECTANGLE, 2, 2, 123, 56, 0xFFFFFF
+    .word RECTANGLE, 2, 1, 123, 56, 0xFFFFFF
+    .word RECTANGLE, 2, 1, 123, 56, 0xFFFFFF
+    .word RECTANGLE, 1, 1, 122, 56, 0xFFFFFF
+
+    .word VALOR_DE_CORTE
+
+car_7_end:
 
 
 

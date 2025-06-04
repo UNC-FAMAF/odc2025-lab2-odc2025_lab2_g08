@@ -53,35 +53,25 @@ main_init:
     //Procedimiento [draw_static_background] escrito en: [background.s]
 	BL draw_static_background
 
-    //Procedimiento [render_shape] escrito en: [shape_renderer.s]
-    //ADR X8,car_1
-    //MOV W1,#45
-    //MOV W2,#-60
-    //BL move_shape
-    //MOV X1,#130
-    //BL scale_shape
-    //BL render_shape
-
 
     ADR X8,car_6
     MOV W1,#170
     MOV W2,#230
-    BL move_shape
-   
+    BL move_shape   
     BL render_shape
-
-
-    //Procedimiento [render_shape] escrito en: [shape_renderer.s]
-    //ADR X8,car_2
-    //MOV W1,#35
-    //MOV W2,#50
-    //BL move_shape
-    //BL render_shape
 
 
     ADR X8,car_4
     MOV W1,#178
     MOV W2,#60
+    BL move_shape
+    BL render_shape
+
+    ADR X8,car_7
+    MOV X1,#95
+    BL scale_shape
+    MOV W1,#289
+    MOV W2,#210
     BL move_shape
     BL render_shape
 
@@ -99,7 +89,6 @@ main_init:
     MOV W1,#103
     MOV W2,#60
     BL move_shape
-   
     BL render_shape
 
 
