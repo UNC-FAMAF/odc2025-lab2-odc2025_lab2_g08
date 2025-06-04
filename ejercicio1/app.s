@@ -91,6 +91,15 @@ main_init:
     BL move_shape
     BL render_shape
 
+    ADR X8, car_9
+    MOV W1, #470  // Small X offset
+    MOV W2, #320  // Small Y offset
+    BL move_shape
+    MOV X1, #50  // Smaller scale (50%)
+    BL scale_shape
+    BL render_shape
+
+
 
 inf_loop:
 
