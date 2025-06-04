@@ -272,6 +272,103 @@ car_5:
 
 car_5_end:
 
+.global car_6
+car_6:
+    // Generated Pixel Art Data
+    // Format: .word RECTANGLE, height, width, X, Y, ARGB_COLOR
+    // Note: Rectangles are output as single commands. Pixels, Circles and Lines are rasterized to individual 1x1 pixels.
+    .word RECTANGLE, 18, 50, 63, 62, 0x000000
+    .word RECTANGLE, 1, 7, 64, 80, 0x000000
+    .word RECTANGLE, 1, 7, 105, 80, 0x000000
+    .word RECTANGLE, 12, 48, 64, 63, 0x00374C
+    .word RECTANGLE, 3, 6, 65, 74, 0x00374C
+    .word RECTANGLE, 3, 6, 105, 74, 0x00374C
+    .word RECTANGLE, 2, 32, 72, 73, 0x000000
+    .word RECTANGLE, 3, 30, 73, 72, 0x000000
+    .word RECTANGLE, 5, 5, 74, 75, 0x60747D
+    .word RECTANGLE, 3, 7, 73, 76, 0x60747D
+    .word RECTANGLE, 5, 5, 97, 75, 0x60747D
+    .word RECTANGLE, 3, 7, 96, 76, 0x60747D
+    .word RECTANGLE, 3, 3, 75, 76, 0x000000
+    .word RECTANGLE, 1, 5, 74, 77, 0x000000
+    .word RECTANGLE, 3, 3, 98, 76, 0x000000
+    .word RECTANGLE, 1, 5, 97, 77, 0x000000
+    .word RECTANGLE, 1, 14, 81, 76, 0x00374C
+    .word RECTANGLE, 4, 42, 67, 66, 0x054E6C
+    .word RECTANGLE, 6, 4, 67, 68, 0x054E6C
+    .word RECTANGLE, 5, 4, 105, 69, 0x054E6C
+    .word RECTANGLE, 3, 1, 71, 69, 0x054E6C
+    .word RECTANGLE, 1, 1, 72, 70, 0x054E6C
+    .word RECTANGLE, 3, 2, 104, 69, 0x054E6C
+    .word RECTANGLE, 1, 1, 103, 70, 0x054E6C
+    .word RECTANGLE, 15, 22, 77, 47, 0x054E6C
+    .word RECTANGLE, 15, 26, 75, 48, 0x054E6C
+    .word RECTANGLE, 3, 48, 64, 60, 0x054E6C
+    .word RECTANGLE, 2, 46, 65, 59, 0x054E6C
+    .word RECTANGLE, 3, 44, 66, 58, 0x054E6C
+    .word RECTANGLE, 1, 4, 68, 58, 0x054E6C
+    .word RECTANGLE, 3, 40, 68, 57, 0x054E6C
+    .word RECTANGLE, 4, 36, 70, 56, 0x054E6C
+    .word RECTANGLE, 1, 34, 71, 55, 0x054E6C
+    .word RECTANGLE, 1, 32, 72, 54, 0x054E6C
+    .word RECTANGLE, 3, 11, 66, 61, 0x000000
+    .word RECTANGLE, 3, 11, 99, 61, 0x000000
+    .word RECTANGLE, 5, 8, 67, 60, 0x000000
+    .word RECTANGLE, 5, 8, 101, 60, 0x000000
+    .word RECTANGLE, 1, 1, 100, 64, 0x000000
+    .word RECTANGLE, 2, 7, 101, 64, 0x000000
+    .word RECTANGLE, 1, 1, 75, 64, 0x000000
+    .word RECTANGLE, 2, 7, 68, 64, 0x000000
+    .word RECTANGLE, 3, 7, 67, 61, 0xC7120C
+    .word RECTANGLE, 1, 6, 68, 64, 0xC7120C
+    .word RECTANGLE, 2, 2, 74, 62, 0xC7120C
+    .word RECTANGLE, 1, 1, 102, 61, 0xC7120C
+    .word RECTANGLE, 4, 6, 102, 61, 0xC7120C
+    .word RECTANGLE, 3, 1, 108, 61, 0xC7120C
+    .word RECTANGLE, 2, 3, 100, 62, 0xC7120C
+    .word RECTANGLE, 2, 5, 69, 62, 0x000000
+    .word RECTANGLE, 2, 5, 102, 62, 0x000000
+    .word RECTANGLE, 1, 1, 77, 62, 0x000000
+    .word RECTANGLE, 1, 1, 98, 62, 0x000000
+    .word RECTANGLE, 1, 20, 78, 63, 0x000000
+    .word RECTANGLE, 1, 4, 68, 57, 0x00374C
+    .word RECTANGLE, 2, 3, 72, 57, 0x00374C
+    .word RECTANGLE, 1, 28, 74, 59, 0x00374C
+    .word RECTANGLE, 2, 3, 101, 57, 0x00374C
+    .word RECTANGLE, 1, 4, 104, 57, 0x00374C
+    .word RECTANGLE, 7, 1, 73, 52, 0x000000
+    .word RECTANGLE, 7, 1, 102, 52, 0x000000
+    .word RECTANGLE, 3, 44, 66, 51, 0x00374C
+    .word RECTANGLE, 1, 42, 67, 50, 0x054E6C
+    .word RECTANGLE, 1, 28, 74, 49, 0x054E6C
+    .word RECTANGLE, 2, 42, 67, 52, 0x000000
+    .word RECTANGLE, 1, 22, 77, 50, 0x000000
+    .word RECTANGLE, 2, 1, 76, 54, 0x000000
+    .word RECTANGLE, 3, 1, 99, 53, 0x000000
+    .word RECTANGLE, 2, 22, 77, 56, 0x000000
+    .word RECTANGLE, 2, 22, 77, 54, 0x0B1D1D
+    .word RECTANGLE, 2, 20, 78, 55, 0x0B1D1D
+    .word RECTANGLE, 4, 18, 79, 66, 0xE3E3E3
+    .word RECTANGLE, 1, 18, 79, 66, 0x000080
+    .word RECTANGLE, 3, 3, 81, 67, 0x000000
+    .word RECTANGLE, 1, 3, 92, 67, 0x000000
+    .word RECTANGLE, 3, 1, 92, 67, 0x000000
+    .word RECTANGLE, 1, 3, 92, 69, 0x000000
+    .word RECTANGLE, 3, 1, 86, 67, 0x000000
+    .word RECTANGLE, 1, 3, 86, 67, 0x000000
+    .word RECTANGLE, 1, 2, 87, 69, 0x000000
+    .word RECTANGLE, 1, 1, 89, 68, 0x000000
+    .word RECTANGLE, 1, 1, 89, 69, 0x000000
+    .word RECTANGLE, 1, 1, 89, 68, 0x000000
+    .word RECTANGLE, 1, 1, 82, 68, 0xFFFFFF
+
+    .word VALOR_DE_CORTE
+
+car_6_end:
+
+
+
+
 
 .global plane_1
 plane_1:
