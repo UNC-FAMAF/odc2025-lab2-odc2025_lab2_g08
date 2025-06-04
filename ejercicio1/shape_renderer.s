@@ -4,7 +4,7 @@
     .equ RECTANGLE, -5
     .equ LINE,      -6
     .equ TRIANGLE,  -7
-    .equ VALOR_DE_CORTE, -999 //similar a como C maneja los strings en printf
+    .equ VALOR_DE_CORTE, -999 //similar a como C maneja los strings en printf verificando [\0]
 
 .section .data
 .global car_1
@@ -975,8 +975,6 @@ car_9:
 car_9_end:
 
 
-
-
 .global plane_1
 plane_1:
     
@@ -1103,43 +1101,68 @@ plane_1_end:
 
 
 
+/*
+    Funcion: [render_shape]
+    Descripcion:Este renderizador viene de la idea en como la stdio.h maneja el printeo de los arreglos de caracteres,
+    como los autos estan alineados en memoria, el procedimiento va recorriendo desde la primera word dada por el puntero almacenado en x8 
+    siempre comprobando primero que estamos en un valor distinto al [VALOR_DE_CORTE], de esta manera nos aseguramos que el procedimiento termine 
+    de recorrer la memoria cuando es debido, cuando no teniamos esta condicion de corte el programa se buggeaba dado que seguia recorriendo la memoria
+    trayendo la basura que habia en esos offsets.
+    Esta manera de renderizar los autos nos ahorró mucho tiempo,lineas de codigo y lo mas importante nos permitió siempre tener referencia a los autos,
+    al tenerlos en memoria, podemos apuntar a ellos y modificar su tamaño,posicion, etc..
 
-// render_shape:
-//   X0 = dirección base del framebuffer
-//   X8 = puntero al primer .word del shape (tipo, alto, ancho, x, y, color, …, VALOR_DE_CORTE)
-//   Usará la convención:
-//     X1 = posX, X2 = posY, X3 = color, X4 = alto, X5 = ancho
-//     X20 = framebuffer/contexto de dibujo
+    Parametros:
+        FB_BASE_ADDRESS --> X20    (dirección base del framebuffer; debe estar en X20 antes de llamar)
+        SHAPE_PTR       --> X8     (puntero a la primera palabra del arreglo que describe la figura)
 
+    Salidas:
+        No retorna valor explícito en registros. El resultado es la imagen dibujada en memoria de video.
+
+    Registros usados (recap):
+        input:  {X8, X20}                 X8 recorre la lista de componentes en memoria; X20 es base del framebuffer
+        temp:   {X9, X4, X5, X14, X15, X6}  
+            - W9  <- tipo
+            - W4  <- alto
+            - W5  <- ancho
+            - W14 <- posX
+            - W15 <- posY
+            - W6  <- color
+        output: {}                        ninguna salida por registro
+
+    Guardar/Restaurar:
+        Se guarda en pila X29,X30. No se guardan otros registros ya que todas las llamadas a 
+        draw_* preservan (o asumen responsabilidad de guardar) sus propios registros temporales.
+*/
 .global render_shape
 render_shape:
-   
-    STP     X29, X30, [SP, #-16]!   // guardar FP y LR
-    MOV     X29, SP
+    // Guardar frame pointer y link register
+    STP     X29, X30, [SP, #-16]!   // Reserva 16 bytes y almacena X29 y X30
+    MOV     X29, SP                 // Establece el nuevo frame pointer
 
 .loop_component:
-    // Cargar tipo y avanzar X8
-    LDR     W9, [X8], #4           // W9 = tipo
+    // Cargar el "tipo" del próximo componente y avanzar X8 en 4 bytes
+    LDR     W9, [X8], #4            // W9 = tipo
     CMP     W9, #VALOR_DE_CORTE
-    BEQ     .done                   // si es VALOR_DE_CORTE, terminamos
+    BEQ     .done                   // Si encontramos el VALOR_DE_CORTE, terminamos
 
-    // Cargar campos: alto, ancho, posX, posY, color
-    LDR     W4,  [X8], #4            // W4 = alto
-    LDR     W5,  [X8], #4            // W5 = ancho
+    // Cargar los parámetros del componente uno a uno
+    LDR     W4,  [X8], #4           // W4 = alto
+    LDR     W5,  [X8], #4           // W5 = ancho
     LDR     W14, [X8], #4           // W14 = posX
     LDR     W15, [X8], #4           // W15 = posY
     LDR     W6,  [X8], #4           // W6 = color
 
-    // Mover a registros X (extender a 64 bits)
-    MOV     W4, W4                  // X4 = alto
-    MOV     W5, W5                  // X5 = ancho
-    MOV     W1, W14                 // X1 = posX
-    MOV     W2, W15                 // X2 = posY
-    MOV     W3, W6                 // X3 = color
+    // Mover datos a registros de convención para las rutinas draw_*
+    MOV     W4, W4                  // X4  = alto
+    MOV     W5, W5                  // X5  = ancho
+    MOV     W1, W14                 // X1  = posX
+    MOV     W2, W15                 // X2  = posY
+    MOV     W3, W6                  // X3  = color
 
-    // Preparar framebuffer/contexto
-    MOV     X0, X20
+    // Preparar argumento para framebuffer (X0)
+    MOV     X0, X20                 // X0 = FB_BASE_ADDRESS
 
+    // switch según el tipo de componente
     CMP     W9, #RECTANGLE
     BEQ     .draw_rect
     CMP     W9, #CIRCLE
@@ -1148,30 +1171,29 @@ render_shape:
     BEQ     .draw_line
     CMP     W9, #TRIANGLE
     BEQ     .draw_triang
-    // Si no coincide ningún tipo, ignorar y continuar
+    // Si no coincide ningún tipo conocido, ignorar y continuar
     B       .loop_component
 
 .draw_rect:
-    BL      draw_rectangle
-    B      .loop_component
+    BL      draw_rectangle          // Llama a draw_rectangle(X0, X1, X2, X3, X4, X5)
+    B       .loop_component
 
 .draw_circ:
-    BL      draw_circle
+    //TODO           
     B       .loop_component
 
 .draw_line:
-    BL      draw_line
+    //TODO                          
     B       .loop_component
 
 .draw_triang:
-    BL      draw_triangle
+    //TODO           
     B       .loop_component
 
 .done:
-    LDP     X29, X30, [SP], #16      // restaurar FP y LR
+    // Restaurar frame pointer y link register, y devolver
+    LDP     X29, X30, [SP], #16     // Restaura X29,X30 y libera 16 bytes de pila
     RET
-
-
 
 
 .global move_shape
@@ -1228,74 +1250,104 @@ move_shape:
     LDP     X29, X30, [SP], #16     // Restaurar FP y LR
     RET
 
-// ----------------------------------------------------------------------------
-// scale_shape:
-//   Escala en el lugar todas las componentes de una figura.
-// Entradas:
-//   X8 = puntero al primer campo (tipo) de la forma
-//   W1 = factor de escala en %, p. ej. 60 → reduce al 60%
-// Convención: X1 - X5, X7 pueden clobber; X20 = framebuffer/contexto (no usado aquí)
-// ----------------------------------------------------------------------------
+/*
+    Funcion: [scale_shape]
+    Descripcion: Recorre en memoria los componentes de una figura ("shape") y escala 
+                 sus parámetros (alto, ancho, posX, posY) según el porcentaje indicado. 
+                 Cada componente se almacena como una secuencia de .word. El bucle avanza 
+                 hasta encontrar el VALOR_DE_CORTE, que indica el fin de la lista. 
+                 Para cada componente, lee los campos, aplica la operación:
+                     campo_escalado = (campo_actual * scale_percent) / 100
+                 y sobrescribe el valor en memoria.
+
+    Parametros:
+        SHAPE_PTR       --> X8    (puntero al primer campo "tipo" de la figura)
+        SCALE_PERCENT   --> W1    (factor de escala en %, p. ej. 60 → reduce al 60%)
+
+    Salidas:
+        No retorna valor explícito en registros. Modifica en memoria los campos escalados 
+        de cada componente en el arreglo original.
+
+    Registros usados (recap):
+        input:  {X8, W1}              ; X8 apunta al arreglo de componentes; W1 = porcentaje de escala
+        temp:   {X2, W7, W17, W3, W4, W5, W6} 
+                 ; X2  = scale_percent extendido (W1 → X2)
+                 ; W7  = divisor fijo (100)
+                 ; W17 = tipo de componente leído
+                 ; W3  = alto temporal
+                 ; W4  = ancho temporal
+                 ; W5  = posX temporal
+                 ; W6  = posY temporal
+        output: {}                    ; sobrescribe en memoria los valores escalados
+
+    Guardar/Restaurar:
+        Se guarda en pila X29,X30 (frame pointer y link register). No se guardan otros 
+        registros, asumiendo que cualquier llamado posterior preserva sus propios usados.
+*/
 .global scale_shape
 scale_shape:
-    STP     X29, X30, [SP, #-16]!   // prologue: guardar FP y LR
-    MOV     X29, SP
+    // Prologue: guardar frame pointer y link register
+    STP     X29, X30, [SP, #-16]!   // Reserva 16 bytes en pila y almacena X29,X30
+    MOV     X29, SP                 // Nuevo frame pointer
 
-    MOV    X2, X1                 // X2 = scale_percent (extendido)
-    MOV     W7, #100              // divisor fijo para porcentajes
-    MOV     X10, X8                // X10 = cursor sobre componentes
+    // Preparar registros para cálculo
+    MOV     X2, X1                  // X2 = scale_percent (W1 extendido a X2)
+    MOV     W7, #100                // W7 = 100 (divisor para porcentajes)
+    MOV     X10, X8                 // X10 = cursor que recorre componentes en memoria
 
 .loop:
-    // Leer tipo en W17
-    LDR     W17, [X10]             
-    CMP     W17, #VALOR_DE_CORTE   
-    BEQ     .done1                 // si es VALOR_DE_CORTE, salir
+    // Leer el "tipo" del componente actual sin desplazar X10 todavía
+    LDR     W17, [X10]              // W17 = tipo (offset #0)
+    CMP     W17, #VALOR_DE_CORTE
+    BEQ     .done1                  // Si es VALOR_DE_CORTE, terminamos
 
-    // --- Escalar alto en offset #4 ---
-    LDR     W3, [X10, #4]          // W3 = alto_actual
-    MUL     W3, W3, W2             // W3 = alto_actual * scale_percent
-    UDIV    W3, W3, W7             // W3 = (alto_actual * scale%) / 100
-    STR     W3, [X10, #4]          // guardar alto escalado
+    // --- Escalar campo "alto" en offset #4 ---
+    LDR     W3, [X10, #4]           // W3 = alto_actual
+    MUL     W3, W3, W2              // W3 = alto_actual * scale_percent
+    UDIV    W3, W3, W7              // W3 = (alto_actual * scale%) / 100
+    STR     W3, [X10, #4]           // Sobrescribir alto escalado
 
-    // --- Escalar ancho en offset #8 ---
-    LDR     W4, [X10, #8]          // W4 = ancho_actual
-    MUL     W4, W4, W2             // W4 = ancho_actual * scale_percent
-    UDIV    W4, W4, W7             // W4 = (ancho_actual * scale%) / 100
-    STR     W4, [X10, #8]          // guardar ancho escalado
+    // --- Escalar campo "ancho" en offset #8 ---
+    LDR     W4, [X10, #8]           // W4 = ancho_actual
+    MUL     W4, W4, W2              // W4 = ancho_actual * scale_percent
+    UDIV    W4, W4, W7              // W4 = (ancho_actual * scale%) / 100
+    STR     W4, [X10, #8]           // Sobrescribir ancho escalado
 
-    // --- Escalar posX en offset #12 ---
-    LDR     W5, [X10, #12]         // W5 = posX_actual
-    MUL     W5, W5, W2             // W5 = posX_actual * scale_percent
-    UDIV    W5, W5, W7             // W5 = (posX_actual * scale%) / 100
-    STR     W5, [X10, #12]         // guardar posX escalada
+    // --- Escalar campo "posX" en offset #12 ---
+    LDR     W5, [X10, #12]          // W5 = posX_actual
+    MUL     W5, W5, W2              // W5 = posX_actual * scale_percent
+    UDIV    W5, W5, W7              // W5 = (posX_actual * scale%) / 100
+    STR     W5, [X10, #12]          // Sobrescribir posX escalada
 
-    // --- Escalar posY en offset #16 ---
-    LDR     W6, [X10, #16]         // W6 = posY_actual
-    MUL     W6, W6, W2             // W6 = posY_actual * scale_percent
-    UDIV    W6, W6, W7             // W6 = (posY_actual * scale%) / 100
-    STR     W6, [X10, #16]         // guardar posY escalada
+    // --- Escalar campo "posY" en offset #16 ---
+    LDR     W6, [X10, #16]          // W6 = posY_actual
+    MUL     W6, W6, W2              // W6 = posY_actual * scale_percent
+    UDIV    W6, W6, W7              // W6 = (posY_actual * scale%) / 100
+    STR     W6, [X10, #16]          // Sobrescribir posY escalada
 
-    // --- Avanzar al siguiente componente ---
-    // RECTANGLE y LINE usan 6 campos (6×4 = 24 bytes)
+    // --- Avanzar al siguiente componente según el tipo ---
+    // RECTANGLE y LINE: 6 campos → 6 × 4 bytes = 24 bytes totales
     CMP     W17, #RECTANGLE
     BEQ     .skip6
     CMP     W17, #LINE
     BEQ     .skip6
-    // CIRCLE y TRIANGLE usan 7 campos (7×4 = 28 bytes)
+
+    // CIRCLE y TRIANGLE: 7 campos → 7 × 4 bytes = 28 bytes totales
     CMP     W17, #CIRCLE
     BEQ     .skip7
     CMP     W17, #TRIANGLE
     BEQ     .skip7
+
     // Por defecto, tratar como 6 campos
 .skip6:
-    ADD     X10, X10, #24
+    ADD     X10, X10, #24            // Avanzar apuntador 24 bytes
     B       .loop
 
 .skip7:
-    ADD     X10, X10, #28
+    ADD     X10, X10, #28            // Avanzar apuntador 28 bytes
     B       .loop
 
 .done1:
-    LDP     X29, X30, [SP], #16     // epilogue: restaurar FP y LR
+    // Epilogue: restaurar frame pointer y link register, y retornar
+    LDP     X29, X30, [SP], #16      // Restaura X29,X30 y libera 16 bytes de pila
     RET
-
