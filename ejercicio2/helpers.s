@@ -68,7 +68,7 @@ get_rel_pix_addr:
 
     ¿Se guardan/restauran valores en la pila (explícitamente)?: NO
 */
-
+.global delay
 delay:
     MOV X0, DELAY_VALUE_2
     MOVK X0, DELAY_VALUE_1, LSL #16  

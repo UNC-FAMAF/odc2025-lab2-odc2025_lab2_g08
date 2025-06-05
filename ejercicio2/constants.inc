@@ -10,15 +10,12 @@
 
     .equ SCREEN_WIDTH,     640
     .equ SCREEN_HEIGHT,    480
-    .equ BYTES_PER_PIXEL,  32
-    .equ BACKGROUND_FB,    SCREEN_WIDTH * SCREEN_HEIGHT * 4
-
     .equ GPIO_BASE,        0x3f200000
     .equ GPIO_GPFSEL0,     0x00
     .equ GPIO_GPLEV0,      0x34
     
     //PARA QUE VAYA MAS RAPIDO EL GAMELOOP MODIFICAR [DELAY_VALUE_1]
-    .equ DELAY_VALUE_1,    0x006f
+    .equ DELAY_VALUE_1,    0x01ff
     .equ DELAY_VALUE_2,    0xFFFF
 
 .endif   // fin de include guard
