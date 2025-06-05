@@ -38,6 +38,7 @@ RECAP:
     x7
 -------------------------------------------------------
  */
+.equ PLANE_OFFSET,15
 
 .globl main
 main:
@@ -69,20 +70,20 @@ main_init:
 
 game_loop:
 
-    CMP X26,#((SCREEN_WIDTH/15)-6)
+    CMP X26,#((SCREEN_WIDTH/PLANE_OFFSET) -6)
     B.GE fix_plane_h
 
 
     BL draw_sky
 
     MOV X8, X27
-    MOV W1, #15
+    MOV W1, #PLANE_OFFSET
     MOV W2, WZR
     BL move_shape
     BL render_shape
 
     MOV X8, X28
-    MOV W1, #15
+    MOV W1, #PLANE_OFFSET
     MOV W2, WZR    
     BL move_shape
     BL render_shape
