@@ -1074,6 +1074,129 @@ plane_1:
 plane_1_end:
 
 
+.global plane_2
+plane_2:
+    // Generated Pixel Art Data
+    // Format: .word RECTANGLE, height, width, X, Y, ARGB_COLOR
+    // Note: Rectangles are output as single commands. Pixels, Circles, Lines, and Polygons are rasterized.
+    .word RECTANGLE, 11, 10, 6, 35, 0x000000
+    .word RECTANGLE, 11, 9, 16, 34, 0x000000
+    .word RECTANGLE, 11, 9, 25, 35, 0x000000
+    .word RECTANGLE, 9, 9, 16, 35, 0xFFFFFF
+    .word RECTANGLE, 9, 9, 7, 36, 0xFFFFFF
+    .word RECTANGLE, 9, 8, 25, 36, 0xFFFFFF
+    .word RECTANGLE, 1, 8, 39, 40, 0x2B2B2B
+    .word RECTANGLE, 7, 5, 47, 35, 0x2B2B2B
+    .word RECTANGLE, 1, 5, 46, 34, 0x2B2B2B
+    .word RECTANGLE, 1, 4, 46, 33, 0x2B2B2B
+    .word RECTANGLE, 1, 16, 51, 42, 0x2B2B2B
+    .word RECTANGLE, 4, 15, 52, 38, 0x2B2B2B
+    .word RECTANGLE, 1, 14, 51, 37, 0x2B2B2B
+    .word RECTANGLE, 1, 6, 58, 36, 0x2B2B2B
+    .word RECTANGLE, 3, 3, 67, 39, 0x2B2B2B
+    .word RECTANGLE, 5, 1, 68, 38, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 70, 40, 0x2B2B2B
+    .word RECTANGLE, 1, 9, 57, 43, 0x2B2B2B
+    .word RECTANGLE, 1, 7, 56, 44, 0x2B2B2B
+    .word RECTANGLE, 1, 7, 55, 45, 0x2B2B2B
+    .word RECTANGLE, 1, 6, 55, 46, 0x2B2B2B
+    .word RECTANGLE, 1, 2, 48, 40, 0xFFFF00
+    .word RECTANGLE, 1, 4, 53, 40, 0xFFFF00
+    .word RECTANGLE, 2, 4, 58, 43, 0xFFFF00
+    .word RECTANGLE, 1, 1, 57, 44, 0xFFFF00
+    .word RECTANGLE, 1, 5, 58, 42, 0xFFFF00
+    .word RECTANGLE, 1, 5, 56, 45, 0xFFA500
+    .word RECTANGLE, 1, 2, 50, 40, 0xFFA500
+    .word RECTANGLE, 1, 3, 57, 40, 0xFFA500
+    .word RECTANGLE, 2, 2, 64, 41, 0x800000
+    .word RECTANGLE, 1, 15, 52, 41, 0x800000
+    .word RECTANGLE, 2, 1, 66, 39, 0x800000
+    .word RECTANGLE, 1, 6, 60, 40, 0x800000
+    .word RECTANGLE, 1, 7, 53, 39, 0x800000
+    .word RECTANGLE, 1, 1, 60, 38, 0x800000
+    .word RECTANGLE, 2, 3, 48, 37, 0x800000
+    .word RECTANGLE, 1, 2, 48, 36, 0x800000
+    .word RECTANGLE, 1, 3, 47, 34, 0xFD1C1C
+    .word RECTANGLE, 1, 3, 48, 35, 0xFD1C1C
+    .word RECTANGLE, 1, 1, 50, 36, 0xFD1C1C
+    .word RECTANGLE, 2, 1, 51, 37, 0xFD1C1C
+    .word RECTANGLE, 1, 7, 52, 38, 0xFD1C1C
+    .word RECTANGLE, 1, 3, 58, 37, 0xFD1C1C
+    .word RECTANGLE, 2, 2, 65, 39, 0xFD1C1C
+    .word RECTANGLE, 1, 1, 64, 39, 0x800000
+    .word RECTANGLE, 1, 2, 63, 38, 0x00FFFF
+    .word RECTANGLE, 1, 2, 62, 37, 0x00FFFF
+    .word RECTANGLE, 9, 9, 16, 35, 0xC4C4C4
+    .word RECTANGLE, 7, 3, 9, 37, 0x000000
+    .word RECTANGLE, 5, 5, 8, 38, 0x000000
+    .word RECTANGLE, 7, 2, 14, 37, 0x000000
+    .word RECTANGLE, 7, 2, 16, 36, 0x000000
+    .word RECTANGLE, 5, 1, 18, 37, 0x000000
+    .word RECTANGLE, 7, 4, 20, 36, 0x000000
+    .word RECTANGLE, 1, 3, 25, 37, 0x000000
+    .word RECTANGLE, 1, 3, 29, 37, 0x000000
+    .word RECTANGLE, 2, 1, 29, 38, 0x000000
+    .word RECTANGLE, 1, 3, 29, 39, 0x000000
+    .word RECTANGLE, 4, 1, 31, 40, 0x000000
+    .word RECTANGLE, 1, 2, 29, 43, 0x000000
+    .word RECTANGLE, 2, 1, 29, 42, 0x000000
+    .word RECTANGLE, 2, 1, 27, 38, 0x000000
+    .word RECTANGLE, 2, 1, 26, 39, 0x000000
+    .word RECTANGLE, 4, 1, 25, 40, 0x000000
+    .word RECTANGLE, 1, 3, 25, 43, 0x000000
+    .word RECTANGLE, 1, 1, 29, 41, 0x000000
+    .word RECTANGLE, 5, 3, 9, 38, 0xFFFFFF
+    .word RECTANGLE, 5, 1, 15, 38, 0xFFFFFF
+    .word RECTANGLE, 5, 2, 16, 37, 0xC4C4C4
+    .word RECTANGLE, 5, 3, 21, 37, 0xC4C4C4
+    .word RECTANGLE, 2, 1, 69, 38, 0x585555
+    .word RECTANGLE, 2, 1, 69, 41, 0x585555
+    .word RECTANGLE, 1, 1, 68, 37, 0x585555
+    .word RECTANGLE, 1, 1, 68, 43, 0x585555
+    .word RECTANGLE, 9, 9, 7, 36, 0xC4C4C4
+    .word RECTANGLE, 9, 8, 25, 36, 0xC4C4C4
+    .word RECTANGLE, 9, 9, 16, 35, 0xFFFFFF
+    .word RECTANGLE, 7, 3, 9, 37, 0x000000
+    .word RECTANGLE, 5, 5, 8, 38, 0x000000
+    .word RECTANGLE, 7, 2, 14, 37, 0x000000
+    .word RECTANGLE, 7, 2, 16, 36, 0x000000
+    .word RECTANGLE, 5, 1, 18, 37, 0x000000
+    .word RECTANGLE, 7, 4, 20, 36, 0x000000
+    .word RECTANGLE, 1, 3, 25, 37, 0x000000
+    .word RECTANGLE, 2, 1, 27, 38, 0x000000
+    .word RECTANGLE, 2, 1, 26, 39, 0x000000
+    .word RECTANGLE, 4, 1, 25, 40, 0x000000
+    .word RECTANGLE, 1, 3, 25, 43, 0x000000
+    .word RECTANGLE, 1, 3, 29, 37, 0x000000
+    .word RECTANGLE, 3, 1, 29, 37, 0x000000
+    .word RECTANGLE, 1, 2, 30, 39, 0x000000
+    .word RECTANGLE, 5, 1, 31, 39, 0x000000
+    .word RECTANGLE, 1, 3, 29, 43, 0x000000
+    .word RECTANGLE, 3, 1, 29, 41, 0x000000
+    .word RECTANGLE, 5, 3, 21, 37, 0xFFFFFF
+    .word RECTANGLE, 5, 2, 16, 37, 0xFFFFFF
+    .word RECTANGLE, 5, 1, 15, 38, 0xC4C4C4
+    .word RECTANGLE, 5, 3, 9, 38, 0xC4C4C4
+    .word RECTANGLE, 1, 1, 34, 35, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 35, 36, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 36, 37, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 37, 38, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 62, 38, 0x008080
+    .word RECTANGLE, 1, 1, 38, 39, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 59, 39, 0xFD1C1C
+    .word RECTANGLE, 1, 1, 38, 40, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 68, 40, 0x585555
+    .word RECTANGLE, 1, 1, 38, 41, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 37, 42, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 36, 43, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 35, 44, 0x2B2B2B
+    .word RECTANGLE, 1, 1, 34, 45, 0x2B2B2B
+
+    .word VALOR_DE_CORTE
+
+plane_2_end:
+
+
 
 
 
