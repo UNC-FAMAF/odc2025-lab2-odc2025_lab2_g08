@@ -42,44 +42,79 @@ RECAP:
 .globl main
 main:
     MOV x20, x0 // Guarda la dirección base del framebuffer en x20 (backup de x0)
-   
+    
 main_init:
     //Procedimiento [draw_static_background] escrito en: [background.s]
+
     BL draw_static_background
-    ADR X8, plane_1
+    Bl draw_cars
+
+    ADR X27, plane_1
+    MOV X8, X27
     MOV W1, #450
     MOV W2, #60
     BL move_shape
     BL render_shape
 
-    BL draw_static_background
-    ADR X8, plane_2
+    
+    ADR X28, plane_2
+    MOV X8,X28
     MOV W1, #450
-    MOV W2, #30
+    MOV W2, #75
     BL move_shape
     BL render_shape
+
+    MOV X26,#0
 
 game_loop:
 
+    CMP X26,#700
+    B.GE fix_plane_h
+
+
     BL draw_sky
 
-    ADR X8, plane_1
+    MOV X8, X27
     MOV W1, #15
-    MOV W2, #0
+    MOV W2, WZR
     BL move_shape
     BL render_shape
 
-    ADR X8, plane_2
+    MOV X8, X28
     MOV W1, #15
-    MOV W2, #0
+    
     BL move_shape
     BL render_shape
 
-    BL delay
+    BL delay 
+
+    ADD X26,X26,#1
     B game_loop
 
 
+
+fix_plane_h:
+    //Este arreglo se hizo porque el avion se bajaba de mas cada aproximadamente 1000 iteraciones
+    MOV X26,#0  //RESET PLANE COUNTER
+    MOV X8,X27
+    MOV W2,#-20
+    MOV W1,WZR
+    BL move_shape
+
+    MOV X8,X28
+    BL move_shape
+
+    B game_loop
+
 draw_cars:
+    SUB SP,SP,#48
+    STR X29,[SP,#0]
+    STR X30,[SP,#8]
+    STR X1,[SP,#16]
+    STR X2,[SP,#24]
+    STR X8,[SP,#32]    
+    MOV X29,SP
+    
 
     ADR X8, car_6
     MOV W1, #170
@@ -110,11 +145,15 @@ draw_cars:
     BL scale_shape
     BL render_shape
 
-    ADR X8, plane_1
-    MOV W1, #103
-    MOV W2, #60
-    BL move_shape
-    BL render_shape
+ 
+
+    LDR X8,[SP,#32]
+    LDR X2,[SP,#24]
+    LDR X1,[SP,#16]
+    LDR X30,[SP,#8]
+    LDR X29,[SP,#0]
+    ADD SP,SP,#48
+    
     RET
 
 

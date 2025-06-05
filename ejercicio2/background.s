@@ -24,8 +24,7 @@ draw_sky:
     MOV X4,#70
     BL draw_circle
 
-    //LINEAS DE RUTA
-    BL draw_route_lines
+    
     
     //MONTAÑAS
     BL draw_mountain 
@@ -87,7 +86,8 @@ draw_static_background:
     MOV X4,#4
     MOV X5,#40
     BL draw_route
-
+    //LINEAS DE RUTA
+    BL draw_route_lines
     BL draw_sky
     //CARTELES
     BL draw_signals

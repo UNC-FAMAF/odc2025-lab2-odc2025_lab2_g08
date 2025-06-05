@@ -1236,8 +1236,14 @@ plane_2_end:
 .global render_shape
 render_shape:
     // Guardar frame pointer y link register
-    STP     X29, X30, [SP, #-16]!   // Reserva 16 bytes y almacena X29 y X30
-    MOV     X29, SP                 // Establece el nuevo frame pointer
+    SUB SP,SP,#48
+    STR X29,[SP,#0]
+    STR X30,[SP,#8]
+    STR X1,[SP,#16]
+    STR X2,[SP,#24]
+    STR X8,[SP,#32]    
+    
+    MOV X29,SP
 
 .loop_component:
     // Cargar el "tipo" del próximo componente y avanzar X8 en 4 bytes
@@ -1292,15 +1298,25 @@ render_shape:
 
 .done:
     // Restaurar frame pointer y link register, y devolver
-    LDP     X29, X30, [SP], #16     // Restaura X29,X30 y libera 16 bytes de pila
+    LDR X8,[SP,#32]
+    LDR X2,[SP,#24]
+    LDR X1,[SP,#16]
+    LDR X30,[SP,#8]
+    LDR X29,[SP,#0]
+    ADD SP,SP,#48       // Restaura X29,X30 y libera 16 bytes de pila
     RET
 
 
 .global move_shape
 move_shape:
-    STP     X29, X30, [SP, #-16]!    // Guardar FP y LR
-    MOV     X29, SP
-
+    SUB SP,SP,#48
+    STR X29,[SP,#0]
+    STR X30,[SP,#8]
+    STR X1,[SP,#16]
+    STR X2,[SP,#24]
+    STR X8,[SP,#32]    
+    
+    MOV X29,SP
     // Entradas:
     //   X8 = puntero al primer componente de la forma
     //   W1 = deltaX, W2 = deltaY
@@ -1347,7 +1363,12 @@ move_shape:
     B       .loop_move
 
 .done_move:
-    LDP     X29, X30, [SP], #16     // Restaurar FP y LR
+    LDR X8,[SP,#32]
+    LDR X2,[SP,#24]
+    LDR X1,[SP,#16]
+    LDR X30,[SP,#8]
+    LDR X29,[SP,#0]
+    ADD SP,SP,#48     // Restaurar FP y LR
     RET
 
 /*
