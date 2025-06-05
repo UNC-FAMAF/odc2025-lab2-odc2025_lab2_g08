@@ -46,11 +46,21 @@ main:
 main_init:
     //Procedimiento [draw_static_background] escrito en: [background.s]
     BL draw_static_background
+    ADR X8, plane_1
+    MOV W1, #450
+    MOV W2, #60
+    BL move_shape
+    BL render_shape
 
 game_loop:
 
-    BL draw_static_background
+    BL draw_sky
 
+    ADR X8, plane_1
+    MOV W1, #15
+    MOV W2, #0
+    BL move_shape
+    BL render_shape
 
     BL delay
     B game_loop
@@ -93,3 +103,5 @@ draw_cars:
     BL move_shape
     BL render_shape
     RET
+
+

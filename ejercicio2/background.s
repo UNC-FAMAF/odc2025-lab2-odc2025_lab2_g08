@@ -1,5 +1,42 @@
 .include "constants.inc"
 
+
+
+.global draw_sky
+draw_sky:
+    STP X29,X30,[SP,#-16]!
+    MOV X29,SP
+
+    //CIELO 
+    MOV X0,X20
+    MOV x1, #0 // x
+    MOV x2, #0 // y
+    LDR x3, =0x08b9ce //color
+    MOV x4, #168 // alto
+    MOV x5, #640 // ancho
+    BL draw_rectangle
+
+    //SOL
+    MOV X0,X20
+    MOV X1,#465
+    MOV X2,#20
+    LDR X3,=0xF5BF42
+    MOV X4,#70
+    BL draw_circle
+
+    //LINEAS DE RUTA
+    BL draw_route_lines
+    
+    //MONTAÑAS
+    BL draw_mountain 
+
+      //NUBES
+    BL draw_clouds
+    LDP X29,X30,[SP],#16
+
+    RET
+
+
 .global "draw_static_background"
 draw_static_background:
     STP X29,X30,[SP,#-16]!
@@ -51,35 +88,9 @@ draw_static_background:
     MOV X5,#40
     BL draw_route
 
-    //CIELO 
-    MOV X0,X20
-    MOV x1, #0 // x
-    MOV x2, #0 // y
-    LDR x3, =0x08b9ce //color
-    MOV x4, #168 // alto
-    MOV x5, #640 // ancho
-    BL draw_rectangle
-
-    //SOL
-    MOV X0,X20
-    MOV X1,#465
-    MOV X2,#20
-    LDR X3,=0xF5BF42
-    MOV X4,#70
-    BL draw_circle
-
-    //LINEAS DE RUTA
-    BL draw_route_lines
-    
-    //MONTAÑAS
-    BL draw_mountain 
-
-
+    BL draw_sky
     //CARTELES
     BL draw_signals
-
-    //NUBES
-    BL draw_clouds
 
 
     LDP X29,X30,[SP],#16
