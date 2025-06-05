@@ -564,7 +564,34 @@ skip_step_y:
     B       line_loop_start
 
 
-.global "draw_route_lines"
+
+ 
+.global draw_route_lines
+draw_route_lines:
+    STP X29,X30,[SP,#-16]!
+    MOV X29,SP
+
+    MOV X19, #0         // contador de líneas
+
+for_route_lines:
+    CMP X19, #11
+    B.GE end_route_lines
+
+    MOVZ X3, 0xFFFF, lsl 0
+    MOVK X3, 0xFFFF, lsl 16
+    MOV X4, #17         // alto
+    MOV X5, #3          // ancho
+    BL draw_rectangle
+
+    ADD X2, X2, #28     // mueve la Y para la próxima línea
+    ADD X19, X19, #1
+    B for_route_lines
+
+end_route_lines:
+    LDP X29,X30,[SP],#16
+    RET
+    
+/* .global "draw_route_lines"
 draw_route_lines:
     STP X29,X30,[SP,#-16]!
     MOV X29,SP
@@ -597,6 +624,7 @@ for_route_lines:
 end_route_lines:
     LDP X29,X30,[SP],#16
     RET
+ */
 
 
 .global "draw_mountain"

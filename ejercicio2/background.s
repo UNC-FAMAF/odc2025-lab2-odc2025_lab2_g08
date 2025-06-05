@@ -109,7 +109,8 @@ draw_static_background:
     MOV X5,#45
     BL draw_route
     //LINEAS DE RUTA
-    BL draw_route_lines
+    //BL draw_route_lines
+
     BL draw_sky
     //CARTELES
     BL draw_signals

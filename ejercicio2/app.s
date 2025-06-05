@@ -66,7 +66,7 @@ main_init:
     BL render_shape
 
     MOV X26,#0
-
+    MOV x24, #0
 
 
 game_loop:
@@ -88,6 +88,20 @@ game_loop:
     MOV W2, WZR    
     BL move_shape
     BL render_shape
+
+ 
+    // ANIMACIÓN DE LÍNEAS DE LA RUTA
+    ADD X24, X24, #4         // Velocidad de la animación (ajusta el 4 para más lento/rápido)
+    CMP X24, #28             // 28 es el espaciamiento vertical de tus líneas
+    BLT .skip_reset_offset
+    MOV X24, #0
+.skip_reset_offset:
+
+    MOV X1, #305             // X inicial (ajusta si quieres centrar más la línea)
+    MOV X2, #169             // Y base
+    ADD X2, X2, X24          // Suma el offset animado
+    BL draw_route_lines      // Dibuja las líneas de la ruta animadas
+
 
     ADD X26,X26,#1
 
