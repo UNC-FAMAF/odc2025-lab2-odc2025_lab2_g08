@@ -1236,12 +1236,9 @@ plane_2_end:
 .global render_shape
 render_shape:
     // Guardar frame pointer y link register
-    SUB SP,SP,#48
+    SUB SP,SP,#16
     STR X29,[SP,#0]
     STR X30,[SP,#8]
-    STR X1,[SP,#16]
-    STR X2,[SP,#24]
-    STR X8,[SP,#32]    
     
     MOV X29,SP
 
@@ -1298,23 +1295,17 @@ render_shape:
 
 .done:
     // Restaurar frame pointer y link register, y devolver
-    LDR X8,[SP,#32]
-    LDR X2,[SP,#24]
-    LDR X1,[SP,#16]
     LDR X30,[SP,#8]
     LDR X29,[SP,#0]
-    ADD SP,SP,#48       // Restaura X29,X30 y libera 16 bytes de pila
+    ADD SP,SP,#16      // Restaura X29,X30 y libera 16 bytes de pila
     RET
 
 
 .global move_shape
 move_shape:
-    SUB SP,SP,#48
+    SUB SP,SP,#16
     STR X29,[SP,#0]
-    STR X30,[SP,#8]
-    STR X1,[SP,#16]
-    STR X2,[SP,#24]
-    STR X8,[SP,#32]    
+    STR X30,[SP,#8] 
     
     MOV X29,SP
     // Entradas:
@@ -1363,12 +1354,10 @@ move_shape:
     B       .loop_move
 
 .done_move:
-    LDR X8,[SP,#32]
-    LDR X2,[SP,#24]
-    LDR X1,[SP,#16]
+
     LDR X30,[SP,#8]
     LDR X29,[SP,#0]
-    ADD SP,SP,#48     // Restaurar FP y LR
+    ADD SP,SP,#16     // Restaurar FP y LR
     RET
 
 /*

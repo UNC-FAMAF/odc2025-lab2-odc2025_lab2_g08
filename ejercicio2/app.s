@@ -68,7 +68,7 @@ main_init:
 
 game_loop:
 
-    CMP X26,#700
+    CMP X26,#SCREEN_WIDTH
     B.GE fix_plane_h
 
 
@@ -82,13 +82,13 @@ game_loop:
 
     MOV X8, X28
     MOV W1, #15
-    
+    MOV W2, WZR    
     BL move_shape
     BL render_shape
 
-    BL delay 
-
     ADD X26,X26,#1
+    
+    BL delay 
     B game_loop
 
 
@@ -102,9 +102,13 @@ fix_plane_h:
     BL move_shape
 
     MOV X8,X28
+    MOV W2,#-20
+    MOV W1,WZR
     BL move_shape
 
     B game_loop
+
+
 
 draw_cars:
     SUB SP,SP,#48
