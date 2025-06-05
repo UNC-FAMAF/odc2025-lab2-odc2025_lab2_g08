@@ -51,7 +51,7 @@ main_init:
 
     ADR X27, plane_1
     MOV X8, X27
-    MOV W1, #450
+    MOV W1, #1
     MOV W2, #60
     BL move_shape
     BL render_shape
@@ -59,16 +59,17 @@ main_init:
     
     ADR X28, plane_2
     MOV X8,X28
-    MOV W1, #450
+    MOV W1, #1
     MOV W2, #75
     BL move_shape
     BL render_shape
 
     MOV X26,#0
 
+
 game_loop:
 
-    CMP X26,#SCREEN_WIDTH
+    CMP X26,#((SCREEN_WIDTH/15)-6)
     B.GE fix_plane_h
 
 
@@ -87,27 +88,25 @@ game_loop:
     BL render_shape
 
     ADD X26,X26,#1
-    
+
     BL delay 
     B game_loop
 
 
 
 fix_plane_h:
-    //Este arreglo se hizo porque el avion se bajaba de mas cada aproximadamente 1000 iteraciones
+    //Este arreglo se hizo porque el avion se bajaba de mas cada aproximadamente [1000] iteraciones
     MOV X26,#0  //RESET PLANE COUNTER
     MOV X8,X27
-    MOV W2,#-20
-    MOV W1,WZR
-    BL move_shape
 
+    BL move_plane_reset
+    
     MOV X8,X28
-    MOV W2,#-20
-    MOV W1,WZR
-    BL move_shape
+   
+    BL move_plane_reset
 
     B game_loop
-
+    RET
 
 
 draw_cars:

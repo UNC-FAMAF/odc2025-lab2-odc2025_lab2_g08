@@ -1461,3 +1461,66 @@ scale_shape:
     // Epilogue: restaurar frame pointer y link register, y retornar
     LDP     X29, X30, [SP], #16      // Restaura X29,X30 y libera 16 bytes de pila
     RET
+
+
+
+
+.global move_plane_reset
+move_plane_reset:
+    SUB SP,SP,#16
+    STR X29,[SP,#0]
+    STR X30,[SP,#8] 
+    
+    MOV X29,SP
+    // Entradas:
+    //   X8 = puntero al primer componente de la forma
+    //   W1 = X, W2 = Y
+
+    MOV     X11, X1      // X11 = X
+    MOV     X12, X2      // X12 = Y
+    MOV     X10, X8      // X10 = cursor en memoria de la forma
+
+.loop_reset:
+    LDR     W9, [X10]    // W9 = tipo
+    CMP     W9, #VALOR_DE_CORTE
+    BEQ     .done_reset
+
+    // --- actualizar posX (offset 3*4 = 12 bytes) ---
+    LDR     W1, [X10, #12]   // W1 = posX
+    SUB     W1,W1, #540      // W1 = X
+    STR     W1, [X10, #12]
+
+    // --- actualizar posY (offset 4*4 = 16 bytes) ---
+    LDR     W2, [X10, #16]   // W2 = posY
+    ADD     W2, W2, #0      // W2 = Y
+    STR     W2, [X10, #16]
+
+    // --- desplazarse al siguiente componente según tipo ---
+    // RECTANGLE (-5) y LINE (-6) tienen 6 campos (6×4 = 24 bytes)
+    CMP     W9, #RECTANGLE
+    BEQ     .skip_6_reset
+    CMP     W9, #LINE
+    BEQ     .skip_6_reset
+
+    // CIRCLE (-3) y TRIANGLE (-7) tienen 7 campos (7×4 = 28 bytes)
+    CMP     W9, #CIRCLE
+    BEQ     .skip_7_reset
+    CMP     W9, #TRIANGLE
+    BEQ     .skip_7_reset
+
+    // Por defecto, tratar como 6 campos
+.skip_6_reset:
+    ADD     X10, X10, #24
+    B       .loop_reset
+
+.skip_7_reset:
+    ADD     X10, X10, #28
+    B       .loop_reset
+
+.done_reset:
+
+    LDR X30,[SP,#8]
+    LDR X29,[SP,#0]
+    ADD SP,SP,#16     // Restaurar FP y LR
+    RET
+
