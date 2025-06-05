@@ -1,10 +1,340 @@
+
 // DEFINE DE FIGURAS
     .equ CIRCLE,    -3
     .equ SQUARE,    -4
     .equ RECTANGLE, -5
     .equ LINE,      -6
     .equ TRIANGLE,  -7
-    .equ VALOR_DE_CORTE, -999 //similar a como la stdio.h maneja los strings en printf verificando [\0]
+    //Similar a como la stdio.h maneja los strings en printf verificando [\0]
+    .equ VALOR_DE_CORTE, -999 
+
+/*
+    Funcion: [render_shape]
+    Descripcion:Este renderizador viene de la idea en como la stdio.h maneja el printeo de los arreglos de caracteres,
+    como los autos estan alineados en memoria, el procedimiento va recorriendo desde la primera word dada por el puntero almacenado en x8 
+    siempre comprobando primero que estamos en un valor distinto al [VALOR_DE_CORTE], de esta manera nos aseguramos que el procedimiento termine 
+    de recorrer la memoria cuando es debido, cuando no teniamos esta condicion de corte el programa se buggeaba dado que seguia recorriendo la memoria
+    trayendo la basura que habia en esos offsets.
+    Esta manera de renderizar los autos nos ahorró mucho tiempo,lineas de codigo y lo mas importante nos permitió siempre tener referencia a los autos,
+    al tenerlos en memoria, podemos apuntar a ellos y modificar su tamaño,posicion, etc..
+
+    OBS: Dado el tiempo, no hemos podido optimizar el uso de memoria. Un ejemplo son los parametros ( ALTO, ANCHO, X, Y ), es muy poco util el reservar 4 bytes para c/u de ellos.
+
+
+    Parametros:
+        FB_BASE_ADDRESS --> X20    (dirección base del framebuffer; debe estar en X20 antes de llamar)
+        SHAPE_PTR       --> X8     (puntero a la primera palabra del arreglo que describe la figura)
+
+    Salidas:
+        No retorna valor explícito en registros. El resultado es la imagen dibujada en memoria de video.
+
+    Registros usados (recap):
+        input:  {X8, X20}                 X8 recorre la lista de componentes en memoria; X20 es base del framebuffer
+        temp:   {X9, X4, X5, X14, X15, X6}  
+            - W9  <- tipo
+            - W4  <- alto
+            - W5  <- ancho
+            - W14 <- posX
+            - W15 <- posY
+            - W6  <- color
+        output: {}                        ninguna salida por registro
+
+    Guardar/Restaurar:
+        Se guarda en pila X29,X30. No se guardan otros registros ya que todas las llamadas a 
+        draw_* preservan (o asumen responsabilidad de guardar) sus propios registros temporales.
+*/
+.global render_shape
+render_shape:
+    // Guardar frame pointer y link register
+    SUB SP,SP,#16
+    STR X29,[SP,#0]
+    STR X30,[SP,#8]
+    
+    MOV X29,SP
+
+.loop_component:
+    // Cargar el "tipo" del próximo componente y avanzar X8 en 4 bytes
+    LDR     W9, [X8], #4            // W9 = tipo
+    CMP     W9, #VALOR_DE_CORTE
+    BEQ     .done                   // Si encontramos el VALOR_DE_CORTE, terminamos
+
+    // Cargar los parámetros del componente uno a uno
+    LDR     W4,  [X8], #4           // W4 = alto
+    LDR     W5,  [X8], #4           // W5 = ancho
+    LDR     W14, [X8], #4           // W14 = posX
+    LDR     W15, [X8], #4           // W15 = posY
+    LDR     W6,  [X8], #4           // W6 = color
+
+    // Mover datos a registros de convención para las rutinas draw_*
+    MOV     W4, W4                  // X4  = alto
+    MOV     W5, W5                  // X5  = ancho
+    MOV     W1, W14                 // X1  = posX
+    MOV     W2, W15                 // X2  = posY
+    MOV     W3, W6                  // X3  = color
+
+    // Preparar argumento para framebuffer (X0)
+    MOV     X0, X20                 // X0 = FB_BASE_ADDRESS
+
+    // switch según el tipo de componente
+    CMP     W9, #RECTANGLE
+    BEQ     .draw_rect
+    CMP     W9, #CIRCLE
+    BEQ     .draw_circ
+    CMP     W9, #LINE
+    BEQ     .draw_line
+    CMP     W9, #TRIANGLE
+    BEQ     .draw_triang
+    // Si no coincide ningún tipo conocido, ignorar y continuar
+    B       .loop_component
+
+.draw_rect:
+    BL      draw_rectangle          // Llama a draw_rectangle(X0, X1, X2, X3, X4, X5)
+    B       .loop_component
+
+.draw_circ:
+    //TODO           
+    B       .loop_component
+
+.draw_line:
+    //TODO                          
+    B       .loop_component
+
+.draw_triang:
+    //TODO           
+    B       .loop_component
+
+.done:
+    // Restaurar frame pointer y link register, y devolver
+    LDR X30,[SP,#8]
+    LDR X29,[SP,#0]
+    ADD SP,SP,#16      // Restaura X29,X30 y libera 16 bytes de pila
+    RET
+
+
+.global move_shape
+move_shape:
+    SUB SP,SP,#16
+    STR X29,[SP,#0]
+    STR X30,[SP,#8] 
+    
+    MOV X29,SP
+    // Entradas:
+    //   X8 = puntero al primer componente de la forma
+    //   W1 = deltaX, W2 = deltaY
+
+    MOV     X11, X1      // X11 = deltaX
+    MOV     X12, X2      // X12 = deltaY
+    MOV     X10, X8      // X10 = cursor en memoria de la forma
+
+.loop_move:
+    LDR     W9, [X10]    // W9 = tipo
+    CMP     W9, #VALOR_DE_CORTE
+    BEQ     .done_move
+
+    // --- actualizar posX (offset 3*4 = 12 bytes) ---
+    LDR     W1, [X10, #12]   // W1 = posX
+    ADD    W1, W1, W11      // W1 += deltaX
+    STR     W1, [X10, #12]
+
+    // --- actualizar posY (offset 4*4 = 16 bytes) ---
+    LDR     W2, [X10, #16]   // W2 = posY
+    ADD    W2, W2, W12      // W2 += deltaY
+    STR     W2, [X10, #16]
+
+    // --- desplazarse al siguiente componente según tipo ---
+    // RECTANGLE (-5) y LINE (-6) tienen 6 campos (6×4 = 24 bytes)
+    CMP     W9, #RECTANGLE
+    BEQ     .skip_6
+    CMP     W9, #LINE
+    BEQ     .skip_6
+
+    // CIRCLE (-3) y TRIANGLE (-7) tienen 7 campos (7×4 = 28 bytes)
+    CMP     W9, #CIRCLE
+    BEQ     .skip_7
+    CMP     W9, #TRIANGLE
+    BEQ     .skip_7
+
+    // Por defecto, tratar como 6 campos
+.skip_6:
+    ADD     X10, X10, #24
+    B       .loop_move
+
+.skip_7:
+    ADD     X10, X10, #28
+    B       .loop_move
+
+.done_move:
+
+    LDR X30,[SP,#8]
+    LDR X29,[SP,#0]
+    ADD SP,SP,#16     // Restaurar FP y LR
+    RET
+
+/*
+    Funcion: [scale_shape]
+    Descripcion: Recorre en memoria los componentes de una figura ("shape") y escala 
+                 sus parámetros (alto, ancho, posX, posY) según el porcentaje indicado. 
+                 Cada componente se almacena como una secuencia de .word. El bucle avanza 
+                 hasta encontrar el VALOR_DE_CORTE, que indica el fin de la lista. 
+                 Para cada componente, lee los campos, aplica la operación:
+                     campo_escalado = (campo_actual * scale_percent) / 100
+                 y sobrescribe el valor en memoria.
+
+    Parametros:
+        SHAPE_PTR       --> X8    (puntero al primer campo "tipo" de la figura)
+        SCALE_PERCENT   --> W1    (factor de escala en %, p. ej. 60 → reduce al 60%)
+
+    Salidas:
+        No retorna valor explícito en registros. Modifica en memoria los campos escalados 
+        de cada componente en el arreglo original.
+
+    Registros usados (recap):
+        input:  {X8, W1}              ; X8 apunta al arreglo de componentes; W1 = porcentaje de escala
+        temp:   {X2, W7, W17, W3, W4, W5, W6} 
+                 ; X2  = scale_percent extendido (W1 → X2)
+                 ; W7  = divisor fijo (100)
+                 ; W17 = tipo de componente leído
+                 ; W3  = alto temporal
+                 ; W4  = ancho temporal
+                 ; W5  = posX temporal
+                 ; W6  = posY temporal
+        output: {}                    ; sobrescribe en memoria los valores escalados
+
+    Guardar/Restaurar:
+        Se guarda en pila X29,X30 (frame pointer y link register). No se guardan otros 
+        registros, asumiendo que cualquier llamado posterior preserva sus propios usados.
+*/
+.global scale_shape
+scale_shape:
+    // Prologue: guardar frame pointer y link register
+    STP     X29, X30, [SP, #-16]!   // Reserva 16 bytes en pila y almacena X29,X30
+    MOV     X29, SP                 // Nuevo frame pointer
+
+    // Preparar registros para cálculo
+    MOV     X2, X1                  // X2 = scale_percent (W1 extendido a X2)
+    MOV     W7, #100                // W7 = 100 (divisor para porcentajes)
+    MOV     X10, X8                 // X10 = cursor que recorre componentes en memoria
+
+.loop:
+    // Leer el "tipo" del componente actual sin desplazar X10 todavía
+    LDR     W17, [X10]              // W17 = tipo (offset #0)
+    CMP     W17, #VALOR_DE_CORTE
+    BEQ     .done1                  // Si es VALOR_DE_CORTE, terminamos
+
+    // --- Escalar campo "alto" en offset #4 ---
+    LDR     W3, [X10, #4]           // W3 = alto_actual
+    MUL     W3, W3, W2              // W3 = alto_actual * scale_percent
+    UDIV    W3, W3, W7              // W3 = (alto_actual * scale%) / 100
+    STR     W3, [X10, #4]           // Sobrescribir alto escalado
+
+    // --- Escalar campo "ancho" en offset #8 ---
+    LDR     W4, [X10, #8]           // W4 = ancho_actual
+    MUL     W4, W4, W2              // W4 = ancho_actual * scale_percent
+    UDIV    W4, W4, W7              // W4 = (ancho_actual * scale%) / 100
+    STR     W4, [X10, #8]           // Sobrescribir ancho escalado
+
+    // --- Escalar campo "posX" en offset #12 ---
+    LDR     W5, [X10, #12]          // W5 = posX_actual
+    MUL     W5, W5, W2              // W5 = posX_actual * scale_percent
+    UDIV    W5, W5, W7              // W5 = (posX_actual * scale%) / 100
+    STR     W5, [X10, #12]          // Sobrescribir posX escalada
+
+    // --- Escalar campo "posY" en offset #16 ---
+    LDR     W6, [X10, #16]          // W6 = posY_actual
+    MUL     W6, W6, W2              // W6 = posY_actual * scale_percent
+    UDIV    W6, W6, W7              // W6 = (posY_actual * scale%) / 100
+    STR     W6, [X10, #16]          // Sobrescribir posY escalada
+
+    // --- Avanzar al siguiente componente según el tipo ---
+    // RECTANGLE y LINE: 6 campos → 6 × 4 bytes = 24 bytes totales
+    CMP     W17, #RECTANGLE
+    BEQ     .skip6
+    CMP     W17, #LINE
+    BEQ     .skip6
+
+    // CIRCLE y TRIANGLE: 7 campos → 7 × 4 bytes = 28 bytes totales
+    CMP     W17, #CIRCLE
+    BEQ     .skip7
+    CMP     W17, #TRIANGLE
+    BEQ     .skip7
+
+    // Por defecto, tratar como 6 campos
+.skip6:
+    ADD     X10, X10, #24            // Avanzar apuntador 24 bytes
+    B       .loop
+
+.skip7:
+    ADD     X10, X10, #28            // Avanzar apuntador 28 bytes
+    B       .loop
+
+.done1:
+    // Epilogue: restaurar frame pointer y link register, y retornar
+    LDP     X29, X30, [SP], #16      // Restaura X29,X30 y libera 16 bytes de pila
+    RET
+
+
+
+
+.global move_plane_reset
+.equ PLANE_SUB_X_OFFSET,540 //Lo que se le resta al aviion cuando se quiere resetear la pos x
+move_plane_reset:
+    SUB SP,SP,#16
+    STR X29,[SP,#0]
+    STR X30,[SP,#8] 
+    
+    MOV X29,SP
+    // Entradas:
+    //   X8 = puntero al primer componente de la forma
+
+    MOV     X11, X1      // X11 = X
+    MOV     X12, X2      // X12 = Y
+    MOV     X10, X8      // X10 = cursor en memoria de la forma
+
+.loop_reset:
+    LDR     W9, [X10]    // W9 = tipo
+    CMP     W9, #VALOR_DE_CORTE
+    BEQ     .done_reset
+
+    // --- actualizar posX (offset 3*4 = 12 bytes) ---
+    LDR     W1, [X10, #12]   // W1 = posX
+    SUB     W1,W1, #PLANE_SUB_X_OFFSET     
+    STR     W1, [X10, #12]
+
+    // --- actualizar posY (offset 4*4 = 16 bytes) ---
+    LDR     W2, [X10, #16]   // W2 = posY
+    ADD     W2, W2, #0      // W2 = Y
+    STR     W2, [X10, #16]
+
+    // --- desplazarse al siguiente componente según tipo ---
+    // RECTANGLE (-5) y LINE (-6) tienen 6 campos (6×4 = 24 bytes)
+    CMP     W9, #RECTANGLE
+    BEQ     .skip_6_reset
+    CMP     W9, #LINE
+    BEQ     .skip_6_reset
+
+    // CIRCLE (-3) y TRIANGLE (-7) tienen 7 campos (7×4 = 28 bytes)
+    CMP     W9, #CIRCLE
+    BEQ     .skip_7_reset
+    CMP     W9, #TRIANGLE
+    BEQ     .skip_7_reset
+
+    // Por defecto, tratar como 6 campos
+.skip_6_reset:
+    ADD     X10, X10, #24
+    B       .loop_reset
+
+.skip_7_reset:
+    ADD     X10, X10, #28
+    B       .loop_reset
+
+.done_reset:
+
+    LDR X30,[SP,#8]
+    LDR X29,[SP,#0]
+    ADD SP,SP,#16     // Restaurar FP y LR
+    RET
+
+
 
 .section .data
 .global car_1
@@ -76,6 +406,7 @@ car_2:
     .word VALOR_DE_CORTE
 car_2_end:
 
+
 .global rand
 rand:
     // TIPO      | ALTO  | ANCHO |    X     |    Y     |   COLOR
@@ -83,6 +414,7 @@ rand:
     .word RECTANGLE, 150,  640,     0,    200, 0x309E6F
     .word VALOR_DE_CORTE
 rand_end:
+
 
 .global car_3
 car_3:
@@ -977,9 +1309,7 @@ car_9_end:
 
 .global plane_1
 plane_1:
-    // Generated Pixel Art Data
     // Format: .word RECTANGLE, height, width, X, Y, ARGB_COLOR
-    // Note: Rectangles are output as single commands. Pixels, Circles, Lines, and Polygons are rasterized.
     .word RECTANGLE, 11, 10, 6, 35, 0x000000
     .word RECTANGLE, 11, 9, 16, 36, 0x000000
     .word RECTANGLE, 11, 9, 25, 35, 0x000000
@@ -1076,9 +1406,8 @@ plane_1_end:
 
 .global plane_2
 plane_2:
-    // Generated Pixel Art Data
+    
     // Format: .word RECTANGLE, height, width, X, Y, ARGB_COLOR
-    // Note: Rectangles are output as single commands. Pixels, Circles, Lines, and Polygons are rasterized.
     .word RECTANGLE, 11, 10, 6, 35, 0x000000
     .word RECTANGLE, 11, 9, 16, 34, 0x000000
     .word RECTANGLE, 11, 9, 25, 35, 0x000000
@@ -1197,330 +1526,685 @@ plane_2:
 plane_2_end:
 
 
-
-
-
-
-/*
-    Funcion: [render_shape]
-    Descripcion:Este renderizador viene de la idea en como la stdio.h maneja el printeo de los arreglos de caracteres,
-    como los autos estan alineados en memoria, el procedimiento va recorriendo desde la primera word dada por el puntero almacenado en x8 
-    siempre comprobando primero que estamos en un valor distinto al [VALOR_DE_CORTE], de esta manera nos aseguramos que el procedimiento termine 
-    de recorrer la memoria cuando es debido, cuando no teniamos esta condicion de corte el programa se buggeaba dado que seguia recorriendo la memoria
-    trayendo la basura que habia en esos offsets.
-    Esta manera de renderizar los autos nos ahorró mucho tiempo,lineas de codigo y lo mas importante nos permitió siempre tener referencia a los autos,
-    al tenerlos en memoria, podemos apuntar a ellos y modificar su tamaño,posicion, etc..
-
-    Parametros:
-        FB_BASE_ADDRESS --> X20    (dirección base del framebuffer; debe estar en X20 antes de llamar)
-        SHAPE_PTR       --> X8     (puntero a la primera palabra del arreglo que describe la figura)
-
-    Salidas:
-        No retorna valor explícito en registros. El resultado es la imagen dibujada en memoria de video.
-
-    Registros usados (recap):
-        input:  {X8, X20}                 X8 recorre la lista de componentes en memoria; X20 es base del framebuffer
-        temp:   {X9, X4, X5, X14, X15, X6}  
-            - W9  <- tipo
-            - W4  <- alto
-            - W5  <- ancho
-            - W14 <- posX
-            - W15 <- posY
-            - W6  <- color
-        output: {}                        ninguna salida por registro
-
-    Guardar/Restaurar:
-        Se guarda en pila X29,X30. No se guardan otros registros ya que todas las llamadas a 
-        draw_* preservan (o asumen responsabilidad de guardar) sus propios registros temporales.
-*/
-.global render_shape
-render_shape:
-    // Guardar frame pointer y link register
-    SUB SP,SP,#16
-    STR X29,[SP,#0]
-    STR X30,[SP,#8]
-    
-    MOV X29,SP
-
-.loop_component:
-    // Cargar el "tipo" del próximo componente y avanzar X8 en 4 bytes
-    LDR     W9, [X8], #4            // W9 = tipo
-    CMP     W9, #VALOR_DE_CORTE
-    BEQ     .done                   // Si encontramos el VALOR_DE_CORTE, terminamos
-
-    // Cargar los parámetros del componente uno a uno
-    LDR     W4,  [X8], #4           // W4 = alto
-    LDR     W5,  [X8], #4           // W5 = ancho
-    LDR     W14, [X8], #4           // W14 = posX
-    LDR     W15, [X8], #4           // W15 = posY
-    LDR     W6,  [X8], #4           // W6 = color
-
-    // Mover datos a registros de convención para las rutinas draw_*
-    MOV     W4, W4                  // X4  = alto
-    MOV     W5, W5                  // X5  = ancho
-    MOV     W1, W14                 // X1  = posX
-    MOV     W2, W15                 // X2  = posY
-    MOV     W3, W6                  // X3  = color
-
-    // Preparar argumento para framebuffer (X0)
-    MOV     X0, X20                 // X0 = FB_BASE_ADDRESS
-
-    // switch según el tipo de componente
-    CMP     W9, #RECTANGLE
-    BEQ     .draw_rect
-    CMP     W9, #CIRCLE
-    BEQ     .draw_circ
-    CMP     W9, #LINE
-    BEQ     .draw_line
-    CMP     W9, #TRIANGLE
-    BEQ     .draw_triang
-    // Si no coincide ningún tipo conocido, ignorar y continuar
-    B       .loop_component
-
-.draw_rect:
-    BL      draw_rectangle          // Llama a draw_rectangle(X0, X1, X2, X3, X4, X5)
-    B       .loop_component
-
-.draw_circ:
-    //TODO           
-    B       .loop_component
-
-.draw_line:
-    //TODO                          
-    B       .loop_component
-
-.draw_triang:
-    //TODO           
-    B       .loop_component
-
-.done:
-    // Restaurar frame pointer y link register, y devolver
-    LDR X30,[SP,#8]
-    LDR X29,[SP,#0]
-    ADD SP,SP,#16      // Restaura X29,X30 y libera 16 bytes de pila
-    RET
-
-
-.global move_shape
-move_shape:
-    SUB SP,SP,#16
-    STR X29,[SP,#0]
-    STR X30,[SP,#8] 
-    
-    MOV X29,SP
-    // Entradas:
-    //   X8 = puntero al primer componente de la forma
-    //   W1 = deltaX, W2 = deltaY
-
-    MOV     X11, X1      // X11 = deltaX
-    MOV     X12, X2      // X12 = deltaY
-    MOV     X10, X8      // X10 = cursor en memoria de la forma
-
-.loop_move:
-    LDR     W9, [X10]    // W9 = tipo
-    CMP     W9, #VALOR_DE_CORTE
-    BEQ     .done_move
-
-    // --- actualizar posX (offset 3*4 = 12 bytes) ---
-    LDR     W1, [X10, #12]   // W1 = posX
-    ADD    W1, W1, W11      // W1 += deltaX
-    STR     W1, [X10, #12]
-
-    // --- actualizar posY (offset 4*4 = 16 bytes) ---
-    LDR     W2, [X10, #16]   // W2 = posY
-    ADD    W2, W2, W12      // W2 += deltaY
-    STR     W2, [X10, #16]
-
-    // --- desplazarse al siguiente componente según tipo ---
-    // RECTANGLE (-5) y LINE (-6) tienen 6 campos (6×4 = 24 bytes)
-    CMP     W9, #RECTANGLE
-    BEQ     .skip_6
-    CMP     W9, #LINE
-    BEQ     .skip_6
-
-    // CIRCLE (-3) y TRIANGLE (-7) tienen 7 campos (7×4 = 28 bytes)
-    CMP     W9, #CIRCLE
-    BEQ     .skip_7
-    CMP     W9, #TRIANGLE
-    BEQ     .skip_7
-
-    // Por defecto, tratar como 6 campos
-.skip_6:
-    ADD     X10, X10, #24
-    B       .loop_move
-
-.skip_7:
-    ADD     X10, X10, #28
-    B       .loop_move
-
-.done_move:
-
-    LDR X30,[SP,#8]
-    LDR X29,[SP,#0]
-    ADD SP,SP,#16     // Restaurar FP y LR
-    RET
-
-/*
-    Funcion: [scale_shape]
-    Descripcion: Recorre en memoria los componentes de una figura ("shape") y escala 
-                 sus parámetros (alto, ancho, posX, posY) según el porcentaje indicado. 
-                 Cada componente se almacena como una secuencia de .word. El bucle avanza 
-                 hasta encontrar el VALOR_DE_CORTE, que indica el fin de la lista. 
-                 Para cada componente, lee los campos, aplica la operación:
-                     campo_escalado = (campo_actual * scale_percent) / 100
-                 y sobrescribe el valor en memoria.
-
-    Parametros:
-        SHAPE_PTR       --> X8    (puntero al primer campo "tipo" de la figura)
-        SCALE_PERCENT   --> W1    (factor de escala en %, p. ej. 60 → reduce al 60%)
-
-    Salidas:
-        No retorna valor explícito en registros. Modifica en memoria los campos escalados 
-        de cada componente en el arreglo original.
-
-    Registros usados (recap):
-        input:  {X8, W1}              ; X8 apunta al arreglo de componentes; W1 = porcentaje de escala
-        temp:   {X2, W7, W17, W3, W4, W5, W6} 
-                 ; X2  = scale_percent extendido (W1 → X2)
-                 ; W7  = divisor fijo (100)
-                 ; W17 = tipo de componente leído
-                 ; W3  = alto temporal
-                 ; W4  = ancho temporal
-                 ; W5  = posX temporal
-                 ; W6  = posY temporal
-        output: {}                    ; sobrescribe en memoria los valores escalados
-
-    Guardar/Restaurar:
-        Se guarda en pila X29,X30 (frame pointer y link register). No se guardan otros 
-        registros, asumiendo que cualquier llamado posterior preserva sus propios usados.
-*/
-.global scale_shape
-scale_shape:
-    // Prologue: guardar frame pointer y link register
-    STP     X29, X30, [SP, #-16]!   // Reserva 16 bytes en pila y almacena X29,X30
-    MOV     X29, SP                 // Nuevo frame pointer
-
-    // Preparar registros para cálculo
-    MOV     X2, X1                  // X2 = scale_percent (W1 extendido a X2)
-    MOV     W7, #100                // W7 = 100 (divisor para porcentajes)
-    MOV     X10, X8                 // X10 = cursor que recorre componentes en memoria
-
-.loop:
-    // Leer el "tipo" del componente actual sin desplazar X10 todavía
-    LDR     W17, [X10]              // W17 = tipo (offset #0)
-    CMP     W17, #VALOR_DE_CORTE
-    BEQ     .done1                  // Si es VALOR_DE_CORTE, terminamos
-
-    // --- Escalar campo "alto" en offset #4 ---
-    LDR     W3, [X10, #4]           // W3 = alto_actual
-    MUL     W3, W3, W2              // W3 = alto_actual * scale_percent
-    UDIV    W3, W3, W7              // W3 = (alto_actual * scale%) / 100
-    STR     W3, [X10, #4]           // Sobrescribir alto escalado
-
-    // --- Escalar campo "ancho" en offset #8 ---
-    LDR     W4, [X10, #8]           // W4 = ancho_actual
-    MUL     W4, W4, W2              // W4 = ancho_actual * scale_percent
-    UDIV    W4, W4, W7              // W4 = (ancho_actual * scale%) / 100
-    STR     W4, [X10, #8]           // Sobrescribir ancho escalado
-
-    // --- Escalar campo "posX" en offset #12 ---
-    LDR     W5, [X10, #12]          // W5 = posX_actual
-    MUL     W5, W5, W2              // W5 = posX_actual * scale_percent
-    UDIV    W5, W5, W7              // W5 = (posX_actual * scale%) / 100
-    STR     W5, [X10, #12]          // Sobrescribir posX escalada
-
-    // --- Escalar campo "posY" en offset #16 ---
-    LDR     W6, [X10, #16]          // W6 = posY_actual
-    MUL     W6, W6, W2              // W6 = posY_actual * scale_percent
-    UDIV    W6, W6, W7              // W6 = (posY_actual * scale%) / 100
-    STR     W6, [X10, #16]          // Sobrescribir posY escalada
-
-    // --- Avanzar al siguiente componente según el tipo ---
-    // RECTANGLE y LINE: 6 campos → 6 × 4 bytes = 24 bytes totales
-    CMP     W17, #RECTANGLE
-    BEQ     .skip6
-    CMP     W17, #LINE
-    BEQ     .skip6
-
-    // CIRCLE y TRIANGLE: 7 campos → 7 × 4 bytes = 28 bytes totales
-    CMP     W17, #CIRCLE
-    BEQ     .skip7
-    CMP     W17, #TRIANGLE
-    BEQ     .skip7
-
-    // Por defecto, tratar como 6 campos
-.skip6:
-    ADD     X10, X10, #24            // Avanzar apuntador 24 bytes
-    B       .loop
-
-.skip7:
-    ADD     X10, X10, #28            // Avanzar apuntador 28 bytes
-    B       .loop
-
-.done1:
-    // Epilogue: restaurar frame pointer y link register, y retornar
-    LDP     X29, X30, [SP], #16      // Restaura X29,X30 y libera 16 bytes de pila
-    RET
-
-
-
-
-.global move_plane_reset
-.equ PLANE_SUB_X_OFFSET,540 //Lo que se le resta al aviion cuando se quiere resetear la pos x
-move_plane_reset:
-    SUB SP,SP,#16
-    STR X29,[SP,#0]
-    STR X30,[SP,#8] 
-    
-    MOV X29,SP
-    // Entradas:
-    //   X8 = puntero al primer componente de la forma
-
-    MOV     X11, X1      // X11 = X
-    MOV     X12, X2      // X12 = Y
-    MOV     X10, X8      // X10 = cursor en memoria de la forma
-
-.loop_reset:
-    LDR     W9, [X10]    // W9 = tipo
-    CMP     W9, #VALOR_DE_CORTE
-    BEQ     .done_reset
-
-    // --- actualizar posX (offset 3*4 = 12 bytes) ---
-    LDR     W1, [X10, #12]   // W1 = posX
-    SUB     W1,W1, #PLANE_SUB_X_OFFSET     
-    STR     W1, [X10, #12]
-
-    // --- actualizar posY (offset 4*4 = 16 bytes) ---
-    LDR     W2, [X10, #16]   // W2 = posY
-    ADD     W2, W2, #0      // W2 = Y
-    STR     W2, [X10, #16]
-
-    // --- desplazarse al siguiente componente según tipo ---
-    // RECTANGLE (-5) y LINE (-6) tienen 6 campos (6×4 = 24 bytes)
-    CMP     W9, #RECTANGLE
-    BEQ     .skip_6_reset
-    CMP     W9, #LINE
-    BEQ     .skip_6_reset
-
-    // CIRCLE (-3) y TRIANGLE (-7) tienen 7 campos (7×4 = 28 bytes)
-    CMP     W9, #CIRCLE
-    BEQ     .skip_7_reset
-    CMP     W9, #TRIANGLE
-    BEQ     .skip_7_reset
-
-    // Por defecto, tratar como 6 campos
-.skip_6_reset:
-    ADD     X10, X10, #24
-    B       .loop_reset
-
-.skip_7_reset:
-    ADD     X10, X10, #28
-    B       .loop_reset
-
-.done_reset:
-
-    LDR X30,[SP,#8]
-    LDR X29,[SP,#0]
-    ADD SP,SP,#16     // Restaurar FP y LR
-    RET
+.global car_8
+car_8:
+ 
+  // .word RECTANGLE, height, width, X, Y, ARGB_COLOR
+ 
+    .word RECTANGLE, 1, 42, 124, 282, 0x121212
+    .word RECTANGLE, 2, 2, 144, 280, 0x121212
+    .word RECTANGLE, 1, 16, 146, 281, 0x121212
+    .word RECTANGLE, 3, 2, 142, 279, 0x0D2231
+    .word RECTANGLE, 1, 3, 144, 279, 0x0D2231
+    .word RECTANGLE, 2, 2, 146, 279, 0x0D2231
+    .word RECTANGLE, 1, 8, 148, 280, 0x0D2231
+    .word RECTANGLE, 4, 9, 156, 277, 0x0D2231
+    .word RECTANGLE, 1, 1, 163, 281, 0x0D2231
+    .word RECTANGLE, 1, 1, 162, 281, 0x0D2231
+    .word RECTANGLE, 1, 1, 164, 281, 0x0D2231
+    .word RECTANGLE, 4, 5, 158, 273, 0x0D2231
+    .word RECTANGLE, 3, 2, 164, 279, 0x0D2231
+    .word RECTANGLE, 2, 6, 136, 280, 0x0D2231
+    .word RECTANGLE, 3, 2, 134, 279, 0x0D2231
+    .word RECTANGLE, 6, 3, 131, 276, 0x0D2231
+    .word RECTANGLE, 9, 5, 127, 273, 0x0D2231
+    .word RECTANGLE, 6, 2, 125, 276, 0x0D2231
+    .word RECTANGLE, 3, 2, 124, 279, 0x0D2231
+    .word RECTANGLE, 4, 6, 142, 275, 0x153B51
+    .word RECTANGLE, 3, 6, 142, 271, 0x0D2231
+    .word RECTANGLE, 2, 46, 122, 269, 0x272626
+    .word RECTANGLE, 9, 6, 136, 271, 0x153B51
+    .word RECTANGLE, 5, 3, 133, 271, 0x153B51
+    .word RECTANGLE, 3, 2, 134, 276, 0x153B51
+    .word RECTANGLE, 2, 6, 127, 271, 0x153B51
+    .word RECTANGLE, 4, 1, 132, 272, 0x153B51
+    .word RECTANGLE, 9, 8, 148, 271, 0x153B51
+    .word RECTANGLE, 6, 2, 156, 271, 0x153B51
+    .word RECTANGLE, 2, 5, 158, 271, 0x153B51
+    .word RECTANGLE, 2, 7, 163, 271, 0x272626
+    .word RECTANGLE, 1, 1, 163, 272, 0x153B51
+    .word RECTANGLE, 1, 1, 163, 271, 0x153B51
+    .word RECTANGLE, 1, 1, 164, 272, 0x153B51
+    .word RECTANGLE, 1, 1, 163, 273, 0x153B51
+    .word RECTANGLE, 1, 1, 164, 273, 0x153B51
+    .word RECTANGLE, 2, 1, 164, 273, 0x153B51
+    .word RECTANGLE, 1, 1, 163, 274, 0x153B51
+    .word RECTANGLE, 4, 2, 164, 273, 0x153B51
+    .word RECTANGLE, 1, 1, 164, 275, 0x153B51
+    .word RECTANGLE, 1, 1, 163, 275, 0x153B51
+    .word RECTANGLE, 1, 1, 163, 276, 0x153B51
+    .word RECTANGLE, 10, 5, 165, 273, 0x153B51
+    .word RECTANGLE, 12, 3, 121, 271, 0x153B51
+    .word RECTANGLE, 5, 3, 123, 271, 0x153B51
+    .word RECTANGLE, 5, 1, 126, 271, 0x153B51
+    .word RECTANGLE, 4, 1, 124, 275, 0x153B51
+    .word RECTANGLE, 3, 5, 166, 273, 0x272626
+    .word RECTANGLE, 4, 6, 167, 276, 0x272626
+    .word RECTANGLE, 1, 8, 167, 281, 0x272626
+    .word RECTANGLE, 4, 9, 166, 279, 0x272626
+    .word RECTANGLE, 2, 1, 165, 280, 0x272626
+    .word RECTANGLE, 3, 5, 165, 279, 0x0D2231
+    .word RECTANGLE, 1, 16, 156, 282, 0x272626
+    .word RECTANGLE, 2, 5, 120, 271, 0x272626
+    .word RECTANGLE, 3, 6, 118, 273, 0x272626
+    .word RECTANGLE, 3, 6, 117, 276, 0x272626
+    .word RECTANGLE, 4, 8, 115, 279, 0x272626
+    .word RECTANGLE, 8, 3, 120, 275, 0x153B51
+    .word RECTANGLE, 4, 4, 122, 273, 0x153B51
+    .word RECTANGLE, 3, 4, 120, 280, 0x0D2231
+    .word RECTANGLE, 1, 6, 142, 274, 0x153B51
+    .word RECTANGLE, 1, 4, 166, 279, 0x153B51
+    .word RECTANGLE, 1, 2, 167, 278, 0x153B51
+    .word RECTANGLE, 3, 1, 166, 274, 0x153B51
+    .word RECTANGLE, 3, 1, 167, 276, 0x153B51
+    .word RECTANGLE, 2, 1, 120, 275, 0x272626
+    .word RECTANGLE, 2, 1, 120, 277, 0x272626
+    .word RECTANGLE, 1, 1, 120, 278, 0x153B51
+    .word RECTANGLE, 1, 1, 120, 277, 0x153B51
+    .word RECTANGLE, 1, 1, 124, 272, 0x153B51
+    .word RECTANGLE, 1, 1, 123, 272, 0x153B51
+    .word RECTANGLE, 1, 1, 124, 271, 0x153B51
+    .word RECTANGLE, 4, 1, 114, 279, 0x670D04
+    .word RECTANGLE, 1, 3, 114, 278, 0x670D04
+    .word RECTANGLE, 4, 1, 116, 275, 0x670D04
+    .word RECTANGLE, 4, 1, 118, 272, 0x670D04
+    .word RECTANGLE, 1, 2, 118, 272, 0x670D04
+    .word RECTANGLE, 3, 1, 119, 270, 0x670D04
+    .word RECTANGLE, 1, 2, 120, 270, 0x670D04
+    .word RECTANGLE, 3, 1, 121, 268, 0x670D04
+    .word RECTANGLE, 1, 47, 122, 268, 0x670D04
+    .word RECTANGLE, 3, 1, 168, 268, 0x670D04
+    .word RECTANGLE, 1, 3, 168, 270, 0x670D04
+    .word RECTANGLE, 2, 1, 170, 271, 0x670D04
+    .word RECTANGLE, 1, 2, 170, 272, 0x670D04
+    .word RECTANGLE, 4, 1, 171, 272, 0x670D04
+    .word RECTANGLE, 1, 3, 171, 275, 0x670D04
+    .word RECTANGLE, 4, 1, 173, 275, 0x670D04
+    .word RECTANGLE, 1, 2, 173, 278, 0x670D04
+    .word RECTANGLE, 5, 1, 175, 278, 0x670D04
+    .word RECTANGLE, 3, 42, 124, 266, 0x670D04
+    .word RECTANGLE, 1, 1, 167, 268, 0x670D04
+    .word RECTANGLE, 1, 2, 166, 267, 0x670D04
+    .word RECTANGLE, 1, 41, 124, 266, 0xB52510
+    .word RECTANGLE, 2, 16, 124, 267, 0xB52510
+    .word RECTANGLE, 2, 15, 151, 267, 0xB52510
+    .word RECTANGLE, 2, 1, 139, 267, 0x670D04
+    .word RECTANGLE, 2, 62, 114, 283, 0xB52510
+    .word RECTANGLE, 1, 1, 176, 279, 0x121212
+    .word RECTANGLE, 1, 1, 176, 280, 0x121212
+    .word RECTANGLE, 1, 4, 177, 278, 0x121212
+    .word RECTANGLE, 1, 1, 181, 279, 0x121212
+    .word RECTANGLE, 1, 1, 182, 280, 0x121212
+    .word RECTANGLE, 1, 1, 181, 281, 0x121212
+    .word RECTANGLE, 1, 3, 178, 282, 0x121212
+    .word RECTANGLE, 1, 1, 177, 281, 0x121212
+    .word RECTANGLE, 4, 1, 176, 280, 0xB52510
+    .word RECTANGLE, 3, 1, 177, 282, 0xB52510
+    .word RECTANGLE, 1, 1, 176, 284, 0xB52510
+    .word RECTANGLE, 4, 1, 178, 284, 0xB52510
+    .word RECTANGLE, 4, 1, 179, 287, 0xB52510
+    .word RECTANGLE, 1, 3, 177, 279, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 179, 279, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 179, 280, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 180, 279, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 180, 279, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 181, 280, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 180, 280, 0xBEC5C5
+    .word RECTANGLE, 1, 2, 178, 281, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 178, 280, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 177, 280, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 180, 281, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 112, 279, 0x121212
+    .word RECTANGLE, 1, 1, 113, 279, 0x121212
+    .word RECTANGLE, 1, 1, 113, 280, 0x121212
+    .word RECTANGLE, 1, 1, 176, 280, 0x121212
+    .word RECTANGLE, 1, 3, 109, 278, 0x121212
+    .word RECTANGLE, 1, 1, 108, 279, 0x121212
+    .word RECTANGLE, 1, 1, 107, 280, 0x121212
+    .word RECTANGLE, 1, 1, 108, 281, 0x121212
+    .word RECTANGLE, 1, 1, 112, 281, 0x121212
+    .word RECTANGLE, 1, 3, 109, 282, 0x121212
+    .word RECTANGLE, 6, 1, 113, 281, 0xB72513
+    .word RECTANGLE, 5, 1, 112, 284, 0xB72513
+    .word RECTANGLE, 1, 1, 112, 282, 0xB72513
+    .word RECTANGLE, 1, 1, 112, 283, 0xB72513
+    .word RECTANGLE, 6, 1, 111, 284, 0xB72513
+    .word RECTANGLE, 3, 1, 177, 285, 0xB72513
+    .word RECTANGLE, 2, 1, 178, 287, 0xB72513
+    .word RECTANGLE, 3, 3, 109, 279, 0xBEC5C5
+    .word RECTANGLE, 2, 1, 112, 279, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 108, 280, 0xBEC5C5
+    .word RECTANGLE, 2, 63, 114, 284, 0xB72513
+    .word RECTANGLE, 2, 45, 123, 286, 0xF54429
+    .word RECTANGLE, 1, 1, 112, 284, 0x670D04
+    .word RECTANGLE, 1, 1, 113, 282, 0x670D04
+    .word RECTANGLE, 4, 1, 112, 285, 0x670D04
+    .word RECTANGLE, 1, 5, 112, 289, 0x670D04
+    .word RECTANGLE, 1, 2, 117, 289, 0x670D04
+    .word RECTANGLE, 4, 1, 118, 285, 0x670D04
+    .word RECTANGLE, 1, 5, 114, 284, 0x670D04
+    .word RECTANGLE, 2, 2, 111, 284, 0xB72513
+    .word RECTANGLE, 1, 3, 119, 284, 0x670D04
+    .word RECTANGLE, 1, 3, 122, 285, 0x670D04
+    .word RECTANGLE, 3, 1, 125, 286, 0x670D04
+    .word RECTANGLE, 1, 6, 119, 289, 0x670D04
+    .word RECTANGLE, 1, 1, 124, 288, 0x670D04
+    .word RECTANGLE, 1, 11, 113, 288, 0xFF751A
+    .word RECTANGLE, 2, 2, 115, 286, 0xF54429
+    .word RECTANGLE, 2, 3, 119, 286, 0xF54429
+    .word RECTANGLE, 3, 2, 113, 285, 0xB72513
+    .word RECTANGLE, 2, 1, 117, 286, 0xB72513
+    .word RECTANGLE, 3, 1, 122, 285, 0xB72513
+    .word RECTANGLE, 1, 1, 113, 284, 0x670D04
+    .word RECTANGLE, 1, 1, 122, 284, 0x670D04
+    .word RECTANGLE, 2, 1, 164, 286, 0x670D04
+    .word RECTANGLE, 1, 1, 164, 288, 0x670D04
+    .word RECTANGLE, 1, 1, 165, 288, 0x670D04
+    .word RECTANGLE, 1, 12, 166, 289, 0x670D04
+    .word RECTANGLE, 5, 1, 177, 285, 0x670D04
+    .word RECTANGLE, 1, 2, 165, 285, 0x670D04
+    .word RECTANGLE, 1, 9, 167, 284, 0x670D04
+    .word RECTANGLE, 1, 1, 177, 285, 0xB72513
+    .word RECTANGLE, 1, 1, 176, 284, 0x670D04
+    .word RECTANGLE, 1, 11, 166, 288, 0xFF751A
+    .word RECTANGLE, 5, 1, 172, 284, 0x670D04
+    .word RECTANGLE, 1, 1, 118, 288, 0x670D04
+    .word RECTANGLE, 1, 1, 119, 286, 0xB72513
+    .word RECTANGLE, 1, 1, 119, 287, 0xB72513
+    .word RECTANGLE, 2, 3, 169, 286, 0xF54429
+    .word RECTANGLE, 3, 3, 174, 285, 0xF54429
+    .word RECTANGLE, 1, 1, 173, 287, 0xF54429
+    .word RECTANGLE, 1, 1, 173, 285, 0xF54429
+    .word RECTANGLE, 1, 1, 173, 286, 0xF54429
+    .word RECTANGLE, 1, 1, 168, 286, 0xF54429
+    .word RECTANGLE, 1, 1, 168, 287, 0xF54429
+    .word RECTANGLE, 1, 1, 166, 288, 0x670D04
+    .word RECTANGLE, 1, 1, 123, 288, 0x670D04
+    .word RECTANGLE, 1, 1, 165, 286, 0x670D04
+    .word RECTANGLE, 1, 1, 165, 286, 0x670D04
+    .word RECTANGLE, 1, 1, 124, 286, 0x670D04
+    .word RECTANGLE, 8, 1, 111, 287, 0xB72513
+    .word RECTANGLE, 8, 2, 178, 289, 0xB72513
+    .word RECTANGLE, 9, 1, 179, 287, 0xB72513
+    .word RECTANGLE, 7, 3, 110, 290, 0xB72513
+    .word RECTANGLE, 1, 1, 180, 296, 0xB72513
+    .word RECTANGLE, 8, 1, 110, 292, 0xB72513
+    .word RECTANGLE, 8, 2, 179, 292, 0xB72513
+    .word RECTANGLE, 2, 41, 124, 283, 0xF54429
+    .word RECTANGLE, 1, 11, 164, 283, 0xF54429
+    .word RECTANGLE, 1, 2, 165, 284, 0xF54429
+    .word RECTANGLE, 2, 1, 123, 283, 0xF54429
+    .word RECTANGLE, 1, 8, 116, 283, 0xF54429
+    .word RECTANGLE, 1, 39, 125, 285, 0xF54429
+    .word RECTANGLE, 4, 38, 126, 286, 0xB72513
+    .word RECTANGLE, 4, 1, 120, 290, 0x670D04
+    .word RECTANGLE, 4, 1, 171, 290, 0x670D04
+    .word RECTANGLE, 2, 1, 120, 294, 0x670D04
+    .word RECTANGLE, 1, 1, 121, 295, 0x670D04
+    .word RECTANGLE, 1, 1, 171, 294, 0x670D04
+    .word RECTANGLE, 1, 1, 170, 295, 0x670D04
+    .word RECTANGLE, 1, 1, 169, 296, 0x670D04
+    .word RECTANGLE, 1, 1, 122, 296, 0x670D04
+    .word RECTANGLE, 1, 47, 122, 298, 0x670D04
+    .word RECTANGLE, 1, 43, 123, 296, 0xF54429
+    .word RECTANGLE, 4, 47, 121, 290, 0xB72513
+    .word RECTANGLE, 1, 1, 164, 289, 0xB72513
+    .word RECTANGLE, 1, 1, 165, 289, 0xB72513
+    .word RECTANGLE, 1, 1, 125, 289, 0xB72513
+    .word RECTANGLE, 1, 1, 121, 294, 0xB72513
+    .word RECTANGLE, 1, 1, 122, 294, 0xB72513
+    .word RECTANGLE, 1, 2, 121, 294, 0xB72513
+    .word RECTANGLE, 3, 48, 122, 292, 0xB72513
+    .word RECTANGLE, 5, 4, 167, 290, 0xB72513
+    .word RECTANGLE, 1, 4, 166, 295, 0xB72513
+    .word RECTANGLE, 1, 1, 122, 295, 0xB72513
+    .word RECTANGLE, 1, 1, 122, 295, 0xB72513
+    .word RECTANGLE, 1, 46, 122, 296, 0xB72513
+    .word RECTANGLE, 1, 1, 122, 296, 0xB72513
+    .word RECTANGLE, 4, 6, 172, 290, 0xB72513
+    .word RECTANGLE, 4, 7, 113, 290, 0xB72513
+    .word RECTANGLE, 3, 6, 172, 296, 0xF54429
+    .word RECTANGLE, 1, 1, 171, 295, 0xF54429
+    .word RECTANGLE, 1, 1, 171, 295, 0xF54429
+    .word RECTANGLE, 1, 1, 171, 296, 0xF54429
+    .word RECTANGLE, 1, 1, 171, 296, 0xF54429
+    .word RECTANGLE, 1, 1, 170, 296, 0xF54429
+    .word RECTANGLE, 1, 1, 170, 297, 0xF54429
+    .word RECTANGLE, 1, 1, 169, 297, 0xF54429
+    .word RECTANGLE, 1, 7, 171, 297, 0xF54429
+    .word RECTANGLE, 3, 7, 113, 296, 0xF54429
+    .word RECTANGLE, 1, 1, 120, 295, 0xF54429
+    .word RECTANGLE, 1, 1, 120, 296, 0xF54429
+    .word RECTANGLE, 1, 1, 121, 296, 0xF54429
+    .word RECTANGLE, 1, 1, 122, 297, 0xF54429
+    .word RECTANGLE, 1, 10, 113, 297, 0xF54429
+    .word RECTANGLE, 1, 42, 123, 294, 0xF54429
+    .word RECTANGLE, 1, 1, 165, 294, 0xF54429
+    .word RECTANGLE, 1, 1, 144, 284, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 145, 284, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 146, 284, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 147, 285, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 147, 286, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 147, 287, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 146, 288, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 145, 288, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 144, 288, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 143, 286, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 143, 287, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 143, 285, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 144, 285, 0x121212
+    .word RECTANGLE, 1, 1, 144, 286, 0x121212
+    .word RECTANGLE, 1, 1, 145, 287, 0x121212
+    .word RECTANGLE, 1, 1, 146, 286, 0x121212
+    .word RECTANGLE, 1, 1, 146, 285, 0x121212
+    .word RECTANGLE, 1, 1, 146, 287, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 145, 285, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 146, 286, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 144, 287, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 145, 286, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 146, 286, 0x121212
+    .word RECTANGLE, 1, 1, 120, 295, 0x670D04
+    .word RECTANGLE, 1, 1, 121, 296, 0x670D04
+    .word RECTANGLE, 1, 1, 122, 297, 0x670D04
+    .word RECTANGLE, 1, 1, 122, 297, 0x670D04
+    .word RECTANGLE, 1, 1, 171, 295, 0x670D04
+    .word RECTANGLE, 1, 1, 170, 296, 0x670D04
+    .word RECTANGLE, 1, 1, 168, 297, 0x670D04
+    .word RECTANGLE, 1, 1, 169, 297, 0x670D04
+    .word RECTANGLE, 2, 45, 123, 296, 0xB72513
+    .word RECTANGLE, 1, 1, 168, 296, 0xB72513
+    .word RECTANGLE, 1, 1, 122, 294, 0xF54429
+    .word RECTANGLE, 1, 1, 122, 294, 0xF54429
+    .word RECTANGLE, 1, 1, 122, 295, 0xF54429
+    .word RECTANGLE, 1, 1, 166, 294, 0xF54429
+    .word RECTANGLE, 1, 1, 167, 294, 0xF54429
+    .word RECTANGLE, 1, 1, 169, 294, 0xF54429
+    .word RECTANGLE, 1, 1, 168, 294, 0xF54429
+    .word RECTANGLE, 2, 1, 166, 294, 0xF54429
+    .word RECTANGLE, 1, 1, 167, 295, 0xF54429
+    .word RECTANGLE, 1, 1, 123, 288, 0xF54429
+    .word RECTANGLE, 1, 1, 123, 285, 0xF54429
+    .word RECTANGLE, 1, 1, 123, 285, 0xF54429
+    .word RECTANGLE, 1, 1, 124, 285, 0xF54429
+    .word RECTANGLE, 1, 1, 124, 286, 0xF54429
+    .word RECTANGLE, 1, 1, 123, 284, 0x670D04
+    .word RECTANGLE, 1, 1, 125, 285, 0x670D04
+    .word RECTANGLE, 1, 1, 124, 285, 0x670D04
+    .word RECTANGLE, 1, 1, 166, 284, 0x670D04
+    .word RECTANGLE, 1, 1, 124, 284, 0x670D04
+    .word RECTANGLE, 1, 1, 125, 287, 0x670D04
+    .word RECTANGLE, 1, 1, 125, 287, 0x670D04
+    .word RECTANGLE, 1, 1, 126, 286, 0x670D04
+    .word RECTANGLE, 1, 1, 126, 287, 0x670D04
+    .word RECTANGLE, 1, 1, 126, 285, 0xF54429
+    .word RECTANGLE, 1, 1, 126, 286, 0xB72513
+    .word RECTANGLE, 1, 1, 126, 287, 0xB72513
+    .word RECTANGLE, 1, 1, 125, 286, 0xB72513
+    .word RECTANGLE, 1, 1, 126, 286, 0x670D04
+    .word RECTANGLE, 1, 1, 126, 287, 0x670D04
+    .word RECTANGLE, 1, 1, 125, 286, 0xF54429
+    .word RECTANGLE, 1, 1, 125, 287, 0xF54429
+    .word RECTANGLE, 1, 1, 126, 288, 0x670D04
+    .word RECTANGLE, 1, 1, 125, 286, 0x670D04
+    .word RECTANGLE, 1, 43, 124, 299, 0xF54429
+    .word RECTANGLE, 1, 43, 124, 300, 0xF54429
+    .word RECTANGLE, 4, 20, 135, 301, 0x121212
+    .word RECTANGLE, 2, 1, 155, 301, 0x670D04
+    .word RECTANGLE, 1, 1, 156, 302, 0x670D04
+    .word RECTANGLE, 1, 1, 156, 303, 0x670D04
+    .word RECTANGLE, 2, 1, 134, 301, 0x670D04
+    .word RECTANGLE, 1, 1, 133, 302, 0x670D04
+    .word RECTANGLE, 1, 1, 133, 303, 0x670D04
+    .word RECTANGLE, 3, 1, 155, 303, 0xF54429
+    .word RECTANGLE, 2, 1, 134, 303, 0xF54429
+    .word RECTANGLE, 1, 22, 134, 305, 0xF54429
+    .word RECTANGLE, 1, 43, 124, 299, 0x670D04
+    .word RECTANGLE, 2, 42, 124, 297, 0xB72513
+    .word RECTANGLE, 1, 1, 166, 298, 0xB72513
+    .word RECTANGLE, 3, 47, 122, 293, 0xB72513
+    .word RECTANGLE, 1, 1, 169, 294, 0xB72513
+    .word RECTANGLE, 1, 1, 122, 294, 0xB72513
+    .word RECTANGLE, 1, 47, 122, 296, 0xF54429
+    .word RECTANGLE, 1, 45, 123, 297, 0xF54429
+    .word RECTANGLE, 3, 7, 113, 294, 0xB72513
+    .word RECTANGLE, 2, 6, 172, 294, 0xB72513
+    .word RECTANGLE, 1, 1, 171, 298, 0xF54429
+    .word RECTANGLE, 1, 1, 171, 298, 0xF54429
+    .word RECTANGLE, 1, 1, 170, 298, 0xF54429
+    .word RECTANGLE, 1, 1, 169, 299, 0xF54429
+    .word RECTANGLE, 1, 1, 169, 298, 0xF54429
+    .word RECTANGLE, 1, 1, 168, 299, 0xF54429
+    .word RECTANGLE, 1, 1, 167, 300, 0xF54429
+    .word RECTANGLE, 1, 2, 167, 301, 0xF54429
+    .word RECTANGLE, 1, 1, 167, 299, 0xF54429
+    .word RECTANGLE, 1, 1, 168, 300, 0xF54429
+    .word RECTANGLE, 1, 1, 169, 299, 0xF54429
+    .word RECTANGLE, 1, 1, 170, 298, 0xF54429
+    .word RECTANGLE, 1, 3, 120, 298, 0xF54429
+    .word RECTANGLE, 1, 2, 122, 299, 0xF54429
+    .word RECTANGLE, 1, 3, 122, 300, 0xF54429
+    .word RECTANGLE, 1, 1, 123, 301, 0xF54429
+    .word RECTANGLE, 1, 1, 122, 301, 0xF54429
+    .word RECTANGLE, 9, 7, 114, 297, 0xB72513
+    .word RECTANGLE, 7, 13, 121, 300, 0xB72513
+    .word RECTANGLE, 1, 1, 122, 299, 0xB72513
+    .word RECTANGLE, 1, 1, 121, 299, 0xB72513
+    .word RECTANGLE, 3, 1, 132, 304, 0xB72513
+    .word RECTANGLE, 20, 8, 108, 297, 0x121212
+    .word RECTANGLE, 20, 7, 175, 297, 0x121212
+    .word RECTANGLE, 12, 8, 111, 297, 0xB72513
+    .word RECTANGLE, 12, 8, 172, 295, 0xB72513
+    .word RECTANGLE, 6, 10, 118, 305, 0xB72513
+    .word RECTANGLE, 4, 4, 116, 308, 0xB72513
+    .word RECTANGLE, 3, 2, 115, 308, 0xB72513
+    .word RECTANGLE, 5, 2, 119, 310, 0xB72513
+    .word RECTANGLE, 4, 4, 116, 310, 0xB72513
+    .word RECTANGLE, 5, 7, 113, 308, 0xB72513
+    .word RECTANGLE, 5, 3, 112, 308, 0xB72513
+    .word RECTANGLE, 10, 6, 167, 301, 0xB72513
+    .word RECTANGLE, 7, 2, 173, 305, 0xB72513
+    .word RECTANGLE, 8, 4, 174, 304, 0xB72513
+    .word RECTANGLE, 6, 2, 177, 305, 0xB72513
+    .word RECTANGLE, 2, 1, 178, 307, 0xB72513
+    .word RECTANGLE, 1, 1, 179, 307, 0xB72513
+    .word RECTANGLE, 3, 1, 173, 311, 0xB72513
+    .word RECTANGLE, 1, 1, 174, 312, 0xB72513
+    .word RECTANGLE, 3, 3, 169, 310, 0xB72513
+    .word RECTANGLE, 4, 2, 171, 311, 0xB72513
+    .word RECTANGLE, 3, 3, 173, 312, 0xB72513
+    .word RECTANGLE, 1, 1, 172, 314, 0xB72513
+    .word RECTANGLE, 8, 2, 109, 289, 0xB72513
+    .word RECTANGLE, 2, 1, 110, 287, 0xB72513
+    .word RECTANGLE, 3, 1, 180, 289, 0xB72513
+    .word RECTANGLE, 7, 2, 180, 294, 0xB72513
+    .word RECTANGLE, 6, 3, 109, 297, 0xB72513
+    .word RECTANGLE, 7, 3, 108, 293, 0xB72513
+    .word RECTANGLE, 2, 1, 108, 300, 0xB72513
+    .word RECTANGLE, 3, 2, 110, 303, 0xB72513
+    .word RECTANGLE, 3, 1, 109, 302, 0xB72513
+    .word RECTANGLE, 2, 59, 117, 312, 0xB72513
+    .word RECTANGLE, 5, 49, 121, 307, 0xB72513
+    .word RECTANGLE, 4, 4, 169, 298, 0xB72513
+    .word RECTANGLE, 7, 14, 156, 303, 0xB72513
+    .word RECTANGLE, 5, 12, 157, 300, 0xB72513
+    .word RECTANGLE, 5, 26, 132, 305, 0xB72513
+    .word RECTANGLE, 4, 55, 119, 311, 0xB72513
+    .word RECTANGLE, 7, 5, 110, 305, 0xB72513
+    .word RECTANGLE, 6, 1, 110, 305, 0xB72513
+    .word RECTANGLE, 10, 6, 109, 304, 0xB72513
+    .word RECTANGLE, 14, 5, 176, 301, 0xB72513
+    .word RECTANGLE, 1, 6, 175, 314, 0x121212
+    .word RECTANGLE, 1, 1, 179, 313, 0x121212
+    .word RECTANGLE, 1, 1, 180, 313, 0x121212
+    .word RECTANGLE, 1, 1, 180, 312, 0x121212
+    .word RECTANGLE, 1, 1, 180, 310, 0x121212
+    .word RECTANGLE, 1, 1, 180, 312, 0x121212
+    .word RECTANGLE, 1, 1, 180, 311, 0x121212
+    .word RECTANGLE, 1, 1, 174, 314, 0x121212
+    .word RECTANGLE, 1, 1, 109, 310, 0x121212
+    .word RECTANGLE, 1, 1, 109, 311, 0x121212
+    .word RECTANGLE, 1, 1, 109, 312, 0x121212
+    .word RECTANGLE, 1, 1, 109, 313, 0x121212
+    .word RECTANGLE, 1, 1, 110, 313, 0x121212
+    .word RECTANGLE, 1, 1, 111, 314, 0x121212
+    .word RECTANGLE, 1, 1, 110, 312, 0x121212
+    .word RECTANGLE, 1, 1, 111, 313, 0x121212
+    .word RECTANGLE, 1, 1, 116, 314, 0x121212
+    .word RECTANGLE, 1, 1, 117, 314, 0x121212
+    .word RECTANGLE, 1, 1, 117, 313, 0x121212
+    .word RECTANGLE, 1, 1, 117, 312, 0x121212
+    .word RECTANGLE, 1, 1, 118, 311, 0x121212
+    .word RECTANGLE, 1, 1, 117, 311, 0x121212
+    .word RECTANGLE, 1, 1, 118, 310, 0x121212
+    .word RECTANGLE, 1, 1, 119, 310, 0x121212
+    .word RECTANGLE, 1, 1, 173, 313, 0x121212
+    .word RECTANGLE, 1, 1, 173, 312, 0x121212
+    .word RECTANGLE, 1, 1, 172, 311, 0x121212
+    .word RECTANGLE, 1, 1, 171, 311, 0x121212
+    .word RECTANGLE, 1, 1, 170, 309, 0x121212
+    .word RECTANGLE, 1, 1, 171, 310, 0x121212
+    .word RECTANGLE, 5, 50, 124, 310, 0x121212
+    .word RECTANGLE, 2, 3, 170, 312, 0x121212
+    .word RECTANGLE, 1, 3, 171, 314, 0x121212
+    .word RECTANGLE, 4, 4, 119, 311, 0x121212
+    .word RECTANGLE, 3, 2, 118, 312, 0x121212
+    .word RECTANGLE, 6, 51, 123, 308, 0x121212
+    .word RECTANGLE, 5, 31, 132, 307, 0x121212
+    .word RECTANGLE, 6, 46, 126, 307, 0x121212
+    .word RECTANGLE, 1, 1, 181, 301, 0xB72513
+    .word RECTANGLE, 1, 1, 171, 308, 0xB72513
+    .word RECTANGLE, 1, 1, 169, 307, 0xB72513
+    .word RECTANGLE, 1, 1, 171, 309, 0x121212
+    .word RECTANGLE, 1, 1, 169, 307, 0x121212
+    .word RECTANGLE, 1, 1, 119, 309, 0x121212
+    .word RECTANGLE, 1, 1, 118, 310, 0x121212
+    .word RECTANGLE, 1, 1, 120, 308, 0x121212
+    .word RECTANGLE, 1, 1, 122, 307, 0x121212
+    .word RECTANGLE, 2, 1, 121, 307, 0x121212
+    .word RECTANGLE, 3, 5, 110, 316, 0x121212
+    .word RECTANGLE, 3, 4, 177, 316, 0x121212
+    .word RECTANGLE, 2, 1, 176, 317, 0x121212
+    .word RECTANGLE, 3, 3, 174, 314, 0x121212
+    .word RECTANGLE, 1, 1, 175, 317, 0x121212
+    .word RECTANGLE, 1, 1, 175, 318, 0x121212
+    .word RECTANGLE, 1, 1, 115, 317, 0x121212
+    .word RECTANGLE, 1, 1, 116, 315, 0x121212
+    .word RECTANGLE, 1, 1, 173, 315, 0x121212
+    .word RECTANGLE, 1, 1, 109, 317, 0x121212
+    .word RECTANGLE, 1, 1, 181, 317, 0x121212
+    .word RECTANGLE, 1, 1, 169, 307, 0xB72513
+    .word RECTANGLE, 1, 1, 170, 309, 0xB72513
+    .word RECTANGLE, 1, 1, 170, 307, 0xB72513
+    .word RECTANGLE, 1, 1, 170, 308, 0xB72513
+    .word RECTANGLE, 1, 1, 171, 309, 0xB72513
+    .word RECTANGLE, 1, 1, 172, 311, 0xB72513
+    .word RECTANGLE, 1, 1, 173, 312, 0xB72513
+    .word RECTANGLE, 1, 1, 171, 310, 0xB72513
+    .word RECTANGLE, 2, 49, 120, 307, 0xB72513
+    .word RECTANGLE, 1, 1, 169, 308, 0xB72513
+    .word RECTANGLE, 1, 1, 169, 309, 0xB72513
+    .word RECTANGLE, 1, 1, 117, 311, 0xB72513
+    .word RECTANGLE, 1, 1, 117, 312, 0xB72513
+    .word RECTANGLE, 1, 1, 117, 313, 0xB72513
+    .word RECTANGLE, 1, 1, 173, 313, 0xB72513
+    .word RECTANGLE, 1, 1, 168, 309, 0xB72513
+    .word RECTANGLE, 3, 51, 119, 307, 0xB72513
+    .word RECTANGLE, 1, 1, 118, 310, 0xB72513
+    .word RECTANGLE, 1, 1, 120, 310, 0xB72513
+    .word RECTANGLE, 1, 1, 119, 310, 0xB72513
+    .word RECTANGLE, 1, 1, 118, 311, 0xB72513
+    .word RECTANGLE, 1, 1, 170, 310, 0xB72513
+    .word RECTANGLE, 1, 1, 171, 311, 0xB72513
+    .word RECTANGLE, 1, 1, 172, 312, 0xB72513
+    .word RECTANGLE, 1, 1, 170, 310, 0x121212
+    .word RECTANGLE, 1, 1, 171, 311, 0x121212
+    .word RECTANGLE, 1, 1, 120, 310, 0x121212
+    .word RECTANGLE, 1, 2, 170, 310, 0xB72513
+    .word RECTANGLE, 1, 1, 172, 311, 0xB72513
+    .word RECTANGLE, 1, 1, 171, 311, 0xB72513
+    .word RECTANGLE, 1, 1, 170, 310, 0x121212
+    .word RECTANGLE, 2, 1, 171, 311, 0x121212
+    .word RECTANGLE, 1, 1, 108, 302, 0xB72513
+    .word RECTANGLE, 1, 1, 116, 316, 0x121212
+    .word RECTANGLE, 1, 1, 174, 317, 0x121212
+    .word RECTANGLE, 1, 1, 170, 310, 0xB72513
+    .word RECTANGLE, 1, 1, 171, 311, 0xB72513
+    .word RECTANGLE, 2, 13, 120, 308, 0xB72513
+    .word RECTANGLE, 1, 3, 141, 312, 0xBEC5C5
+    .word RECTANGLE, 3, 1, 140, 313, 0xBEC5C5
+    .word RECTANGLE, 1, 3, 141, 316, 0xBEC5C5
+    .word RECTANGLE, 2, 1, 144, 313, 0xBEC5C5
+    .word RECTANGLE, 3, 3, 141, 313, 0x121212
+    .word RECTANGLE, 1, 3, 148, 312, 0xBEC5C5
+    .word RECTANGLE, 3, 1, 147, 313, 0xBEC5C5
+    .word RECTANGLE, 1, 2, 148, 316, 0xBEC5C5
+    .word RECTANGLE, 3, 1, 151, 313, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 150, 316, 0xBEC5C5
+    .word RECTANGLE, 3, 3, 148, 313, 0x121212
+    .word RECTANGLE, 6, 4, 171, 306, 0xB72513
+    .word RECTANGLE, 1, 1, 116, 312, 0xB72513
+    .word RECTANGLE, 1, 1, 115, 313, 0xB72513
+    .word RECTANGLE, 1, 1, 123, 314, 0x121212
+    .word RECTANGLE, 1, 1, 121, 310, 0x121212
+    .word RECTANGLE, 2, 1, 122, 310, 0x121212
+    .word RECTANGLE, 1, 1, 118, 312, 0xB72513
+    .word RECTANGLE, 1, 1, 119, 311, 0xB72513
+    .word RECTANGLE, 1, 1, 120, 309, 0xB72513
+    .word RECTANGLE, 1, 1, 120, 310, 0xB72513
+    .word RECTANGLE, 1, 46, 123, 309, 0x121212
+    .word RECTANGLE, 1, 1, 122, 309, 0x121212
+    .word RECTANGLE, 1, 1, 115, 317, 0x121212
+    .word RECTANGLE, 1, 1, 115, 318, 0x121212
+    .word RECTANGLE, 1, 1, 116, 317, 0x121212
+    .word RECTANGLE, 1, 1, 173, 316, 0x121212
+    .word RECTANGLE, 1, 1, 174, 318, 0x121212
+    .word RECTANGLE, 1, 1, 173, 317, 0x121212
+    .word RECTANGLE, 1, 1, 117, 315, 0x121212
+    .word RECTANGLE, 1, 1, 117, 316, 0x121212
+    .word RECTANGLE, 1, 1, 172, 314, 0x121212
+    .word RECTANGLE, 1, 1, 172, 315, 0x121212
+    .word RECTANGLE, 3, 8, 113, 296, 0xF54429
+    .word RECTANGLE, 1, 10, 114, 299, 0xF54429
+    .word RECTANGLE, 1, 1, 113, 298, 0xB72513
+    .word RECTANGLE, 1, 1, 113, 297, 0xB72513
+    .word RECTANGLE, 1, 1, 114, 299, 0xB72513
+    .word RECTANGLE, 2, 1, 170, 298, 0xF54429
+    .word RECTANGLE, 4, 5, 171, 296, 0xF54429
+    .word RECTANGLE, 4, 1, 176, 296, 0xF54429
+    .word RECTANGLE, 1, 2, 169, 299, 0xF54429
+    .word RECTANGLE, 1, 1, 169, 298, 0xF54429
+    .word RECTANGLE, 1, 1, 166, 298, 0xF54429
+    .word RECTANGLE, 1, 1, 124, 298, 0xF54429
+    .word RECTANGLE, 1, 1, 176, 299, 0xB72513
+    .word RECTANGLE, 1, 1, 177, 296, 0xF54429
+    .word RECTANGLE, 1, 1, 177, 297, 0xF54429
+    .word RECTANGLE, 1, 1, 177, 296, 0xF54429
+    .word RECTANGLE, 1, 1, 178, 296, 0xF54429
+    .word RECTANGLE, 1, 1, 112, 296, 0xF54429
+    .word RECTANGLE, 1, 1, 113, 297, 0xF54429
+    .word RECTANGLE, 2, 5, 174, 309, 0xF54429
+    .word RECTANGLE, 1, 1, 173, 310, 0xF54429
+    .word RECTANGLE, 1, 1, 173, 309, 0xF54429
+    .word RECTANGLE, 1, 1, 173, 310, 0xF54429
+    .word RECTANGLE, 1, 1, 171, 311, 0xF54429
+    .word RECTANGLE, 1, 1, 172, 310, 0xF54429
+    .word RECTANGLE, 2, 1, 178, 310, 0xF54429
+    .word RECTANGLE, 2, 1, 179, 310, 0xF54429
+    .word RECTANGLE, 1, 1, 179, 309, 0xF54429
+    .word RECTANGLE, 1, 1, 113, 311, 0xF54429
+    .word RECTANGLE, 1, 1, 116, 310, 0xF54429
+    .word RECTANGLE, 2, 7, 112, 310, 0xF54429
+    .word RECTANGLE, 1, 1, 111, 312, 0xF54429
+    .word RECTANGLE, 1, 2, 111, 311, 0xF54429
+    .word RECTANGLE, 1, 1, 118, 312, 0xF54429
+    .word RECTANGLE, 1, 1, 119, 311, 0xF54429
+    .word RECTANGLE, 2, 6, 112, 312, 0xF54429
+    .word RECTANGLE, 1, 6, 172, 311, 0xF54429
+    .word RECTANGLE, 1, 1, 180, 310, 0xB72513
+    .word RECTANGLE, 1, 1, 180, 311, 0xB72513
+    .word RECTANGLE, 1, 1, 180, 311, 0xB72513
+    .word RECTANGLE, 1, 1, 180, 311, 0x121212
+    .word RECTANGLE, 1, 1, 181, 310, 0x121212
+    .word RECTANGLE, 1, 1, 181, 302, 0xB72513
+    .word RECTANGLE, 1, 4, 174, 313, 0xF54429
+    .word RECTANGLE, 1, 1, 173, 313, 0xF54429
+    .word RECTANGLE, 1, 1, 178, 313, 0xF54429
+    .word RECTANGLE, 1, 7, 173, 312, 0xF54429
+    .word RECTANGLE, 2, 1, 172, 312, 0xF54429
+    .word RECTANGLE, 1, 6, 174, 309, 0xB72513
+    .word RECTANGLE, 1, 1, 173, 309, 0xB72513
+    .word RECTANGLE, 1, 1, 179, 310, 0xB72513
+    .word RECTANGLE, 1, 1, 156, 301, 0xB72513
+    .word RECTANGLE, 1, 1, 156, 303, 0x670D04
+    .word RECTANGLE, 1, 1, 133, 303, 0x670D04
+    .word RECTANGLE, 1, 1, 133, 304, 0x670D04
+    .word RECTANGLE, 1, 1, 157, 300, 0xB72513
+    .word RECTANGLE, 1, 1, 156, 300, 0xB72513
+    .word RECTANGLE, 1, 1, 155, 300, 0xB72513
+    .word RECTANGLE, 1, 1, 134, 300, 0xB72513
+    .word RECTANGLE, 1, 1, 138, 301, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 137, 301, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 136, 302, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 137, 303, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 138, 303, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 136, 304, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 137, 304, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 139, 304, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 140, 303, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 141, 302, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 142, 301, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 143, 302, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 143, 303, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 143, 304, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 142, 303, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 141, 303, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 144, 304, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 145, 303, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 146, 302, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 146, 301, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 147, 302, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 147, 303, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 148, 304, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 148, 303, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 148, 301, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 148, 302, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 150, 304, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 150, 303, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 150, 302, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 149, 301, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 150, 301, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 151, 301, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 153, 304, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 153, 302, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 153, 303, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 112, 278, 0x121212
+    .word RECTANGLE, 1, 1, 123, 267, 0x670D04
+    .word RECTANGLE, 1, 1, 121, 271, 0x0D2231
+    .word RECTANGLE, 1, 1, 120, 270, 0x0D2231
+    .word RECTANGLE, 1, 1, 121, 270, 0x0D2231
+    .word RECTANGLE, 1, 1, 121, 270, 0x0D2231
+    .word RECTANGLE, 1, 1, 121, 269, 0x0D2231
+    .word RECTANGLE, 1, 1, 119, 272, 0x0D2231
+    .word RECTANGLE, 1, 1, 119, 271, 0x0D2231
+    .word RECTANGLE, 1, 1, 115, 277, 0x670D04
+    .word RECTANGLE, 1, 1, 116, 278, 0x0D2231
+    .word RECTANGLE, 1, 1, 120, 270, 0x670D04
+    .word RECTANGLE, 1, 1, 116, 278, 0x670D04
+    .word RECTANGLE, 1, 1, 116, 278, 0x670D04
+    .word RECTANGLE, 1, 1, 116, 278, 0x0D2231
+    .word RECTANGLE, 1, 1, 116, 277, 0x0D2231
+    .word RECTANGLE, 1, 1, 117, 275, 0x0D2231
+    .word RECTANGLE, 1, 1, 120, 270, 0x0D2231
+    .word RECTANGLE, 1, 1, 173, 278, 0x0D2231
+    .word RECTANGLE, 1, 1, 171, 275, 0x0D2231
+    .word RECTANGLE, 1, 1, 168, 270, 0x0D2231
+    .word RECTANGLE, 1, 1, 116, 277, 0x670D04
+    .word RECTANGLE, 1, 1, 117, 275, 0x670D04
+    .word RECTANGLE, 1, 1, 120, 270, 0x670D04
+    .word RECTANGLE, 1, 1, 108, 293, 0xF54429
+    .word RECTANGLE, 1, 1, 162, 294, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 164, 294, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 166, 294, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 181, 294, 0xF54429
+    .word RECTANGLE, 1, 1, 108, 295, 0xF54429
+    .word RECTANGLE, 1, 1, 161, 295, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 163, 295, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 165, 295, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 167, 295, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 181, 295, 0xF54429
+    .word RECTANGLE, 1, 1, 108, 296, 0xF54429
+    .word RECTANGLE, 1, 1, 161, 296, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 162, 296, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 164, 296, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 167, 296, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 181, 296, 0xF54429
+    .word RECTANGLE, 1, 1, 108, 297, 0xF54429
+    .word RECTANGLE, 1, 1, 161, 297, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 163, 297, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 165, 297, 0xBEC5C5
+    .word RECTANGLE, 1, 1, 166, 297, 0xBEC5C5
+ 
+    .word VALOR_DE_CORTE
+ 
+car_8_end:
 

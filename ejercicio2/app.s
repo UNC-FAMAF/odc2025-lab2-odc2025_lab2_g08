@@ -120,6 +120,15 @@ draw_cars:
     MOV X29,SP
     
 
+    ADR X8, car_8
+    MOV X1, 200
+    BL scale_shape
+    MOV W1, #99
+    MOV W2, #-200
+    BL move_shape
+    BL render_shape
+
+
     ADR X8, car_6
     MOV W1, #170
     MOV W2, #230
@@ -127,7 +136,7 @@ draw_cars:
     BL render_shape
 
     ADR X8, car_4
-    MOV W1, #178
+    MOV W1, #2
     MOV W2, #60
     BL move_shape
     BL render_shape
