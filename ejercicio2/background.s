@@ -112,7 +112,7 @@ draw_static_background:
     BL draw_route_lines
     BL draw_sky
     //CARTELES
-    BL draw_signals
+    //BL draw_signals
 
 
     LDP X29,X30,[SP],#16

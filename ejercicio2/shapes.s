@@ -603,6 +603,7 @@ end_route_lines:
 draw_mountain:
     STP X29,X30,[SP,#-16]!
     MOV X29,SP
+    
     //MONTAÑA 3
     MOV X0,X20
     MOV x1, #20

@@ -68,14 +68,25 @@ main_init:
     MOV X26,#0
 
 
+    /*
+        EJEMPLO DE RECTANGULO MOVIENDOSE DE ARRIBA HACIA ABAJO
+        x21 VA SER EL COUNTER
+        x22 EL -1
+        x25 EL OFFSET
+        OBS: SE USAN REGISTROS NO VOLATILES
+     */
+     
+     MOV x21,#0
+     MOV x22,#-1
+     MOV x25,30
 
 game_loop:
 
     CMP X26,#((SCREEN_WIDTH/PLANE_OFFSET) -6)
     B.GE fix_plane_h
 
-
-    BL draw_sky
+    CMP x21,#50 //cada 20 vueltas del game loop se cambia la direccion
+    B.GE change_rect_dir
 
     MOV X8, X27
     MOV W1, #PLANE_OFFSET
@@ -89,10 +100,45 @@ game_loop:
     BL move_shape
     BL render_shape
 
-    ADD X26,X26,#1
+    BL draw_example_rect
 
+    ADD X26,X26,#1
+    //COUNTER PARA TRACKEAR EL MOVIMIENTO DEL RECT 
+    ADD x21,x21,#1
+    
     BL delay 
+    
+    BL draw_sky
     B game_loop
+
+
+change_rect_dir:
+
+    NEG X25,X25 //MUL x25,x25,x22 // [x25] * (-1)
+    MOV x21,#0
+    B game_loop
+
+
+draw_example_rect:
+    STP X29,X30,[SP,#-16]!
+    MOV X29,SP
+
+    //Rect example
+    MOV X0,X20
+    MOV x1, #50 // x
+    MOV x2, #50 // y
+    MOV x3, 0 // //color
+    MOV x4, #50 // alto
+    MOV x5, #50 // ancho
+
+    //(ANIM) LE SUMO EL OFFSET SETEADO EN x25, QUE VA IR HACIENDO -30,30,-30,30.... 
+    ADD X1,X1,X25
+    
+    BL draw_rectangle
+
+    LDP X29,X30,[SP],#16
+    RET
+
 
 
 
@@ -108,7 +154,7 @@ fix_plane_h:
     BL move_plane_reset
 
     B game_loop
-    RET
+    
 
 
 draw_cars:
@@ -149,10 +195,6 @@ draw_cars:
     MOV W2, #160
     BL move_shape
     BL render_shape
-
-  
-
- 
 
     LDR X8,[SP,#32]
     LDR X2,[SP,#24]
