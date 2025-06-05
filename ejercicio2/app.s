@@ -38,7 +38,7 @@ RECAP:
     x7
 -------------------------------------------------------
  */
-.equ PLANE_OFFSET,15
+.equ PLANE_OFFSET,10
 
 .globl main
 main:
@@ -65,7 +65,7 @@ main_init:
     BL move_shape
     BL render_shape
 
-    MOV X26,#0
+    MOV X26,#1
 
 
     /*
@@ -79,43 +79,84 @@ main_init:
      MOV x21,#0
      MOV x22,#-1
      MOV x25,30
+     
+     SUB SP, SP, #16
+     STR XZR, [sp, #8] //n = 0 en sp + 8
 
 game_loop:
 
-    CMP X26,#((SCREEN_WIDTH/PLANE_OFFSET) -6)
-    B.GE fix_plane_h
+    //CMP X26,#((SCREEN_WIDTH/PLANE_OFFSET) -7)
+    //B.GE fix_plane_h
 
-    CMP x21,#50 //cada 20 vueltas del game loop se cambia la direccion
+    
+
+    CMP x21,#50 //cada 50 vueltas del game loop se cambia la direccion
     B.GE change_rect_dir
-
-    MOV X8, X27
-    MOV W1, #PLANE_OFFSET
-    MOV W2, WZR
+    
+    MOV W1,#PLANE_OFFSET
+    MOV W2,WZR
+    MOV X8,X27
     BL move_shape
-    BL render_shape
 
-    MOV X8, X28
+    MOV W1,#PLANE_OFFSET
+    MOV W2,WZR
+    MOV X8,X28
+    BL move_shape
+
+
+    BL paridad
     MOV W1, #PLANE_OFFSET
     MOV W2, WZR    
-    BL move_shape
     BL render_shape
 
-    BL draw_example_rect
+    //BL draw_example_rect
 
     ADD X26,X26,#1
     //COUNTER PARA TRACKEAR EL MOVIMIENTO DEL RECT 
     ADD x21,x21,#1
     
+    BL add_one
+
     BL delay 
-    
     BL draw_sky
     B game_loop
+
+
+add_one:
+    LDR X9,[SP,#8]
+    ADD X9,X9,#1
+    STR X9,[SP,#8]
+    RET
+reset:
+    LDR X9,[SP,#8]
+    MOV X9,XZR
+    STR X9,[SP,#8]
+    RET
+
+paridad:
+    LDR x11, [sp, #8]
+    AND x11, x11, #1
+    CBNZ x11, cargar_p2
+    B cargar_p1
+
+    RET
+
+
+cargar_p1:
+    mov X8,x28
+    RET
+
+cargar_p2:
+    mov X8,x27
+    RET
+
 
 
 change_rect_dir:
 
     NEG X25,X25 //MUL x25,x25,x22 // [x25] * (-1)
     MOV x21,#0
+    
     B game_loop
 
 
@@ -144,15 +185,17 @@ draw_example_rect:
 
 fix_plane_h:
     //Este arreglo se hizo porque el avion se bajaba de mas cada aproximadamente [1000] iteraciones
-    MOV X26,#0  //RESET PLANE COUNTER
+    MOV X26,#1  //RESET PLANE COUNTER
     MOV X8,X27
-
     BL move_plane_reset
     
-    MOV X8,X28
-   
-    BL move_plane_reset
 
+    MOV X8,X28
+    BL move_plane_reset 
+
+    BL reset
+    
+    
     B game_loop
     
 

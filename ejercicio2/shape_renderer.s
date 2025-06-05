@@ -276,7 +276,7 @@ scale_shape:
 
 
 .global move_plane_reset
-.equ PLANE_SUB_X_OFFSET,540 //Lo que se le resta al aviion cuando se quiere resetear la pos x
+.equ PLANE_SUB_X_OFFSET,475 //Lo que se le resta al aviion cuando se quiere resetear la pos x
 move_plane_reset:
     SUB SP,SP,#16
     STR X29,[SP,#0]
@@ -291,6 +291,8 @@ move_plane_reset:
     MOV     X10, X8      // X10 = cursor en memoria de la forma
 
 .loop_reset:
+    
+
     LDR     W9, [X10]    // W9 = tipo
     CMP     W9, #VALOR_DE_CORTE
     BEQ     .done_reset
