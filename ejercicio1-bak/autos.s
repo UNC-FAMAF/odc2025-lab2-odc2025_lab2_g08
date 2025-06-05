@@ -27,7 +27,9 @@ car_1_end:
 
 .global car_2
 car_2:
-    // TIPO |ALTO | ANCHO | X | Y | COLOR|
+    // AUTO 2 (escalado al 60 % para reducir 40 %)
+
+    // TIPO |ALTO | ANCHO | X | Y | C1 | C2 |
     .word RECTANGLE, 12, 72, 162+140, 120+100, 0xFF00FF00
     .word RECTANGLE, 12, 84, 156+140, 132+100, 0xFF00FF00
     .word RECTANGLE, 18, 96, 150+140, 144+100, 0xFF00FF00
@@ -185,7 +187,7 @@ move_shape:
 
 
 
-.global scale_shape
+    .global scale_shape
 // ----------------------------------------------------------------------------
 // scale_shape:
 //   Escala en el lugar todas las componentes de una figura.

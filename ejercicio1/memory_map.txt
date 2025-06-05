@@ -1,0 +1,119 @@
+
+There are no discarded input sections
+
+Configuración de la Memoria
+
+Nombre           Origen             Longitud           Atributos
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Guión del enlazador y mapa de memoria
+
+LOAD app.o
+LOAD autos.o
+LOAD backup_ambientacion.o
+LOAD constants.o
+LOAD figuras-bak.o
+LOAD helpers.o
+LOAD input_loop.o
+LOAD shapes.o
+LOAD start.o
+                0x0000000000080000                . = 0x80000
+
+.text           0x0000000000080000    0x9031c
+ *(.text.boot)
+ .text.boot     0x0000000000080000    0x100c8 start.o
+                0x0000000000080000                _start
+ *(.text*)
+ .text          0x00000000000900c8        0x0 app.o
+ .text          0x00000000000900c8        0x0 autos.o
+ .text          0x00000000000900c8        0x0 backup_ambientacion.o
+ .text          0x00000000000900c8        0x0 constants.o
+ .text          0x00000000000900c8      0x254 figuras-bak.o
+                0x00000000000900c8                draw_square
+                0x0000000000090114                calc_address
+                0x0000000000090174                draw_line
+                0x0000000000090238                draw_right_triangle
+                0x0000000000090278                draw_triangle
+                0x00000000000902cc                draw_right_triangle_inverted
+ .text          0x000000000009031c        0x0 helpers.o
+ .text          0x000000000009031c        0x0 input_loop.o
+ .text          0x000000000009031c        0x0 shapes.o
+ .text          0x000000000009031c    0x80000 start.o
+
+.iplt           0x000000000011031c        0x0
+ .iplt          0x000000000011031c        0x0 app.o
+
+.rela.dyn       0x0000000000110320        0x0
+ .rela.iplt     0x0000000000110320        0x0 app.o
+ .rela.text.boot
+                0x0000000000110320        0x0 app.o
+
+.data           0x0000000000110320      0xb48
+ .data          0x0000000000110320      0x5b0 app.o
+                0x0000000000110384                main
+                0x0000000000110810                draw_circle
+ .data          0x00000000001108d0      0x418 autos.o
+                0x00000000001108d0                car_1
+                0x00000000001109f4                car_2
+                0x0000000000110b18                rand
+                0x0000000000110b4c                render_shape
+                0x0000000000110bd8                move_shape
+                0x0000000000110c40                scale_shape
+ .data          0x0000000000110ce8        0x0 backup_ambientacion.o
+ .data          0x0000000000110ce8        0x0 constants.o
+ .data          0x0000000000110ce8        0x0 figuras-bak.o
+ .data          0x0000000000110ce8       0x70 helpers.o
+ .data          0x0000000000110d58        0x0 input_loop.o
+ .data          0x0000000000110d58      0x110 shapes.o
+                0x0000000000110e0c                draw_rectangle
+ .data          0x0000000000110e68        0x0 start.o
+
+.igot.plt       0x0000000000110e68        0x0
+ .igot.plt      0x0000000000110e68        0x0 app.o
+
+.bss            0x0000000000110e68        0x0
+ *(.bss*)
+ .bss           0x0000000000110e68        0x0 app.o
+ .bss           0x0000000000110e68        0x0 autos.o
+ .bss           0x0000000000110e68        0x0 backup_ambientacion.o
+ .bss           0x0000000000110e68        0x0 constants.o
+ .bss           0x0000000000110e68        0x0 figuras-bak.o
+ .bss           0x0000000000110e68        0x0 helpers.o
+ .bss           0x0000000000110e68        0x0 input_loop.o
+ .bss           0x0000000000110e68        0x0 shapes.o
+ .bss           0x0000000000110e68        0x0 start.o
+
+.bss            0x0000000000110e68        0x8
+                0x0000000000110e70                . = ALIGN (0x10)
+ *fill*         0x0000000000110e68        0x8 
+                0x0000000000110e70                __bss_start = .
+ *(.bss .bss.*)
+ *(COMMON)
+                0x0000000000110e70                __bss_end = .
+                0x0000000000110e70                _end = .
+                0x0000000000000000                __bss_size = ((__bss_end - __bss_start) >> 0x3)
+OUTPUT(kernel8.elf elf64-littleaarch64)
+LOAD linker stubs
+
+.debug_line     0x0000000000000000      0x126
+ .debug_line    0x0000000000000000       0xd6 figuras-bak.o
+ .debug_line    0x00000000000000d6       0x50 start.o
+
+.debug_info     0x0000000000000000       0x5c
+ .debug_info    0x0000000000000000       0x2e figuras-bak.o
+ .debug_info    0x000000000000002e       0x2e start.o
+
+.debug_abbrev   0x0000000000000000       0x28
+ .debug_abbrev  0x0000000000000000       0x14 figuras-bak.o
+ .debug_abbrev  0x0000000000000014       0x14 start.o
+
+.debug_aranges  0x0000000000000000       0x60
+ .debug_aranges
+                0x0000000000000000       0x30 figuras-bak.o
+ .debug_aranges
+                0x0000000000000030       0x30 start.o
+
+.debug_str      0x0000000000000000       0x6d
+ .debug_str     0x0000000000000000       0x6d figuras-bak.o
+                                         0x65 (tamaño antes de la relajación)
+ .debug_str     0x000000000000006d       0x5f start.o
