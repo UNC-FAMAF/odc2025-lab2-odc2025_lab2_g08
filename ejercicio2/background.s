@@ -60,16 +60,36 @@ draw_static_background:
     BL draw_rectangle
 
 
+
+  //BANQUINA 2
+    MOV X0,X20
+    MOV X1, #296
+    MOV X2,#160
+    LDR X3, =0x7a523c
+    MOV X4,#7
+    MOV X5,#80
+    BL draw_shoulder_1
+
     //BANQUINA 1
     MOV X0,X20
-    MOV X1, #282
+    MOV X1, #285
     MOV X2,#160
     LDR X3, =0xf7caa2
     MOV X4,#7
     MOV X5,#80
     BL draw_shoulder_1
 
-    //BANQUINA 2
+   
+
+    //BANQUINA 4
+    MOV X0,X20
+    MOV X1, #239
+    MOV X2,#160
+    LDR X3, =0x7a523c
+    MOV X4,#8
+    MOV X5,#70
+    BL draw_shoulder_2
+    //BANQUINA 3
     MOV X0,X20
     MOV X1, #250
     MOV X2,#160
@@ -77,20 +97,22 @@ draw_static_background:
     MOV X4,#7
     MOV X5,#80
     BL draw_shoulder_2
+
+   
     
     //RUTA
     MOV X0,X20
     MOV X1, #286
-    MOV X2,#150
+    MOV X2,#135
     LDR X3, =0x50748c
     MOV X4,#4
-    MOV X5,#40
+    MOV X5,#45
     BL draw_route
     //LINEAS DE RUTA
     BL draw_route_lines
     BL draw_sky
     //CARTELES
-   // BL draw_signals
+    BL draw_signals
 
 
     LDP X29,X30,[SP],#16

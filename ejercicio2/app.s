@@ -61,11 +61,12 @@ main_init:
     ADR X28, plane_2
     MOV X8,X28
     MOV W1, #1
-    MOV W2, #75
+    MOV W2, #60
     BL move_shape
     BL render_shape
 
     MOV X26,#0
+
 
 
 game_loop:
@@ -123,40 +124,33 @@ draw_cars:
     ADR X8, car_8
     MOV X1, 200
     BL scale_shape
-    MOV W1, #99
+    MOV W1, #-89
     MOV W2, #-200
     BL move_shape
     BL render_shape
 
 
     ADR X8, car_6
-    MOV W1, #170
-    MOV W2, #230
-    BL move_shape
-    BL render_shape
-
-    ADR X8, car_4
-    MOV W1, #2
-    MOV W2, #60
-    BL move_shape
-    BL render_shape
-
-    ADR X8, car_9
-    MOV X1, #92
-    BL scale_shape
-    MOV W1, #289
+    MOV W1, #175
     MOV W2, #210
     BL move_shape
     BL render_shape
 
-    ADR X8, car_5
-    MOV W1, #560
-    MOV W2, #110
+    ADR X8, car_4
+    MOV W1, #200
+    MOV W2, #40
     BL move_shape
-
-    MOV X1, #42
-    BL scale_shape
     BL render_shape
+
+    ADR X8, car_9
+    MOV X1, #80
+    BL scale_shape
+    MOV W1, #294
+    MOV W2, #160
+    BL move_shape
+    BL render_shape
+
+  
 
  
 

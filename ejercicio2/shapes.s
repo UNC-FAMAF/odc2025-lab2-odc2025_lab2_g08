@@ -296,7 +296,7 @@ draw_route:
     MOV     X19, XZR        // contador = 0
 
 do_draw_route:
-    CMP     X19, #109      // comparar contador con ANCHO inicial
+    CMP     X19, #115      // comparar contador con ANCHO inicial
     B.GE    end_draw_route
 
     ADD     X2, X2,#3      // Y = Y - alto
