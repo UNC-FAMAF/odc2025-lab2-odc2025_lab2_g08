@@ -15,7 +15,7 @@
     .equ GPIO_GPLEV0,      0x34
     
     //PARA QUE VAYA MAS RAPIDO EL GAMELOOP MODIFICAR [DELAY_VALUE_1]
-    .equ DELAY_VALUE_1,    0x02FF
+    .equ DELAY_VALUE_1,    0x01FF
     .equ DELAY_VALUE_2,    0xFFFF
 
 .endif   // fin de include guard

@@ -1466,6 +1466,7 @@ scale_shape:
 
 
 .global move_plane_reset
+.equ PLANE_SUB_X_OFFSET,540 //Lo que se le resta al aviion cuando se quiere resetear la pos x
 move_plane_reset:
     SUB SP,SP,#16
     STR X29,[SP,#0]
@@ -1474,7 +1475,6 @@ move_plane_reset:
     MOV X29,SP
     // Entradas:
     //   X8 = puntero al primer componente de la forma
-    //   W1 = X, W2 = Y
 
     MOV     X11, X1      // X11 = X
     MOV     X12, X2      // X12 = Y
@@ -1487,7 +1487,7 @@ move_plane_reset:
 
     // --- actualizar posX (offset 3*4 = 12 bytes) ---
     LDR     W1, [X10, #12]   // W1 = posX
-    SUB     W1,W1, #540      // W1 = X
+    SUB     W1,W1, #PLANE_SUB_X_OFFSET     
     STR     W1, [X10, #12]
 
     // --- actualizar posY (offset 4*4 = 16 bytes) ---
