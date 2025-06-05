@@ -1,4 +1,5 @@
 .include "constants.inc"
+.include "helpers.s"
 /* -----------------------------------------------------
  | CONVENCION DE USO DE REGISTROS QUE USAMOS EN ESTE LAB |
   ------------------------------------------------------
