@@ -137,7 +137,7 @@ change_rect_dir:
     
     ADR X8, car_6
     MOV X2,X25
-    MOV X1,XZR
+    MOV X1,X25
     BL move_shape
     BL render_shape
    

@@ -668,6 +668,8 @@ draw_clouds:
 	MOV x2, 40 //centro y
 	LDR X3,=0XFFFFFFFF
     MOV x4, 20 //radio
+    ADD X1,X1,X25 //animado
+
 	BL draw_circle
 	
 	MOV x0, x20
@@ -675,6 +677,8 @@ draw_clouds:
 	MOV x2, 35 //centro y
 	LDR X3,=0XFFFFFFFF
     MOV x4, 25 //radio
+    ADD X1,X1,X25 //animado
+
 	BL draw_circle
 	
 	MOV x0, x20
@@ -682,29 +686,36 @@ draw_clouds:
 	MOV x2, 40 //centro y
 	LDR X3,=0XFFFFFFFF
 	MOV x4, 20 //radio
+    ADD X1,X1,X25 //animado
+
 	BL draw_circle
 
 	
 	//NUBE 2
 	MOV x0, x20
-	MOV x1, 200 //centro x
+	MOV x1, 200 +30 //centro x
 	MOV x2, 50 //centro y
 	LDR X3,=0XFFFFFFFF
 	MOV x4, 20 //radio
+    SUB X1,X1,X25,LSL 1 //animado
+
 	BL draw_circle
 	
 	MOV x0, x20
-	MOV x1, 220 //centro x
+	MOV x1, 220 +30//centro x
 	MOV x2, 45 //centro y
 	LDR X3,=0XFFFFFFFF
 	MOV x4, 25 //radio
+    SUB X1,X1,X25,LSL 1 //animado
+
 	BL draw_circle
 	
 	MOV x0, x20
-	MOV x1, 240 //centro x
+	MOV x1, 240 +30//centro x
 	MOV x2, 50 //centro y
 	LDR X3,=0XFFFFFFFF
 	MOV x4, 20 //radio
+    SUB X1,X1,X25,LSL 1 //animado
 
 	BL draw_circle
 
@@ -714,6 +725,8 @@ draw_clouds:
 	MOV x2, 50 //centro y
 	LDR X3,=0XFFFFFFFF
 	MOV x4, 20 //radio
+    ADD X1,X1,X25 //animado
+    
 	BL draw_circle
 	
 	MOV x0, x20
@@ -721,6 +734,8 @@ draw_clouds:
 	MOV x2, 45 //centro y
 	LDR X3,=0XFFFFFFFF
 	MOV x4, 25 //radio
+    ADD X1,X1,X25 //animado
+
 	BL draw_circle
 	
 	MOV x0, x20
@@ -728,6 +743,7 @@ draw_clouds:
 	MOV x2, 50 //centro y
 	LDR X3,=0XFFFFFFFF
 	MOV x4, 20 //radio
+    ADD X1,X1,X25 //animado
 
 	BL draw_circle
 
