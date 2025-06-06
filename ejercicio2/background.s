@@ -36,11 +36,11 @@ draw_sky:
     RET
 
 
-.global "draw_static_background"
-draw_static_background:
-    STP X29,X30,[SP,#-16]!
+
+.global draw_grass
+draw_grass:
+STP X29,X30,[SP,#-16]!
     MOV X29,SP
-    
     //background
     MOV X0,X20
     MOV x1, #0 // x
@@ -58,7 +58,6 @@ draw_static_background:
     MOV x4, #165 // alto
     MOV x5, #640 // ancho
     BL draw_rectangle
-
 
 
   //BANQUINA 2
@@ -99,18 +98,31 @@ draw_static_background:
     BL draw_shoulder_2
 
    
+    LDP X29,X30,[SP],#16
+    RET
+
+.global "draw_static_background"
+draw_static_background:
+    STP X29,X30,[SP,#-16]!
+    MOV X29,SP
+    
+    
+
+
+
     
     //RUTA
     MOV X0,X20
-    MOV X1, #286
-    MOV X2,#135
+    MOV X1, #264
+    MOV X2,#165
     LDR X3, =0x50748c
     MOV X4,#4
-    MOV X5,#45
+    MOV X5,#87
     BL draw_route
     //LINEAS DE RUTA
-    BL draw_route_lines
-    BL draw_sky
+    //BL draw_route_lines
+    
+    
     //CARTELES
     //BL draw_signals
 

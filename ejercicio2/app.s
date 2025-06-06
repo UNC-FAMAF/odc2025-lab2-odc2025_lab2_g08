@@ -47,23 +47,39 @@ main:
 main_init:
     //Procedimiento [draw_static_background] escrito en: [background.s]
 
+    BL draw_grass
     BL draw_static_background
-    Bl draw_cars
-
-    ADR X27, plane_1
-    MOV X8, X27
-    MOV W1, #1
-    MOV W2, #60
+    BL draw_route_lines_dyn
+    
+    //GOLF R32
+    ADR X8, car_8
+    MOV X1, 200
+    BL scale_shape
+    MOV W1, #-89
+    MOV W2, #-200
+    BL move_shape
+    
+    //PORSHE
+    ADR X8, car_6
+    MOV W1, #295
+    MOV W2, #220
     BL move_shape
     BL render_shape
+
+    //ADR X27, plane_1
+    //MOV X8, X27
+    //MOV W1, #1
+    //MOV W2, #60
+    //BL move_shape
+    //BL render_shape
 
     
-    ADR X28, plane_2
-    MOV X8,X28
-    MOV W1, #1
-    MOV W2, #60
-    BL move_shape
-    BL render_shape
+    //ADR X28, plane_2
+    //MOV X8,X28
+    //MOV W1, #1
+    //MOV W2, #60
+    //BL move_shape
+    //BL render_shape
 
     MOV X26,#1
 
@@ -76,106 +92,105 @@ main_init:
         OBS: SE USAN REGISTROS NO VOLATILES
      */
      
-     MOV x21,#0
-     MOV x22,#-1
-     MOV x25,30
-     
+     MOV x25,6 //Cuanto se mueve de arriba a abajo las lineas
      SUB SP, SP, #16
      STR XZR, [sp, #8] //n = 0 en sp + 8
 
-game_loop:
-
+game_loop:  
+   
     //CMP X26,#((SCREEN_WIDTH/PLANE_OFFSET) -7)
     //B.GE fix_plane_h
 
-    
-
-    CMP x21,#50 //cada 50 vueltas del game loop se cambia la direccion
+    MOV X21,XZR
+    LDR X21,[SP,#8]
+    CMP x21,#2
     B.GE change_rect_dir
-    
-    MOV W1,#PLANE_OFFSET
-    MOV W2,WZR
-    MOV X8,X27
-    BL move_shape
+  
+    BL draw_sky
 
-    MOV W1,#PLANE_OFFSET
-    MOV W2,WZR
-    MOV X8,X28
-    BL move_shape
-
-
-    BL paridad
-    MOV W1, #PLANE_OFFSET
-    MOV W2, WZR    
-    BL render_shape
-
-    //BL draw_example_rect
 
     ADD X26,X26,#1
-    //COUNTER PARA TRACKEAR EL MOVIMIENTO DEL RECT 
-    ADD x21,x21,#1
-    
-    BL add_one
 
-    BL delay 
-    BL draw_sky
+    //COUNTER PARA TRACKEAR EL MOVIMIENTO DE LAS LINEAS DE RUTA
+    LDR X21,[SP,#8]
+    ADD X21,X21,#1
+    STR X21,[SP,#8]
+
+    BL delay
     B game_loop
 
-
-add_one:
-    LDR X9,[SP,#8]
-    ADD X9,X9,#1
-    STR X9,[SP,#8]
-    RET
-reset:
-    LDR X9,[SP,#8]
-    MOV X9,XZR
-    STR X9,[SP,#8]
-    RET
-
-paridad:
-    LDR x11, [sp, #8]
-    AND x11, x11, #1
-    CBNZ x11, cargar_p2
-    B cargar_p1
-
-    RET
-
-
-cargar_p1:
-    mov X8,x28
-    RET
-
-cargar_p2:
-    mov X8,x27
-    RET
 
 
 
 change_rect_dir:
 
     NEG X25,X25 //MUL x25,x25,x22 // [x25] * (-1)
-    MOV x21,#0
+    STR XZR,[SP,#8]
     
+    BL draw_static_background
+    BL draw_route_lines_dyn
+    
+    MOV X8,XZR
+    MOV X1,XZR
+    MOV X2,XZR
+    ADR X8, car_8
+    BL render_shape
+    ADR X8, car_6
+    BL render_shape
+    
+    MOV X8,XZR
+    MOV X1,XZR
+    MOV X2,XZR
     B game_loop
 
 
-draw_example_rect:
+draw_route_lines_dyn:
     STP X29,X30,[SP,#-16]!
     MOV X29,SP
-
+    .equ rl_h,25
+    .equ rl_p,37
     //Rect example
     MOV X0,X20
-    MOV x1, #50 // x
-    MOV x2, #50 // y
-    MOV x3, 0 // //color
-    MOV x4, #50 // alto
-    MOV x5, #50 // ancho
+    MOV x1, #305 // x
+    MOV x2, #172 // y
+    MOVZ x3, #0XFF,LSL 16 // //color
+    MOVK X3, #0XFFFF,LSL 0
+    MOV x4, #rl_h // alto
+    MOV x5, #5 // ancho
 
     //(ANIM) LE SUMO EL OFFSET SETEADO EN x25, QUE VA IR HACIENDO -30,30,-30,30.... 
-    ADD X1,X1,X25
-    
+    ADD X2,X2,X25 //animado
+
     BL draw_rectangle
+    ADD X2,X2,#rl_p
+    BL draw_rectangle
+    ADD X2,X2,#rl_p
+    BL draw_rectangle
+    ADD X2,X2,#rl_p
+    BL draw_rectangle
+    ADD X2,X2,#rl_p
+    BL draw_rectangle
+    ADD X2,X2,#rl_p
+    BL draw_rectangle
+    ADD X2,X2,#rl_p
+    BL draw_rectangle
+    ADD X2,X2,#rl_p
+    BL draw_rectangle
+    ADD X2,X2,#rl_p
+    BL draw_rectangle
+
+
+    //Algo asi puede funcionar para el pasto
+    ////PASTO 2
+    //MOV X0,X20
+    //MOV x1, #0 // x
+    //MOV x2, #240 // y
+    //LDR x3, =0x309E6F // //color
+    //MOV x4, #20 // alto
+    //MOV x5, #170 // ancho
+    //ADD X2,X2,X25 //animado
+
+   // BL draw_rectangle
 
     LDP X29,X30,[SP],#16
     RET
@@ -193,7 +208,7 @@ fix_plane_h:
     MOV X8,X28
     BL move_plane_reset 
 
-    BL reset
+    //BL reset
     
     
     B game_loop
