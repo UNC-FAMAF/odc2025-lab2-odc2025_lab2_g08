@@ -70,22 +70,11 @@ main_init:
 
 
 game_loop:
-
-    CMP X26,#((SCREEN_WIDTH/PLANE_OFFSET) -6)
-    B.GE fix_plane_h
-
-
     BL draw_sky
 
-    MOV X8, X27
+    BL choose_plane
     MOV W1, #PLANE_OFFSET
     MOV W2, WZR
-    BL move_shape
-    BL render_shape
-
-    MOV X8, X28
-    MOV W1, #PLANE_OFFSET
-    MOV W2, WZR    
     BL move_shape
     BL render_shape
 
@@ -108,21 +97,6 @@ game_loop:
     BL delay 
     B game_loop
 
-
-
-fix_plane_h:
-    //Este arreglo se hizo porque el avion se bajaba de mas cada aproximadamente [1000] iteraciones
-    MOV X26,#0  //RESET PLANE COUNTER
-    MOV X8,X27
-
-    BL move_plane_reset
-    
-    MOV X8,X28
-   
-    BL move_plane_reset
-
-    B game_loop
-    RET
 
 
 draw_cars:
