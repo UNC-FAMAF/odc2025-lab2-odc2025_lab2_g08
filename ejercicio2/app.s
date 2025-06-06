@@ -55,14 +55,14 @@ main_init:
     ADR X8, car_8
     MOV X1, 200
     BL scale_shape
-    MOV W1, #-89
+    MOV W1, #-70
     MOV W2, #-200
     BL move_shape
     
     //PORSHE
     ADR X8, car_6
     MOV W1, #295
-    MOV W2, #220
+    MOV W2, #230
     BL move_shape
     BL render_shape
 
@@ -129,18 +129,28 @@ change_rect_dir:
     
     BL draw_static_background
     BL draw_route_lines_dyn
-    
+
+    //renderizado de autos
     MOV X8,XZR
     MOV X1,XZR
     MOV X2,XZR
+
     ADR X8, car_8
+    MOV X1,X25,LSL 1
+    BL move_shape
     BL render_shape
+    
     ADR X8, car_6
+    MOV X2,X25
+    MOV X1,XZR
+    BL move_shape
     BL render_shape
+   
     
     MOV X8,XZR
     MOV X1,XZR
     MOV X2,XZR
+    //fin renderizado de autos
     B game_loop
 
 
