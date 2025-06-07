@@ -35,11 +35,35 @@ draw_sky:
 
     RET
 
+.global draw_rgt_shoulder
+draw_rgt_shoulder:
+    STP X29,X30,[SP,#-16]!
+    MOV X29,SP
+  //BANQUINA 2
+    MOV X0,X20
+    MOV X1, #296
+    MOV X2,#160
+    LDR X3, =0x7a523c
+    MOV X4,#7
+    MOV X5,#80
+    BL draw_shoulder_1
+
+    //BANQUINA 1
+    MOV X0,X20
+    MOV X1, #285
+    MOV X2,#160
+    LDR X3, =0xf7caa2
+    MOV X4,#7
+    MOV X5,#80
+    BL draw_shoulder_1
+
+    LDP X29,X30,[SP],#16
+    RET
 
 
 .global draw_grass
 draw_grass:
-STP X29,X30,[SP,#-16]!
+    STP X29,X30,[SP,#-16]!
     MOV X29,SP
     //background
     MOV X0,X20

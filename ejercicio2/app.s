@@ -56,15 +56,26 @@ main_init:
     MOV X1, 200
     BL scale_shape
     MOV W1, #-70
-    MOV W2, #-200
+    MOV W2, #-165
     BL move_shape
     
     //PORSHE
     ADR X8, car_6
-    MOV W1, #295
-    MOV W2, #230
+    MOV W1, #185
+    MOV W2, #240
     BL move_shape
     BL render_shape
+
+    //MUSTANG
+    ADR x8,car_9
+    
+    MOV X1,#70
+    BL scale_shape
+    MOV W1,#290
+    MOV W2,#160
+    BL move_shape
+    BL render_shape
+
 
     //AVION
     ADR X27, plane_1
@@ -88,17 +99,25 @@ main_init:
         Preparo la stack para poder almacenar la variable contador que nos va permitir
         animar las lineas de la ruta
      */
-     SUB SP, SP, #16
+     SUB SP, SP, #32
      STR XZR, [sp, #8] //n = 0 en sp + 8
-
+     STR XZR, [SP,#16] //m = 0
+     STR XZR, [SP,#24] // mustang tracker 
 
 game_loop:
+    
     
     MOV X21,XZR
     LDR X21,[SP,#8]
     CMP x21,#2
     B.GE change_rect_dir
     
+    MOV X21,XZR
+    LDR X21,[SP,#16]
+    CMP X21, #2
+    B.GE move_car_ford
+    
+
     BL draw_sky
 
     BL choose_plane
@@ -112,16 +131,71 @@ game_loop:
     ADD X21,X21,#1
     STR X21,[SP,#8]
 
+    //INCREMENTO EL CONTADOR M++
+    LDR X21,[SP,#16]
+    ADD X21,X21,#1
+    STR X21,[SP,#16]
+
+    //INCREMENTO EL CONTADOR Mustang tracker
+    LDR X21,[SP,#24]
+    ADD X21,X21,#1
+    STR X21,[SP,#24]
+
     BL delay 
     B game_loop
 
 
+
+move_car_ford:
+
+    STR XZR,[SP,#16] //m = 0 //reseteo el counter m
+    ADR X18,car_9
+    
+    LDR X15,[SP,#24] //MUSTANG TRACKER
+    CMP X15,#90
+    B.GE reset_mustang
+
+    //renderizado de autos
+    MOV X8,XZR
+    MOV X1,XZR
+    MOV X2,XZR
+    //MUSTANG
+    ADR X8,car_9
+    MOV W1,#2
+    MOV W2,#5
+    BL move_shape
+    BL render_shape
+
+    //fin renderizado de autos
+    B game_loop
+
+
+
+reset_mustang:
+
+    STR XZR,[SP,#24]
+    //renderizado de autos
+    MOV X8,XZR
+    MOV X1,XZR
+    MOV X2,XZR
+    //MUSTANG
+    
+    ADR X8,car_9
+    MOV W1,#296
+    MOV W2,#120
+    BL set_position
+    BL render_shape
+
+
+    //fin renderizado de autos
+    B move_car_ford
 
 change_rect_dir:
 
     NEG X25,X25 //MUL x25,x25,x22 // [x25] * (-1)
     STR XZR,[SP,#8]
     
+    BL draw_rgt_shoulder
     BL draw_static_background
     BL draw_route_lines_dyn
 
@@ -131,20 +205,17 @@ change_rect_dir:
     MOV X2,XZR
 
     ADR X8, car_8
+    NEG X25,X25
     MOV X1,X25,LSL 1
     BL move_shape
+    NEG X25,X25
     BL render_shape
     
     ADR X8, car_6
     MOV X2,X25
     MOV X1,X25
     BL move_shape
-    BL render_shape
-   
-    
-    MOV X8,XZR
-    MOV X1,XZR
-    MOV X2,XZR
+    BL render_shape  
     //fin renderizado de autos
     B game_loop
 
@@ -199,59 +270,6 @@ draw_route_lines_dyn:
    // BL draw_rectangle
 
     LDP X29,X30,[SP],#16
-    RET
-
-
-
-
-
-draw_cars:
-    SUB SP,SP,#48
-    STR X29,[SP,#0]
-    STR X30,[SP,#8]
-    STR X1,[SP,#16]
-    STR X2,[SP,#24]
-    STR X8,[SP,#32]    
-    MOV X29,SP
-    
-
-    ADR X8, car_8
-    MOV X1, 200
-    BL scale_shape
-    MOV W1, #-89
-    MOV W2, #-200
-    BL move_shape
-    BL render_shape
-
-
-    ADR X8, car_6
-    MOV W1, #175
-    MOV W2, #210
-    BL move_shape
-    BL render_shape
-
-    ADR X8, car_4
-    MOV W1, #200
-    MOV W2, #40
-    BL move_shape
-    BL render_shape
-
-    ADR X8, car_9
-    MOV X1, #80
-    BL scale_shape
-    MOV W1, #294
-    MOV W2, #160
-    BL move_shape
-    BL render_shape
-
-  
-    LDR X8,[SP,#32]
-    LDR X2,[SP,#24]
-    LDR X1,[SP,#16]
-    LDR X30,[SP,#8]
-    LDR X29,[SP,#0]
-    ADD SP,SP,#48
-    
     RET
 
 

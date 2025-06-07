@@ -335,6 +335,31 @@ move_plane_reset:
     RET
 
 
+.global set_position
+set_position:
+    // Prologue: guardar FP y LR
+    SUB     SP, SP, #16
+    STR     X29, [SP]
+    STR     X30, [SP, #8]
+    MOV     X29, SP
+
+    // X8 = ptr a la figura; W1 = newX; W2 = newY
+
+    // Cálculo del delta: deltaX = newX - oldX, deltaY = newY - oldY
+    // Cargamos posX, posY del primer componente (offsets 12 y 16 bytes)
+    LDR     W3, [X8, #12]     // W3 = oldX
+    LDR     W4, [X8, #16]     // W4 = oldY
+    SUB     W1, W1, W3        // W1 = deltaX
+    SUB     W2, W2, W4        // W2 = deltaY
+
+    // Llamada a move_shape(X8, deltaX, deltaY)
+    BL      move_shape
+
+    // Epilogue: restaurar FP y LR
+    LDR     X30, [SP, #8]
+    LDR     X29, [SP]
+    ADD     SP, SP, #16
+    RET
 
 .section .data
 .global car_1
@@ -1305,6 +1330,10 @@ car_9:
     .word VALOR_DE_CORTE
 
 car_9_end:
+
+
+
+
 
 
 .global plane_1
