@@ -1,0 +1,84 @@
+Nombre y apellido 
+Integrante 1:	Roco Corbalan
+Integrante 2:	Nicolás Cativas Romero
+Integrante 3:	Geronimo Lindor Lescano
+Integrante 4:	Santiago Emanuel Nieva
+
+
+Descripción ejercicio 1: 
+			Para este laboratorio decidimos elegir el concepto de juegos de carreras antiguo,
+			como los que había en la FamilyGame para ello utilizamos amplia y principalmente un procedimiento que
+			se encarga de dibujar rectángulos en pantalla, lo utilizamos de base para los triangulos, rutas, banquinas,etc
+			Ademas, al momento de dibujar los autos, nos dimos cuenta el proceso de creación de los mismos
+			era sumamente tedioso y repetitivo, siempre utilizando mismos registros solo levemente modificados. Por lo que 
+			tomamos un concepto interesante de la librería estandar de entrada y salida del lenguaje de programacion C, presente
+			en la funcion printf, observamos que el arreglo de caracteres a imprimir siempre estaba alineado en memoria,y que al 
+			finalizar el array tenia un valor de corte [ \0 ]; en base a esto desarrollamos un renderizador de figuras
+			(la idea principal era que el mismo funcione con todas las figuras) el cual hacia uso de directivas del ensamblador
+			para indicar que ibamos a cargar una seccion con datos inicializados en memoria. el formato que usamos tiene esta
+			forma:
+
+			.section .data
+			.global car_1
+			car_1:
+    				// TIPO      | ALTO | ANCHO |    X     |    Y     |   COLOR
+    				.word RECTANGLE, 7,    70,      223, 338,0x057CA1
+    				.word RECTANGLE, 17,    80,     219, 344,0x097194
+				.word VALOR_DE_CORTE
+			end_car_1:
+			
+			Como se observa la versatilidad de este concepto nos abrió las puertas a crear herramientas propias para el dibujado
+			de "SPRITES" para que esto funcionase teniamos que tener alguna manera de "apuntar" a la direccion de la primera palabra
+			de estos SPRITES (Etiquetas). Esto lo logramos haciendo amplio uso de la pseudo-instruccion ADR <Rn> <etiquera> la cual
+			nos permitió tener un punto de inicio para recorrer y leer los valores de estas WORDS siempre buscando primero por esa
+			word que contenia el VALOR_DE_CORTE (-999 en nuestro caso).
+			
+			La implementacion core de esta funcion es la siguiente:
+
+			.global render_shape
+			render_shape:
+			    // Guardar frame pointer y link register
+			    SUB SP,SP,#16
+			    STR X29,[SP,#0]
+			    STR X30,[SP,#8]
+
+			    MOV X29,SP
+
+			.loop_component:
+			    // Cargar el "tipo" del próximo componente y avanzar X8 en 4 bytes
+			    LDR     W9, [X8], #4            // W9 = tipo 
+			    CMP     W9, #VALOR_DE_CORTE
+			    BEQ     .done                   // Si encontramos el VALOR_DE_CORTE, terminamos
+
+			    // Cargar los parámetros del componente uno a uno
+			    LDR     W4,  [X8], #4           // W4 = alto
+			    LDR     W5,  [X8], #4           // W5 = ancho
+			    LDR     W14, [X8], #4           // W14 = posX
+			    LDR     W15, [X8], #4           // W15 = posY
+			    LDR     W6,  [X8], #4           // W6 = color
+
+			Como se observa, antes de recorrer las (cantidad de parametros) 6*n (cantidad de rectangulos) palabras 
+			siempre se checkea por el valor de corte. una vez cargado en registros los parametros simplemente
+			los adaptamos a la convencion de la funcion draw_rectangle y los mismos se pintaban por pantalla
+
+			Nos tomamos el tiempo de detallar este procedimiento porque fue fundamental para el rapido avance del laboratiorio
+			ademas como mencionamos previamente, este concepto nos permitio crear herramientas propias 
+			en el siguiente link se puede acceder a la misma: https://bit.ly/4kptcxm
+
+			este primer ejercicio nos ayudó fundamentalmente a explorar la filosofia del lenguaje ensamblador, y el como funcinan
+			instrucciones a simple vista simples que muchas veces damos por sentado debido al acostumbramiento a la syntactic sugar de 
+			los lenguajes de alto nivel y tambien nos ayudo a comprender el funcionamiento (en alto nivel) del framebuffer.
+
+
+Descripción ejercicio 2:
+		Extendiendo la explicacion de arriba, con este segundo ejercicio logramos implementar una funcion de delay (CPU hz - dependiente)
+		y como hacer uso de la misma para crear animaciones, el hecho de tener las partes movibles en memoria, nos dio la posibilidad
+		de nunca perder referencia a las mismas y asi tambien craar procedimientos para escalar, mover y resetear las mismas SHAPES.
+		ademas se hizo un esfuerzo por modularizar el codigo y estandarizar el uso de los registros (cuya inspeccion quedo pendiente debido al tiempo)
+
+Justificación instrucciones ARMv8:
+	Utilizamos directivas de ensamblador GAS (linux dependiente)
+	asi tambien como Registros de 32 bits Wn 
+	asi mismo como se detalló mas arriba, se usaron pseudo-instruccion como ADR para poder apuntar a los bloques de informacion que contenian
+	los autos.
+
