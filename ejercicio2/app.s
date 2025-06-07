@@ -41,6 +41,8 @@ RECAP:
 .equ PLANE_OFFSET,15
 
 .globl main
+.data
+zigzag_dir: .word 1     // 1 = derecha, -1 = izquierda
 main:
     MOV x20, x0 // Guarda la dirección base del framebuffer en x20 (backup de x0)
     
@@ -101,11 +103,27 @@ game_loop:
     
     BL draw_sky
 
-    BL choose_plane
-    MOV W1, #PLANE_OFFSET
-    MOV W2, WZR
-    BL move_shape
-    BL render_shape
+    BL choose_plane                // Llama a la función choose_plane
+	// Movimiento zig-zag del avión
+    LDR X9, =zigzag_dir           // Carga la dirección actual del zigzag (dirección de memoria de zigzag_dir) en X9
+    LDR W10, [X9]                 // Lee el valor almacenado en zigzag_dir (1 o -1) en W10
+
+    // Alternar dirección cada N frames (usamos contador en SP+8)
+    LDR X11, [SP, #8]             // Carga el contador N (número de frames) desde la pila en X11
+    AND X12, X11, #0xF            // X12 = contador & 0xF (se queda con los últimos 4 bits, equivalente a hacer % 16)
+    CMP X12, #0                   // Compara el resultado con 0
+    B.NE continue_zigzag          // Si no es 0 (no múltiplo de 16), continúa sin cambiar la dirección
+
+    NEG W10, W10                  // Si es múltiplo de 16, invierte la dirección (multiplica por -1)
+    STR W10, [X9]                 // Guarda la nueva dirección invertida en zigzag_dir
+
+continue_zigzag:
+    MOV W1, #PLANE_OFFSET         // W1 = valor constante de desplazamiento horizontal
+    MUL W2, W1, W10               // W2 = PLANE_OFFSET * dirección (±PLANE_OFFSET)
+
+    BL move_shape                 // Mueve la figura (avión) en la dirección calculada
+    BL render_shape               // Renderiza la figura en pantalla
+
     
     //INCREMENTO EL CONTADOR n++
     LDR X21,[SP,#8]
